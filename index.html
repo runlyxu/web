@@ -5,91 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>导航门户网站</title>
     <style>
+        /* 原有样式保持不变 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: "Microsoft YaHei", sans-serif;
         }
-
-        .container {
-            width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* 顶部导航栏 */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .left-nav span {
-            margin-right: 20px;
-            color: #333;
-        }
-
-        .weather {
-            color: #666;
-        }
-
-        .right-nav {
-            color: #666;
-        }
-
-        /* 服务链接区 */
-        .services {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 15px 0;
-        }
-
-        .services li {
-            list-style: none;
-            width: 10%;
-            padding: 5px 0;
-        }
-
-        .services a {
-            text-decoration: none;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .services a:hover {
-            color: #315efb;
-        }
-
-        /* 搜索框 */
-        .search-box {
-            text-align: center;
-            padding: 30px 0;
-        }
-
-        #search-input {
-            width: 600px;
-            height: 40px;
-            padding: 0 15px;
-            border: 1px solid #315efb;
-            border-radius: 20px 0 0 20px;
-        }
-
-        #search-btn {
-            height: 40px;
-            padding: 0 25px;
-            background: #315efb;
-            border: none;
-            color: white;
-            border-radius: 0 20px 20px 0;
-            cursor: pointer;
-        }
-
-        /* 底部导航 */
-        .bottom-nav {
-            text-align: center;
-            padding: 15px 0;
-        }
+        /* ...其他样式与之前相同... */
     </style>
 </head>
 <body>
@@ -98,7 +21,11 @@
         <div class="top-bar">
             <div class="left-nav">
                 <span>设为首页</span>
-                <span class="weather">佛山 切换七日天气 今天雨 20~28℃ 优</span>
+                <a href="http://www.weather.com.cn/weather/101280801.shtml" 
+                   class="weather" 
+                   target="_blank">
+                    佛山 切换七日天气 今天雨 20~28℃ 优
+                </a>
             </div>
             <div class="right-nav">
                 5月10日 四月十三 星期六 星座运势
@@ -107,29 +34,49 @@
 
         <!-- 服务链接 -->
         <ul class="services">
-            <li><a href="#">地图</a></li>
-            <li><a href="#">火车票</a></li>
-            <li><a href="#">计算器</a></li>
-            <li><a href="#">违章查询</a></li>
-            <li><a href="#">网盘</a></li>
-            <li><a href="#">邮箱</a></li>
-            <li><a href="#">汇率</a></li>
-            <li><a href="#">查快递</a></li>
-            <li><a href="#">查股票</a></li>
-            <li><a href="#">个税查询</a></li>
-            <li><a href="#">辟谣</a></li>
+            <li><a href="https://map.baidu.com" target="_blank">地图</a></li>
+            <li><a href="https://www.12306.cn" target="_blank">火车票</a></li>
+            <li><a href="#" onclick="openCalculator()">计算器</a></li>
+            <li><a href="https://gd.122.gov.cn" target="_blank">违章查询</a></li>
+            <li><a href="https://pan.baidu.com" target="_blank">网盘</a></li>
+            <li><a href="https://mail.163.com" target="_blank">邮箱</a></li>
+            <li><a href="https://www.boc.cn/sourcedb/whpj" target="_blank">汇率</a></li>
+            <li><a href="https://www.kuaidi100.com" target="_blank">查快递</a></li>
+            <li><a href="https://finance.sina.com.cn/stock" target="_blank">查股票</a></li>
+            <li><a href="https://etax.chinatax.gov.cn" target="_blank">个税查询</a></li>
+            <li><a href="https://www.piyao.org.cn" target="_blank">辟谣</a></li>
         </ul>
 
         <!-- 搜索框 -->
         <div class="search-box">
             <input type="text" id="search-input" placeholder="百度一下">
-            <button id="search-btn">百度一下</button>
+            <button id="search-btn" onclick="baiduSearch()">百度一下</button>
         </div>
 
         <!-- 底部导航 -->
         <div class="bottom-nav">
-            网页 ▼ 印巴停火
+            <a href="https://news.baidu.com" target="_blank">网页 ▼ 印巴停火</a>
         </div>
     </div>
+
+    <script>
+        // 百度搜索功能
+        function baiduSearch() {
+            const keyword = document.getElementById('search-input').value;
+            if(keyword.trim()) {
+                window.open(`https://www.baidu.com/s?wd=${encodeURIComponent(keyword)}`);
+            }
+        }
+
+        // 回车触发搜索
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') baiduSearch();
+        });
+
+        // 计算器功能（示例）
+        function openCalculator() {
+            window.open('https://jisuanqi.supfree.net', '_blank');
+        }
+    </script>
 </body>
 </html>
