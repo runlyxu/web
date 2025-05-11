@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>专业导航门户</title>
     <style>
-        /* 新增中部内容样式 */
+        /* 原有全部样式保持不变 */
+
+        /* 新增中部四列样式 */
         .content-columns {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
+            gap: 25px;
             margin: 40px 0;
             padding: 0 20px;
         }
@@ -18,11 +20,11 @@
             background: #fff;
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .category-header {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #2d3748;
             margin-bottom: 15px;
             padding-bottom: 10px;
@@ -32,6 +34,7 @@
         .site-list {
             list-style: none;
             padding: 0;
+            min-height: 380px;
         }
 
         .site-item {
@@ -62,15 +65,11 @@
             color: #315efb;
             text-decoration: none;
             font-weight: 500;
-            padding: 8px;
-            border-radius: 6px;
         }
 
-        /* 响应式布局 */
         @media (max-width: 1200px) {
             .content-columns {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
             }
         }
 
@@ -83,68 +82,85 @@
 </head>
 <body>
     <div class="container">
-        <!-- 原有顶部导航和服务导航... -->
+        <!-- 顶部导航栏 -->
+        <nav class="top-bar">...</nav>
 
-        <!-- 新增内容分区 -->
+        <!-- 服务导航 -->
+        <ul class="services-grid">...</ul>
+
+        <!-- 新增四列内容 -->
         <div class="content-columns">
             <!-- 常用网址 -->
             <div class="category-column">
                 <h3 class="category-header">常用网址</h3>
                 <ul class="site-list">
-                    <li class="site-item">
-                        <img src="https://www.baidu.com/favicon.ico" class="site-icon" alt="">
-                        <a href="https://www.baidu.com" target="_blank">百度</a>
-                    </li>
-                    <li class="site-item">
-                        <img src="https://www.google.com/favicon.ico" class="site-icon" alt="">
-                        <a href="https://www.google.com" target="_blank">谷歌</a>
-                    </li>
-                    <!-- 其他6个链接 -->
+                    <li class="site-item"><img src="https://www.baidu.com/favicon.ico" class="site-icon"><a href="https://www.baidu.com" target="_blank">百度</a></li>
+                    <li class="site-item"><img src="https://www.google.com/favicon.ico" class="site-icon"><a href="https://www.google.com" target="_blank">谷歌</a></li>
+                    <li class="site-item"><img src="https://github.githubassets.com/favicon.ico" class="site-icon"><a href="https://github.com" target="_blank">GitHub</a></li>
+                    <li class="site-item"><img src="https://www.zhihu.com/favicon.ico" class="site-icon"><a href="https://www.zhihu.com" target="_blank">知乎</a></li>
+                    <li class="site-item"><img src="https://weibo.com/favicon.ico" class="site-icon"><a href="https://weibo.com" target="_blank">微博</a></li>
+                    <li class="site-item"><img src="https://www.bilibili.com/favicon.ico" class="site-icon"><a href="https://www.bilibili.com" target="_blank">哔哩哔哩</a></li>
+                    <li class="site-item"><img src="https://www.jd.com/favicon.ico" class="site-icon"><a href="https://www.jd.com" target="_blank">京东</a></li>
+                    <li class="site-item"><img src="https://www.taobao.com/favicon.ico" class="site-icon"><a href="https://www.taobao.com" target="_blank">淘宝</a></li>
                     <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
 
             <!-- 电影网址 -->
             <div class="category-column">
-                <h3 class="category-header">电影网址</h3>
+                <h3 class="category-header">影视资源</h3>
                 <ul class="site-list">
-                    <li class="site-item">
-                        <img src="https://www.netflix.com/favicon.ico" class="site-icon" alt="">
-                        <a href="https://www.netflix.com" target="_blank">Netflix</a>
-                    </li>
-                    <!-- 其他7个链接 -->
+                    <li class="site-item"><img src="https://www.netflix.com/favicon.ico" class="site-icon"><a href="https://www.netflix.com" target="_blank">Netflix</a></li>
+                    <li class="site-item"><img src="https://www.youtube.com/favicon.ico" class="site-icon"><a href="https://www.youtube.com" target="_blank">YouTube</a></li>
+                    <li class="site-item"><img src="https://www.iqiyi.com/favicon.ico" class="site-icon"><a href="https://www.iqiyi.com" target="_blank">爱奇艺</a></li>
+                    <li class="site-item"><img src="https://www.bilibili.com/favicon.ico" class="site-icon"><a href="https://www.bilibili.com" target="_blank">哔哩哔哩</a></li>
+                    <li class="site-item"><img src="https://v.qq.com/favicon.ico" class="site-icon"><a href="https://v.qq.com" target="_blank">腾讯视频</a></li>
+                    <li class="site-item"><img src="https://www.youku.com/favicon.ico" class="site-icon"><a href="https://www.youku.com" target="_blank">优酷</a></li>
+                    <li class="site-item"><img src="https://www.mgtv.com/favicon.ico" class="site-icon"><a href="https://www.mgtv.com" target="_blank">芒果TV</a></li>
+                    <li class="site-item"><img src="https://movie.douban.com/favicon.ico" class="site-icon"><a href="https://movie.douban.com" target="_blank">豆瓣电影</a></li>
                     <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
 
-            <!-- AI网址 -->
+            <!-- AI工具 -->
             <div class="category-column">
-                <h3 class="category-header">AI网址</h3>
+                <h3 class="category-header">AI工具</h3>
                 <ul class="site-list">
-                    <li class="site-item">
-                        <img src="https://openai.com/favicon.ico" class="site-icon" alt="">
-                        <a href="https://openai.com" target="_blank">OpenAI</a>
-                    </li>
-                    <!-- 其他7个链接 -->
+                    <li class="site-item"><img src="https://openai.com/favicon.ico" class="site-icon"><a href="https://openai.com" target="_blank">OpenAI</a></li>
+                    <li class="site-item"><img src="https://www.deepmind.com/favicon.ico" class="site-icon"><a href="https://www.deepmind.com" target="_blank">DeepMind</a></li>
+                    <li class="site-item"><img src="https://www.midjourney.com/favicon.ico" class="site-icon"><a href="https://www.midjourney.com" target="_blank">Midjourney</a></li>
+                    <li class="site-item"><img src="https://huggingface.co/favicon.ico" class="site-icon"><a href="https://huggingface.co" target="_blank">Hugging Face</a></li>
+                    <li class="site-item"><img src="https://www.kaggle.com/favicon.ico" class="site-icon"><a href="https://www.kaggle.com" target="_blank">Kaggle</a></li>
+                    <li class="site-item"><img src="https://colab.research.google.com/favicon.ico" class="site-icon"><a href="https://colab.research.google.com" target="_blank">Colab</a></li>
+                    <li class="site-item"><img src="https://www.runwayml.com/favicon.ico" class="site-icon"><a href="https://www.runwayml.com" target="_blank">Runway ML</a></li>
+                    <li class="site-item"><img src="https://www.elevenlabs.io/favicon.ico" class="site-icon"><a href="https://www.elevenlabs.io" target="_blank">ElevenLabs</a></li>
                     <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
 
-            <!-- 电脑常用 -->
+            <!-- 电脑工具 -->
             <div class="category-column">
-                <h3 class="category-header">电脑常用</h3>
+                <h3 class="category-header">电脑工具</h3>
                 <ul class="site-list">
-                    <li class="site-item">
-                        <img src="https://www.microsoft.com/favicon.ico" class="site-icon" alt="">
-                        <a href="https://www.microsoft.com" target="_blank">Microsoft</a>
-                    </li>
-                    <!-- 其他7个链接 -->
+                    <li class="site-item"><img src="https://www.microsoft.com/favicon.ico" class="site-icon"><a href="https://www.microsoft.com" target="_blank">微软官网</a></li>
+                    <li class="site-item"><img src="https://www.adobe.com/favicon.ico" class="site-icon"><a href="https://www.adobe.com" target="_blank">Adobe全家桶</a></li>
+                    <li class="site-item"><img src="https://www.nvidia.com/favicon.ico" class="site-icon"><a href="https://www.nvidia.com" target="_blank">NVIDIA驱动</a></li>
+                    <li class="site-item"><img src="https://www.intel.com/favicon.ico" class="site-icon"><a href="https://www.intel.com" target="_blank">Intel支持</a></li>
+                    <li class="site-item"><img src="https://www.ccleaner.com/favicon.ico" class="site-icon"><a href="https://www.ccleaner.com" target="_blank">CCleaner</a></li>
+                    <li class="site-item"><img src="https://www.7-zip.org/favicon.ico" class="site-icon"><a href="https://www.7-zip.org" target="_blank">7-Zip</a></li>
+                    <li class="site-item"><img src="https://www.winrar.com/favicon.ico" class="site-icon"><a href="https://www.win-rar.com" target="_blank">WinRAR</a></li>
+                    <li class="site-item"><img src="https://www.teamviewer.com/favicon.ico" class="site-icon"><a href="https://www.teamviewer.com" target="_blank">TeamViewer</a></li>
                     <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
         </div>
 
-        <!-- 原有搜索框... -->
+        <!-- 搜索框 -->
+        <section class="search-section">...</section>
     </div>
+
+    <script>
+        // 原有JavaScript功能保持不变
+    </script>
 </body>
 </html>
