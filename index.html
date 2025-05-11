@@ -38,7 +38,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 5px 0;
+            padding: 3px 0;
             border-bottom: 1px solid var(--border-color);
             margin-bottom: 15px;
         }
@@ -89,23 +89,26 @@
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-            gap: 8px;
-            padding: 12px 0;
-            margin-bottom: 20px;
+            gap: 2px;
+            padding: 4px 0;
+            margin-bottom: 8px;
         }
 
         .service-item {
             list-style: none;
             text-align: center;
+            margin: 1px 0; 
         }
 
         .service-link {
             display: block;
-            padding: 6px;
-            font-size: 0.85rem;
+            padding:  3px 4px !important;
+            font-size: 0.82rem;
             color: var(--text-dark);
             text-decoration: none;
-            border-radius: 4px;
+
+ line-height: 1.15 !important; /* 行高再压缩 */
+    border-radius: 3px;          /* 圆角适配新尺寸 */
             transition: var(--transition);
         }
 
@@ -318,7 +321,134 @@
                 </div>
             </div>
         </section>
+<!-- 在搜索框section之后添加 -->
+<section class="news-bar">
+    <div class="news-container">
+        <span class="news-label">🔥 实时热榜</span>
+        <div class="scroll-wrapper">
+            <div class="news-scroll">
+                <a href="#" class="news-item"><span class="rank">1</span>OpenAI发布新一代语音模型</a>
+                <a href="#" class="news-item"><span class="rank">2</span>苹果WWDC前瞻：iOS 18将迎重大更新</a>
+                <a href="#" class="news-item"><span class="rank">3</span>嫦娥六号成功月背采样</a>
+                <a href="#" class="news-item"><span class="rank">4</span>全球首架电动客机完成试飞</a>
+                <a href="#" class="news-item"><span class="rank">5</span>AI医疗诊断准确率首超人类专家</a>
+            </div>
+        </div>
+    </div>
+</section>
 
+<style>
+/* 时尚条状新闻栏 */
+.news-bar {
+    max-width: 800px;
+    margin: 12px auto;
+    background: rgba(49,94,251,0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(49,94,251,0.15);
+    height: 40px; /* 固定高度 */
+    overflow: hidden;
+    position: relative;
+}
+
+.news-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 15px;
+}
+
+.news-label {
+    font-size: 0.9rem;
+    color: #315efb;
+    font-weight: 600;
+    padding-right: 20px;
+    border-right: 1px solid rgba(49,94,251,0.2);
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.scroll-wrapper {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(
+        to right, 
+        transparent 0%, 
+        #000 20px, 
+        #000 calc(100% - 20px), 
+        transparent 100%
+    );
+}
+
+.news-scroll {
+    display: inline-flex;
+    gap: 30px;
+    animation: scroll 100s linear infinite;
+animation-play-state: running; /* 明确默认状态 */
+    padding-right: 50%;
+    white-space: nowrap;
+}
+
+.news-item {
+    color: #2d3748;
+    font-size: 0.92rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    height: 40px;
+}
+
+.news-item:hover {
+    color: #315efb;
+    transform: translateY(-1px);
+}
+
+.rank {
+    background: #315efb;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+@media (max-width: 768px) {
+    .news-bar {
+        height: 36px;
+        margin: 10px auto;
+    }
+    
+    .news-label {
+        font-size: 0.85rem;
+        padding-right: 15px;
+        margin-right: 15px;
+    }
+    
+    .news-item {
+        font-size: 0.88rem;
+        height: 36px;
+    }
+    
+    .rank {
+        width: 20px;
+        height: 20px;
+        font-size: 0.76rem;
+    }
+}
+</style>
         <div class="content-columns">
             <!-- 常用网址 -->
             <div class="category-column">
@@ -428,6 +558,126 @@
                 `${date.getMonth()+1}月${date.getDate()}日 ${date.toLocaleDateString('zh-CN', options)}`;
         }
         setInterval(updateDate, 1000);
+  // 搜索引擎配置和原有函数保持不变...
+
+    // 预定义新闻池（可自行扩展）
+    const newsPool = [
+        "OpenAI发布新一代语音模型",
+        "苹果WWDC前瞻：iOS 18将迎重大更新",
+        "嫦娥六号成功月背采样",
+        "全球首架电动客机完成试飞",
+        "AI医疗诊断准确率首超人类专家",
+        "特斯拉发布全自动驾驶v12.5版本",
+        "SpaceX星舰完成第四次轨道试飞",
+        "量子计算机突破千量子比特大关",
+        "中国新能源汽车市占率突破60%",
+        "火星探测器发现液态水痕迹",
+        "DeepMind推出新一代蛋白质预测模型",
+        "全球首例脑机接口患者实现意念打字",
+        "5G-A网络正式进入商用阶段",
+        "我国成功发射风云五号气象卫星",
+        "室温超导材料研究取得新突破"
+    ];
+
+    // 随机获取10条不重复新闻
+    function getRandomNews() {
+        const shuffled = [...newsPool].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, 10).map((title, index) => ({
+            rank: index + 1,
+            title,
+            link: "#"
+        }));
+    }
+
+    // 更新热榜数据
+    function fetchHotNews() {
+        const newsData = getRandomNews();
+        const scrollContainer = document.querySelector('.news-scroll');
+        
+        // 克隆原有元素保持动画连续性
+        const newScroll = document.createElement('div');
+        newScroll.className = "news-scroll";
+        
+        newsData.forEach(item => {
+            const a = document.createElement('a');
+            a.className = "news-item";
+            a.href = item.link;
+            a.target = "_blank";
+            a.innerHTML = `<span class="rank">${item.rank}</span>${item.title}`;
+            newScroll.appendChild(a);
+        });
+
+        // 平滑过渡处理
+        scrollContainer.parentNode.replaceChild(newScroll, scrollContainer);
+        newScroll.style.animation = 'none';
+        void newScroll.offsetWidth; // 触发重绘
+        newScroll.style.animation = 'scroll 30s linear infinite';
+    }
+
+    // 初始化时立即执行
+    fetchHotNews();
+    
+    // 每10分钟更新一次（测试时可改为更短时间）
+    setInterval(fetchHotNews, 10 * 60 * 1000);
+   // ▼▼▼ 在原有JavaScript末尾添加以下代码 ▼▼▼
+        // 预定义新闻池
+        const newsPool = [
+            "OpenAI发布新一代语音模型",
+            "苹果WWDC前瞻：iOS 18将迎重大更新",
+            "嫦娥六号成功月背采样",
+            "全球首架电动客机完成试飞",
+            "AI医疗诊断准确率首超人类专家",
+            "特斯拉发布全自动驾驶v12.5版本",
+            "SpaceX星舰完成第四次轨道试飞",
+            "量子计算机突破千量子比特大关",
+            "中国新能源汽车市占率突破60%",
+            "火星探测器发现液态水痕迹",
+            "DeepMind推出新一代蛋白质预测模型",
+            "全球首例脑机接口患者实现意念打字",
+            "5G-A网络正式进入商用阶段",
+            "我国成功发射风云五号气象卫星",
+            "室温超导材料研究取得新突破"
+        ];
+
+        // 随机获取10条新闻
+        function getRandomNews() {
+            const shuffled = [...newsPool].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 10).map((title, index) => ({
+                rank: index + 1,
+                title,
+                link: "#"
+            }));
+        }
+
+        // 更新热榜数据
+        function fetchHotNews() {
+            const newsData = getRandomNews();
+            const scrollContainer = document.querySelector('.news-scroll');
+            
+            // 清空旧内容
+            scrollContainer.innerHTML = "";
+            
+            // 添加新内容
+            newsData.forEach(item => {
+                const a = document.createElement('a');
+                a.className = "news-item";
+                a.href = item.link;
+                a.target = "_blank";
+                a.innerHTML = `<span class="rank">${item.rank}</span>${item.title}`;
+                scrollContainer.appendChild(a);
+            });
+
+            // 重置动画确保流畅
+            scrollContainer.style.animation = 'none';
+            void scrollContainer.offsetWidth; // 触发重绘
+            scrollContainer.style.animation = 'scroll 60s linear infinite';
+        }
+
+        // 初始化
+        fetchHotNews();
+        // 每10分钟更新（测试时可设为10000即10秒）
+        setInterval(fetchHotNews, 10 * 60 * 1000);
+        // ▲▲▲ 新增JavaScript结束 ▲▲▲
     </script>
 </body>
 </html>
