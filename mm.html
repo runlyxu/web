@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影视音乐导航</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        /* 修复滚动问题 */
+        body {
+            background: linear-gradient(160deg, 
+                #006994 0%, 
+                #008cba 30%, 
+                #00b4d8 70%, 
+                #90e0ef 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto; /* 允许垂直滚动 */
+        }
+
+        .wave-container {
+            position: fixed; /* 固定定位 */
+            width: 200%;
+            height: 100vh;
+            left: -50%;
+            top: 0;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 1; /* 确保在内容下方 */
+        }
+
+        /* 新增内容容器 */
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            padding-bottom: 100px; /* 底部留白 */
+        }
+
+        /* 以下是您原有的完整样式 */
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 150px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 43% 47% 42% 44%;
+            animation: waveFlow 20s linear infinite;
+        }
+
+        @keyframes waveFlow {
+            0% { transform: rotate(0deg) scale(1.2); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            100% { transform: rotate(360deg) scale(1.2); }
+        }
+
+        .wave:nth-child(1) {
+            top: 20%;
+            animation-duration: 25s;
+            filter: blur(3px);
+        }
+        .wave:nth-child(2) {
+            top: 45%;
+            animation-duration: 20s;
+            animation-delay: -5s;
+            filter: blur(5px);
+        }
+        .wave:nth-child(3) {
+            top: 70%;
+            animation-duration: 15s;
+            animation-delay: -10s;
+            filter: blur(7px);
+        }
+
+        .special-area {
+            max-width: 1000px;
+            margin: 50px auto;
+            position: relative;
+            z-index: 2;
+            padding: 0 15px;
+        }
+
+        .area-title {
+            font-size: 1.5rem;
+            color: #fff;
+            padding-bottom: 8px;
+            margin-bottom: 30px;
+            display: inline-block;
+            position: relative;
+        }
+
+        @keyframes underlineBlink {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        .area-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                #FF007F 30%,
+                #FF1493 50%,
+                #FF007F 70%,
+                transparent
+            );
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            animation: underlineBlink 1.5s ease-in-out infinite;
+        }
+
+        .movie-columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .movie-section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 15px;
+            backdrop-filter: blur(2px);
+            max-height: 600px; /* 限制最大高度 */
+            overflow-y: auto;  /* 版块内部可滚动 */
+        }
+
+        .section-title {
+            color: #7CFC00 !important;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            margin: -15px -15px 20px;
+            padding: 12px 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0,77,122,0.15) 30%, 
+                rgba(0,119,182,0.25) 50%, 
+                rgba(0,77,122,0.15) 70%, 
+                transparent
+            );
+            border-radius: 8px;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+        }
+
+        .nav-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            padding: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .icon-frame {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 50%;
+            margin: 0 auto 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .site-icon {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .site-title {
+            color: #fff;
+            font-size: 12px;
+            line-height: 1.3;
+            text-align: center;
+            width: 100%;
+            padding: 0 2px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-4px);
+        }
+        .nav-card:hover .icon-frame {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+        .nav-card:hover .site-icon {
+            transform: scale(1.15) rotate(8deg);
+        }
+        .nav-card:hover .site-title {
+            color: #ffeb3b;
+        }
+
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .movie-columns {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .area-title {
+                font-size: 1.3rem;
+            }
+            
+            .icon-frame {
+                width: 55px;
+                height: 55px;
+            }
+            
+            .site-title {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wave-container">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <!-- 新增内容容器 -->
+    <div class="content-wrapper">
+        <!-- 影视专区 -->
+        <div class="special-area">
+            <h2 class="area-title">🎬 影视专区</h2>
+            <div class="movie-columns">
+                <!-- 精彩综合 -->
+                <div class="movie-section">
+                    <div class="section-title">精彩综合</div>
+                    <div class="music-grid">
+                        <a href="https://www.douyin.com/user/self?from_tab_name=main&modal_id=7346457751373106451&showTab=post" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.douyin.com/favicon.ico" class="site-icon" alt="抖音">
+                            </div>
+                            <div class="site-title">抖音</div>
+                        </a>
+                        <a href="https://www.kuaishou.com" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.kuaishou.com/favicon.ico" class="site-icon" alt="快手">
+                            </div>
+                            <div class="site-title">快手</div>
+ </a>
+                        <a href="https://www.yangshipin.cn" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.yangshipin.cn/favicon.ico" class="site-icon" alt="央视频">
+                            </div>
+                            <div class="site-title">央视频</div>
+ </a>
+                        <a href="https://https://www.acfun.cn" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.acfun.cn/favicon.ico" class="site-icon" alt="AcFun（A站）">
+                            </div>
+                            <div class="site-title">AcFun（A站）</div>
+ </a>
+                        <a href="https://www.le.com/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.le.com/favicon.ico" class="site-icon" alt="乐视视频">
+                            </div>
+                            <div class="site-title">乐视视频</div>
+ </a>
+                        <a href="https://tv.sohu.com/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://tv.sohu.com/favicon.ico" class="site-icon" alt="搜狐视频">
+                            </div>
+                            <div class="site-title">搜狐视频</div>
+ </a>
+                        <a href="https://www.1905.com/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.1905.com/favicon.ico" class="site-icon" alt="1905">
+                            </div>
+                            <div class="site-title">1905</div>
+                        </a>
+                        <a href="https://haokan.baidu.com" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://haokan.baidu.com/favicon.ico" class="site-icon" alt="好看视频">
+                            </div>
+                            <div class="site-title">好看视频</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 免费电影 -->
+                <div class="movie-section">
+                    <div class="section-title">免费电影</div>
+                    <div class="music-grid">
+                        <a href="https://www.6vdyy.com/mj/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.6vdyy.com/favicon.ico" class="site-icon" alt="6电视">
+                            </div>
+                            <div class="site-title">6电影</div>
+</a>
+                        <a href="https://www.163kp.com/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.163kp.com/favicon.ico" class="site-icon" alt="小苹果视频">
+                            </div>
+                            <div class="site-title">小苹果视频</div>
+
+</a>
+                        <a href="https://www.77kkpp.com/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.77kkpp.com/favicon.ico" class="site-icon" alt="七七电影">
+                            </div>
+                            <div class="site-title">七七电影</div>
+
+</a>
+                        <a href="https://www.dygod.org/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.dygod.org/favicon.ico" class="site-icon" alt="电影天堂">
+                            </div>
+                            <div class="site-title">电影天堂</div>
+
+</a>
+                        <a href="http://www.shrzw.net/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="http://www.shrzw.net/favicon.ico" class="site-icon" alt="天狼影院">
+                            </div>
+                            <div class="site-title">天狼影院</div>
+
+</a>
+                        <a href="https://video.isyour.love/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://video.isyour.love/favicon.ico" class="site-icon" alt="播放搜寻">
+                            </div>
+                            <div class="site-title">播放搜寻</div>
+</a>
+                        <a href="https://publicdomainmovie.net/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://publicdomainmovie.net/favicon.ico" class="site-icon" alt="国际公映网">
+                            </div>
+                            <div class="site-title">国际公映网</div>
+
+                        </a>
+                        <a href="https://www.agemys.org" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.agemys.org/favicon.ico" class="site-icon" alt="AGE动漫">
+                            </div>
+                            <div class="site-title">AGE动漫</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!--三级AV -->
+                <div class="movie-section">
+                    <div class="section-title">优选电影</div>
+                    <div class="music-grid">
+                        <a href="https://www.netflix.com" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.netflix.com/favicon.ico" class="site-icon" alt="Netflix">
+                            </div>
+                            <div class="site-title">Netflix</div>
+                        </a>
+</a>
+                        <a href="https://www.runly.com.cn/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://cn.pornhub.com/favicon.ico" class="site-icon" alt="Pornhub">
+                            </div>
+                            <div class="site-title">Pornhub</div>
+
+</a>
+                        <a href="https://www.runly.com.cn/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.xvideos.com/favicon.ico" class="site-icon" alt="xvideos">
+                            </div>
+                            <div class="site-title">xvideos</div>
+
+</a>
+                        <a href="https://www.runly.com.cn/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="	https://www.youporn.com/favicon.ico" class="site-icon" alt="youporn">
+                            </div>
+                            <div class="site-title">youporn</div>
+
+</a>
+                        <a href="https://www.runly.com.cn/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://91porn.com/favicon.ico" class="site-icon" alt="91影视">
+                            </div>
+                            <div class="site-title">91影视</div>
+
+</a>
+                        <a href="	https://www.tiktok.com" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="	https://www.tiktok.com/favicon.ico" class="site-icon" alt="TikTok">
+                            </div>
+                            <div class="site-title">TikTok</div>
+
+</a>
+                        <a href="https://www.dailymotion.com/" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.dailymotion.com/favicon.ico" class="site-icon" alt="Dailymotion">
+                            </div>
+                            <div class="site-title">Dailymotion</div>
+
+                        <a href="https://www.disneyplus.com" class="nav-card" target="_blank">
+                            <div class="icon-frame">
+                                <img src="https://www.disneyplus.com/favicon.ico" class="site-icon" alt="Disney+">
+                            </div>
+                            <div class="site-title">Disney+</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 音乐专区 -->
+        <div class="special-area">
+            <h2 class="area-title">🎵 音乐专区</h2>
+            <div class="music-grid">
+                
+                <a href="https://www.kuwo.cn/" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://www.kuwo.cn/favicon.ico" class="site-icon" alt="配我音乐">
+                    </div>
+                    <div class="site-title">酷我音乐</div>
+                </a>
+<a href="https://y.qq.com" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://y.qq.com/favicon.ico" class="site-icon" alt="QQ音乐">
+                    </div>
+                    <div class="site-title">QQ音乐</div>
+                </a>
+<a href="https://www.kugou.com/" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://www.kugou.com/favicon.ico" class="site-icon" alt="酷狗音乐">
+                    </div>
+                    <div class="site-title">酷狗音乐</div>
+                </a>
+<a href="https://music.taihe.com/" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://music.taihe.com/favicon.ico" class="site-icon" alt="千千音乐">
+                    </div>
+                    <div class="site-title">千千音乐</div>
+                </a>
+<a href="https://music.youtube.com/" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://music.youtube.com/favicon.ico" class="site-icon" alt="Youtube音乐（海外）">
+                    </div>
+                    <div class="site-title">Youtube音乐（海外）</div>
+                </a>
+<a href="https://open.spotify.com/" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://open.spotify.com/favicon.ico" class="site-icon" alt="Spotify（海外）">
+                    </div>
+                    <div class="site-title">Spotify（海外）</div>
+                </a>
+<a href="https://soundcloud.com/" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://soundcloud.com/favicon.ico" class="site-icon" alt="音乐云（海外）">
+                    </div>
+                    <div class="site-title">音乐云（海外）</div>
+                </a>
+<a href="https://audiomack.com/" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://audiomack.com/favicon.ico" class="site-icon" alt="Audiomack（海外）">
+                    </div>
+                    <div class="site-title">Audiomack（海外）</div>
+                </a>
+<a href="https://pixabay.com/" class="nav-card" target="_blank">
+                    <div class="icon-frame">
+                        <img src="https://pixabay.com/favicon.ico" class="site-icon" alt="无版权音乐（海外）">
+                    </div>
+                    <div class="site-title">无版权音乐（海外）</div>
+                </a>
+
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

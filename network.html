@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络专区 - 双蝶飞舞</title>
+    <style>
+        /* 原始背景和蝴蝶样式 - 不变 */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(160deg, #b3d9ff 20%, #8ab5ff 80%); /* 淡雅的蓝紫色渐变 */
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Microsoft YaHei', Arial, sans-serif; /* 更常用的中文字体 */
+            color: #333; /* 基础文字颜色 */
+        }
+
+        .butterfly {
+            position: fixed;
+            width: 100px; /* 蝴蝶大小调整，使其不那么显眼 */
+            opacity: 0;
+            transform-origin: center;
+            z-index: 1000; /* 确保蝴蝶在内容之上 */
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .left-wing { animation: flapL 2.8s ease-in-out infinite; }
+        .right-wing { animation: flapR 2.8s ease-in-out infinite; }
+
+        @keyframes flapL {
+            0%,100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(40deg); }
+        }
+        @keyframes flapR {
+            0%,100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(-40deg); }
+        }
+
+        #butterfly1 { filter: drop-shadow(0 0 6px #d8bfd8aa); } /* 淡紫色蝴蝶阴影，略微透明 */
+        #butterfly2 { filter: drop-shadow(0 0 6px #ff8095aa); } /* 粉色蝴蝶阴影，略微透明 */
+
+        /* 新布局样式 */
+        .page-wrapper {
+            max-width: 960px; /* 页面内容最大宽度 */
+            margin: 0 auto;
+            padding: 20px 20px 60px; /* 抬高标题，减少顶部内边距 */
+            position: relative;
+            z-index: 1; /* 内容在蝴蝶之下，但在背景之上 */
+        }
+
+        .main-header-title {
+            text-align: center;
+            font-size: 1.9em; /* 主标题字号缩小 (原2.8em) */
+            color: #5e35b1; /* 深紫色，与背景协调 */
+            margin-bottom: 60px; /* 与下方内容间距增加为原来的两倍 (原30px) */
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .content-area {
+            margin-bottom: 35px;
+            background-color: rgba(255, 255, 255, 0.75); /* 轻微透明的白色背景 */
+            backdrop-filter: blur(8px); /* 毛玻璃效果增强质感 */
+            border-radius: 16px; /* 更大的圆角 */
+            padding: 20px 25px; /* 内边距 */
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* 柔和阴影 */
+        }
+
+        /* 标题和搜索条的容器 */
+        .header-and-search-container {
+            display: flex;
+            justify-content: space-between; /* 标题左对齐，搜索条右对齐 */
+            align-items: center; /* 垂直居中对齐 */
+            margin-bottom: 20px; /* 控制整个区域与下方内容的间距 */
+            flex-wrap: wrap; /* 允许在小屏幕上换行 */
+            padding-bottom: 8px; /* 模拟标题下划线的效果，让标题和搜索条下方有一条线 */
+            border-bottom: 2px solid #ede7f6; /* 淡紫色下划线 */
+        }
+
+        .area-title {
+            font-size: 1.15em; /* 分区标题字号缩小 (原1.7em) */
+            color: #7e57c2; /* 紫色系，比主标题略浅 */
+            margin-top: 0;
+            margin-bottom: 0; /* 移除原有的 margin-bottom，由 .header-and-search-container 统一控制 */
+            text-align: left; /* 标题靠左 */
+            font-weight: 500;
+            flex-grow: 1; /* 确保标题在 flex 容器中可以占据空间 */
+            flex-shrink: 1; /* 允许标题在必要时收缩 */
+            margin-right: 15px; /* 标题与搜索条之间的间距 */
+        }
+
+        /* 软件分区特定样式 */
+        .software-item {
+            display: flex;
+            flex-wrap: wrap; /* 在小屏幕上换行 */
+            align-items: center;
+            margin-bottom: 3.375px; /* 条目间距缩小四分之一 (原4.5px) */
+            padding: 3.6px; /* 内边距缩小四分之一 (原4.8px) */
+            background-color: rgba(248, 245, 252, 0.9); /* 非常淡的紫色背景 */
+            border-radius: 10px; /* 条目圆角 */
+            transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+        }
+        .software-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .software-name-label {
+            flex: 0 0 160px; /* 软件名固定宽度 */
+            background-color: #b39ddb; /* 淡雅紫色矩形背景 */
+            color: white;
+            padding: 3.15px 5.4px; /* 垂直内边距缩小四分之一 (原4.2px) */
+            border-radius: 6px; /* 轻微圆角 */
+            font-weight: bold;
+            text-align: center;
+            margin-right: 15px; /* 与简介条的间距 */
+            font-size: 0.9em;
+            line-height: 1.3; /* 控制行高以适应内容 */
+            height: auto; /* 高度自适应 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .software-info-bar {
+            flex-grow: 1; /* 占据剩余空间 */
+            min-width: 150px; /* 简介最小宽度调整，避免过窄 (原200px) */
+            background-color: #f3e5f5; /* 更淡的紫色圆角长条 */
+            color: #4a4a4a; /* 深灰色文字 */
+            padding: 3.15px 6.75px; /* 垂直内边距缩小四分之一 (原4.2px) */
+            border-radius: 15px; /* 圆角长条 */
+            font-size: 0.85em;
+            line-height: 1.4;
+            height: auto; /* 高度自适应 */
+            display: flex;
+            align-items: center;
+        }
+
+        .download-button-group {
+            display: flex;
+            gap: 8px; /* 按钮间距 */
+            flex-shrink: 0; /* 防止按钮组被压缩 */
+            margin-left: 15px; /* 新增：简介条与按钮组之间的间距 */
+        }
+
+        .download-button-group a {
+            background-color: #9575cd; /* 紫色按钮 */
+            color: white;
+            padding: 2.7px 6.3px; /* 垂直内边距缩小四分之一 (原3.6px) */
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8em;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            white-space: nowrap; /* 防止文字换行 */
+        }
+        .download-button-group a:hover {
+            background-color: #7e57c2; /* 深一点的紫色 */
+            transform: translateY(-1px);
+        }
+
+        /* 疑难问题区特定样式 */
+        .issue-link-bar {
+            display: block; /* 使整个条块可点击 */
+            background-color: #f3e5f5; /* 淡紫色圆角长条 */
+            color: #512da8; /* 较深的紫色文字，增加对比 */
+            padding: 7px 18px; /* 垂直内边距缩小 (原10px) */
+            border-radius: 15px; /* 圆角 */
+            margin-bottom: 6px; /* 条目间距缩小一半 (原12px) */
+            text-decoration: none;
+            font-size: 0.9em;
+            line-height: 1.5;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            min-height: auto; /* 移除最小高度，让padding控制 */
+            height: auto;
+        }
+        .issue-link-bar:hover {
+            background-color: #ede7f6; /* 悬停时背景变浅一点，更柔和 */
+            color: #4527a0; /* 悬停时文字颜色变深 */
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+
+        /* 搜索框样式优化 */
+        .search-container {
+            /* 移除绝对定位相关的属性，现在由flex父容器控制位置 */
+            /* position: absolute; */
+            /* top: 25px; */
+            /* right: 25px; */
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 8px 12px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            margin-left: auto; /* 在flex容器中将其推到右侧 */
+            flex-shrink: 0; /* 防止被压缩 */
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 14px; /* 缩小内边距 */
+            border: 1px solid #dcdcdc; /* 浅色边框 */
+            border-radius: 18px; /* 圆角与容器匹配 */
+            font-size: 0.88em; /* 稍微缩小字号 */
+            outline: none;
+            width: 140px; /* 默认宽度更小巧 */
+            transition: width 0.3s ease-in-out, border-color 0.3s ease;
+            background-color: #fcfcfc; /* 浅色背景 */
+            color: #333;
+        }
+
+        .search-container input[type="text"]:focus {
+            width: 180px; /* 焦点时宽度适度增长 */
+            border-color: #7e57c2; /* 焦点时边框颜色 */
+            box-shadow: 0 0 0 2px rgba(126, 87, 194, 0.2); /* 焦点时柔和的光晕 */
+        }
+
+        .search-container button {
+            background-color: #9575cd; /* 按钮背景色 */
+            color: white;
+            border: none;
+            padding: 6px 12px; /* 缩小内边距 */
+            border-radius: 18px; /* 圆角与输入框匹配 */
+            cursor: pointer;
+            font-size: 0.88em; /* 统一字号 */
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* 按钮阴影 */
+            white-space: nowrap; /* 防止文字换行 */
+        }
+
+        .search-container button:hover {
+            background-color: #7e57c2;
+            transform: translateY(-1px); /* 悬停时轻微上浮 */
+        }
+        .search-container button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-nav-buttons {
+            display: flex;
+            gap: 5px;
+            margin-left: 8px; /* 导航按钮与搜索按钮之间间距 */
+        }
+
+        .search-nav-buttons button {
+            padding: 5px 10px; /* 导航按钮更小巧 */
+            font-size: 0.8em; /* 导航按钮字号更小 */
+            border-radius: 15px; /* 导航按钮圆角 */
+        }
+
+        /* 搜索结果高亮样式 */
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        /* 当前高亮结果样式 */
+        .active-highlight {
+            background-color: orange; /* 当前高亮的背景色 */
+            outline: 2px solid #5e35b1; /* 当前高亮的边框，与主标题颜色协调 */
+            transition: background-color 0.2s, outline 0.2s;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .main-header-title {
+                font-size: 1.6em;
+            }
+            .area-title {
+                font-size: 1.0em;
+            }
+            .software-item {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 2.7px;
+            }
+            .software-name-label {
+                margin-right: 0;
+                margin-bottom: 3.6px;
+                flex-basis: auto;
+                padding: 2.25px 4.5px;
+            }
+            .software-info-bar {
+                margin-right: 0;
+                margin-bottom: 3.6px;
+                text-align: center;
+                justify-content: center;
+                min-width: auto;
+                padding: 2.25px 5.4px;
+            }
+            .download-button-group {
+                justify-content: center;
+                width: 100%;
+                margin-left: 0;
+            }
+            .download-button-group a {
+                flex-grow: 1;
+                text-align: center;
+                padding: 2.25px 4.5px;
+            }
+            .issue-link-bar {
+                padding: 6px 15px;
+            }
+
+            /* 搜索框在小屏幕下的调整 */
+            .header-and-search-container {
+                flex-direction: column; /* 垂直堆叠 */
+                align-items: center; /* 居中显示 */
+                margin-bottom: 25px; /* 增加整体区域的下方间距 */
+                border-bottom: none; /* 小屏幕下移除下划线，或者调整为其他样式 */
+                padding-bottom: 0;
+            }
+            .area-title {
+                text-align: center; /* 标题居中 */
+                width: 100%; /* 占据整行 */
+                margin-right: 0; /* 移除右侧间距 */
+                margin-bottom: 15px; /* 标题与搜索条之间的间距 */
+                padding-bottom: 0; /* 移除内边距 */
+                border-bottom: none; /* 移除下划线 */
+            }
+            .search-container {
+                position: relative; /* 恢复相对定位，融入文档流 */
+                top: auto;
+                right: auto;
+                justify-content: center; /* 居中显示 */
+                margin: 0 auto; /* 自动边距居中 */
+                flex-wrap: wrap; /* 允许换行 */
+                max-width: 90%; /* 限制最大宽度 */
+                width: fit-content; /* 宽度适应内容 */
+                padding: 10px 15px;
+            }
+            .search-container input[type="text"] {
+                width: 100%; /* 全宽 */
+                max-width: 280px; /* 限制最大宽度 */
+                margin-bottom: 8px; /* 输入框与按钮之间间距 */
+                text-align: center; /* 文本居中 */
+            }
+            .search-container button, .search-nav-buttons button {
+                flex-grow: 1; /* 按钮平分空间 */
+                max-width: 100px; /* 限制按钮最大宽度 */
+            }
+            .search-nav-buttons {
+                margin-left: 0; /* 移除左边距 */
+                width: 100%; /* 占据整行 */
+                justify-content: center; /* 内部按钮居中 */
+                margin-top: 5px; /* 与上方输入框的间距 */
+            }
+        }
+         @media (max-width: 480px) {
+            .page-wrapper {
+                padding: 20px 15px 40px;
+            }
+            .main-header-title {
+                font-size: 1.4em;
+                margin-bottom: 25px;
+            }
+            .area-title {
+                font-size: 0.9em;
+                margin-bottom: 15px;
+            }
+             .software-name-label {
+                padding: 2.25px 4.5px;
+             }
+             .software-info-bar {
+                padding: 2.25px 5.4px;
+             }
+             .download-button-group a {
+                padding: 2.25px 4.5px;
+             }
+             .issue-link-bar {
+                padding: 6px 15px;
+            }
+            .search-container {
+                max-width: 95%; /* 更窄的屏幕上稍微扩大宽度 */
+            }
+            .search-container input[type="text"] {
+                max-width: 200px; /* 更窄的屏幕上进一步限制输入框宽度 */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="butterfly1" class="butterfly">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 429">
+            <defs><linearGradient id="grad1_v2"><stop offset="0%" stop-color="#d8bfd8"/><stop offset="100%" stop-color="#b19cd9"/></linearGradient></defs>
+            <g class="left-wing"><path fill="url(#grad1_v2)" d="M42.56,2.5c-8.1,6.9-11.3,21.2-16.1,71-3.9,41.1-6.6,57.7-13.6,83-2.9,10.5-3.5,14.1-3.1,18.9,1.6,17.6,20.9,37.3,52.2,53.3,13.2,6.7,39.3,17,58,22.8,15.2,4.7,45.5,12.5,48.6,12.5,2.4,0,2.9-3.9,2.9-24.9,0-39.9-7-88.3-16.9-118.2-11.4-33.9-28.4-59-64.1-94.8C71.96,7.7,60.36,0,50.96,0c-4.3,0-6,.5-8.4,2.5Z"/><path fill="url(#grad1_v2)" d="M32.76,237.1c-8.9,2.6-22.4,26.1-28.7,49.9-6.4,24.2-5.2,44.6,3.4,56.3,15.6,21.2,52,13.3,107-23.2,12.3-8.1,27.6-20.9,37.6-31.2,8.2-8.5,16.5-19,15.8-20.1-0.3-0.4-2.1-0.8-4.1-0.8-5.3,0-23.5-4.8-56-14.9-46.7-14.5-66.1-18.6-75-16Z"/></g>
+            <g class="right-wing"><path fill="url(#grad1_v2)" d="M405.16,119c-20.1,2.3-56.1,10.1-72.2,15.7-29.1,10.1-53,25.5-79.6,51.1-14.6,14-31.7,32.8-43.9,48.2-9.9,12.5-24.2,33.8-23.7,35.4,0.4,1.3,26.4,12,41.3,17,15.7,5.3,56,15.2,69.2,17,6.2,0.9,17.7,1.6,25.5,1.6,27.2,0,42.9-6.5,50.5-20.8,1.8-3.3,3.2-6.6,3.2-7.3,0-2.4,11.2-29.4,17.2-41.4,3.3-6.6,13.7-25.5,23.1-42,23.1-40.7,28.1-52.3,26.2-62.1-0.9-4.8-5.9-9.9-11.1-11.3-6.1-1.5-17.1-2-25.7-1.1Z"/><path fill="url(#grad1_v2)" d="M184.86,285.1c1.7,29,12.1,63.5,29.2,96.9,7.8,15.3,14.8,25.5,23.3,34.1,10,9.9,16.8,13.4,26.6,13.4s15-2.8,24-11.9c16.2-16.5,28.5-49.1,28.5-75.6,0-9.6-1.4-14-5.2-17.2-4-3.4-19-11.2-31.8-16.6-18.3-7.8-84-31.7-92.9-33.9l-2.4-0.6.7,11.4Z"/></g>
+            <path fill="url(#grad1_v2)" d="M189.66,216.6c-1.2,0.8-2.2,2.5-2.2,3.8,0,1.2-1.2,3.8-2.6,5.7-4.6,6.2-6.3,10.5-7.4,19.5-2,15.2-3.7,20.9-10.8,35.1-10.1,20.3-11.2,23.9-11.1,38.1,0.1,17,0.3,17.2,7.7,7.8,3.4-4.2,7.3-9.6,8.6-11.9,3.2-5.4,6.1-16.6,8.1-31.2,1.8-13.4,3.7-18.9,11.2-33.2,5-9.8,5.3-10.7,5.3-17.7,0-4.1,0.5-7.8,1-8.1,1.7-1,1.1-6.1-0.8-7.8-2.3-2.1-4.1-2.1-7,0.1Z"/>
+        </svg>
+    </div>
+
+    <div id="butterfly2" class="butterfly">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 429">
+            <defs><linearGradient id="grad2_v2"><stop offset="0%" stop-color="#ffb3ba"/><stop offset="100%" stop-color="#ff8095"/></linearGradient></defs>
+            <g class="left-wing"><path fill="url(#grad2_v2)" d="M42.56,2.5c-8.1,6.9-11.3,21.2-16.1,71-3.9,41.1-6.6,57.7-13.6,83-2.9,10.5-3.5,14.1-3.1,18.9,1.6,17.6,20.9,37.3,52.2,53.3,13.2,6.7,39.3,17,58,22.8,15.2,4.7,45.5,12.5,48.6,12.5,2.4,0,2.9-3.9,2.9-24.9,0-39.9-7-88.3-16.9-118.2-11.4-33.9-28.4-59-64.1-94.8C71.96,7.7,60.36,0,50.96,0c-4.3,0-6,.5-8.4,2.5Z"/><path fill="url(#grad2_v2)" d="M32.76,237.1c-8.9,2.6-22.4,26.1-28.7,49.9-6.4,24.2-5.2,44.6,3.4,56.3,15.6,21.2,52,13.3,107-23.2,12.3-8.1,27.6-20.9,37.6-31.2,8.2-8.5,16.5-19,15.8-20.1-0.3-0.4-2.1-0.8-4.1-0.8-5.3,0-23.5-4.8-56-14.9-46.7-14.5-66.1-18.6-75-16Z"/></g>
+            <g class="right-wing"><path fill="url(#grad2_v2)" d="M405.16,119c-20.1,2.3-56.1,10.1-72.2,15.7-29.1,10.1-53,25.5-79.6,51.1-14.6,14-31.7,32.8-43.9,48.2-9.9,12.5-24.2,33.8-23.7,35.4,0.4,1.3,26.4,12,41.3,17,15.7,5.3,56,15.2,69.2,17,6.2,0.9,17.7,1.6,25.5,1.6,27.2,0,42.9-6.5,50.5-20.8,1.8-3.3,3.2-6.6,3.2-7.3,0-2.4,11.2-29.4,17.2-41.4,3.3-6.6,13.7-25.5,23.1-42,23.1-40.7,28.1-52.3,26.2-62.1-0.9-4.8-5.9-9.9-11.1-11.3-6.1-1.5-17.1-2-25.7-1.1Z"/><path fill="url(#grad2_v2)" d="M184.86,285.1c1.7,29,12.1,63.5,29.2,96.9,7.8,15.3,14.8,25.5,23.3,34.1,10,9.9,16.8,13.4,26.6,13.4s15-2.8,24-11.9c16.2-16.5,28.5-49.1,28.5-75.6,0-9.6-1.4-14-5.2-17.2-4-3.4-19-11.2-31.8-16.6-18.3-7.8-84-31.7-92.9-33.9l-2.4-0.6.7,11.4Z"/></g>
+            <path fill="url(#grad2_v2)" d="M189.66,216.6c-1.2,0.8-2.2,2.5-2.2,3.8,0,1.2-1.2,3.8-2.6,5.7-4.6,6.2-6.3,10.5-7.4,19.5-2,15.2-3.7,20.9-10.8,35.1-10.1,20.3-11.2,23.9-11.1,38.1,0.1,17,0.3,17.2,7.7,7.8,3.4-4.2,7.3-9.6,8.6-11.9,3.2-5.4,6.1-16.6,8.1-31.2,1.8-13.4,3.7-18.9,11.2-33.2,5-9.8,5.3-10.7,5.3-17.7,0-4.1,0.5-7.8,1-8.1,1.7-1,1.1-6.1-0.8-7.8-2.3-2.1-4.1-2.1-7,0.1Z"/>
+        </svg>
+    </div>
+
+    <div class="page-wrapper">
+        <h1 class="main-header-title">网络专区</h1>
+
+        <div class="content-area">
+            <div class="header-and-search-container">
+                <h2 class="area-title">软件分区</h2>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="搜索本页内容...">
+                    <button onclick="searchPage()">搜索</button>
+                    <div class="search-nav-buttons">
+                        <button id="prevButton" disabled>上一个</button>
+                        <button id="nextButton" disabled>下一个</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="software-item">
+                <div class="software-name-label">奶瓶beini</div>
+                <div class="software-info-bar">WIFI强破解工具。</div>
+                <div class="download-button-group">
+                    <a href="https://lib.dgrcc.com/down/soft/beini_downyi.com.zip"_blank" title="默认解压密码：www.downyi.com">直接下载</a>
+                    <a href="https://www.downza.cn/soft/183837.html" target="_blank" title="网盘下载奶瓶修改beini">网络教程</a>
+                </div>
+            </div>
+
+            <div class="software-item">
+                <div class="software-name-label">小黑猫Clash</div>
+                <div class="software-info-bar">网络代理工具，加速工具。</div>
+                <div class="download-button-group">
+                    <a href="https://clashforwindows.net/files/Clash.for.Windows.Setup.0.20.39.exe" target="_blank" title="小黑猫Clash FOR win">直接下载</a>
+                    <a href="http://pan.ishaohuang.com/soft/com.github.kr328.clash.apk"_blank" title="安卓版">安卓下载</a>
+                </div>
+            </div>
+     <div class="software-item">
+                <div class="software-name-label">天易成网管</div>
+                <div class="software-info-bar">局域网网络管理工具，是国内网络监控领域里领先的上网行为管理软件</div>
+                <div class="download-button-group">
+                    <a href="http://dz1.9a9m.com/data/nfs//4/tycwgqypjb_9a9m.com.zip="_blank" title="天易成">直接下载</a>
+                    <a href="https://download.downza.cn/hudsnjkl/190081?module=soft&id=190081&token=69e5b9bb505764019ed710028e5d3d9b&isxzq=1"_blank" title="天易成">直接下载</a>
+
+                </div>
+            </div>
+
+
+     <div class="software-item">
+                <div class="software-name-label">WorkWin永久破解版</div>
+                <div class="software-info-bar">计算机监视、控制与管理于一体的网络监控软件。</div>
+                <div class="download-button-group">
+                    <a href="https://api.kxdw.com/lds360.php?id=51890&type=2"target="_blank" title="直接下载 WorkWin永久破解版">直接下载</a>
+                    <a href="https://api.kxdw.com/lds360.php?id=51890&type=2"target="_blank" title="直接下载 WorkWin永久破解版">直接下载</a>
+                </div>
+            </div>
+
+
+            <div class="software-item">
+                <div class="software-name-label">局域网共享一键通</div>
+                <div class="software-info-bar">局域网共享一键通，该工具可以帮助用户快速的创建文件共享。</div>
+                <div class="download-button-group">
+                    <a href="https://down.365ncg.com/kuai/6VW/OEE18pYw/Hw90E9EBw"target="_blank" title="局域网共享一键通">直接下载</a>
+                    <a href="https://download.downza.cn/hudsnjkl/7529?module=soft&id=7529&token=b07477e77652c0fa5ee7485831d52c71&isxzq=0"target="_blank" title="绿色版英文名Okshare">直接下载</a>
+                </div>
+            </div>
+        </div>
+
+       <div class="content-area">
+            <h2 class="area-title">疑难问题</h2>
+
+            <a href="https://www.douban.com/note/872768083/?_i=8094277ijlm5ep" target="_blank" class="issue-link-bar" title="无法上网">Windows 11 静态 IP 无法上网：常见原因与解决方案。</a>
+            <a href="https://zhuanlan.zhihu.com/p/1907143056651695013" target="_blank" class="issue-link-bar" title="使用教程（转自他人）">网络八大命令</a>
+            <a href="https://www.zhihu.com/tardis/bd/art/511641834?source_id=1001" target="_blank" class="issue-link-bar" title="家庭网络常见故障（转自他人）">家庭网络常见故障解决方案与疑难杂症排查思路。</a>
+        </div>
+    </div>
+
+    <script>
+        class ButterflyController {
+            constructor(element, isSecond) {
+                this.element = element;
+                this.isSecond = isSecond; // 用于区分两只蝴蝶，可以应用不同行为
+                this.currentAnimation = null;
+                this.isAnimating = false;
+                // 定义蝴蝶活动的边界，避免飞出屏幕或过于靠近边缘
+                this.boundaryPadding = { x: 80, y: 80 }; // 蝴蝶距离窗口边缘的最小距离
+            }
+
+            generatePath() {
+                // 获取视口的有效活动区域
+                const visibleWidth = window.innerWidth - 2 * this.boundaryPadding.x;
+                const visibleHeight = window.innerHeight - 2 * this.boundaryPadding.y;
+
+                // 随机生成路径起点，并确保在边界内
+                const startX = this.boundaryPadding.x + Math.random() * visibleWidth;
+                const startY = this.boundaryPadding.y + Math.random() * visibleHeight;
+
+                // 生成一系列路径点
+                return Array.from({length: this.isSecond ? 6 : 4}, (_,i) => { // 第二只蝴蝶路径点多一些
+                    const angle = i * (this.isSecond ? Math.PI / 2.5 : Math.PI / 1.8); // 调整角度增量
+                    const radiusX = visibleWidth * (0.3 + Math.random() * 0.3); // X轴半径
+                    const radiusY = visibleHeight * (0.3 + Math.random() * 0.3); // Y轴半径
+
+                    return {
+                        // 确保路径点在边界内
+                        x: Math.max(this.boundaryPadding.x, Math.min(startX + Math.cos(angle) * radiusX, window.innerWidth - this.boundaryPadding.x - (this.element.offsetWidth || 0) )),
+                        y: Math.max(this.boundaryPadding.y, Math.min(startY + Math.sin(angle) * radiusY, window.innerHeight - this.boundaryPadding.y - (this.element.offsetHeight || 0) )),
+                        scale: 0.5 + Math.random() * (this.isSecond ? 0.7 : 0.5), // 缩放大小
+                        rotate: (Math.random() - 0.5) * (this.isSecond ? 40 : 25) // 旋转角度
+                    };
+                });
+            }
+
+
+            startFlight() {
+                if(this.isAnimating || !this.element) return;
+                this.isAnimating = true;
+
+                // 淡入效果
+                this.element.animate([{opacity:0}, {opacity:1}], {
+                    duration: 1200, // 淡入时间
+                    fill: 'forwards'
+                });
+
+                const pathKeyframes = this.generatePath().map(p => ({
+                    transform: `translate(${p.x}px, ${p.y}px) scale(${p.scale}) rotate(${p.rotate}deg)`,
+                    opacity: 1 // 保持不透明
+                }));
+
+                if (pathKeyframes.length === 0) { // 安全检查，防止路径为空
+                    this.isAnimating = false;
+                    return;
+                }
+
+                const baseDuration = this.isSecond ? 25000 : 38000; // 基础飞行时间
+                this.currentAnimation = this.element.animate(pathKeyframes, {
+                    duration: baseDuration + Math.random() * 10000, // 增加随机性
+                    iterations: 1,
+                    easing: this.isSecond ? 'cubic-bezier(0.42, 0, 0.58, 1)' : 'linear' // 不同缓动函数
+                });
+
+                this.currentAnimation.onfinish = () => {
+                    // 淡出效果
+                    this.element.animate([{opacity:1}, {opacity:0}], {
+                        duration: 1200, // 淡出时间
+                        fill: 'forwards'
+                    }).onfinish = () => {
+                        this.isAnimating = false;
+                        // 随机延迟后再次开始飞行
+                        setTimeout(() => this.startFlight(), (this.isSecond ? 2000 : 3500) + Math.random() * 2000);
+                    };
+                };
+            }
+        }
+
+        // =========================================================
+        // 搜索功能相关代码
+        // =========================================================
+
+        let searchResults = []; // 存储所有高亮元素的引用
+        let currentHighlightIndex = -1; // 当前高亮元素的索引
+        let currentSearchTerm = ''; // 存储当前搜索的关键词，避免重复搜索
+
+        /**
+         * 清除页面上所有的高亮显示。
+         * 将高亮<span>标签替换回其内部的文本节点，并合并相邻的文本节点。
+         */
+        function clearHighlights() {
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(span => {
+                const parent = span.parentNode;
+                if (parent) {
+                    // 移除当前高亮的类
+                    span.classList.remove('active-highlight');
+                    // 将<span>标签替换为其包含的文本内容
+                    parent.replaceChild(document.createTextNode(span.textContent), span);
+                    // 规范化父节点，合并相邻的文本节点，保持DOM清洁
+                    parent.normalize();
+                }
+            });
+            searchResults = []; // 清空搜索结果数组
+            currentHighlightIndex = -1; // 重置当前高亮索引
+            updateNavigationButtons(); // 更新导航按钮状态
+        }
+
+        /**
+         * 在页面中执行搜索并高亮所有匹配项。
+         */
+        function searchPage() {
+            const searchText = document.getElementById('searchInput').value.trim();
+
+            // 如果搜索词为空，则清空高亮并提示
+            if (!searchText) {
+                if (currentSearchTerm) { // 只有在之前有搜索词时才清空
+                    clearHighlights();
+                }
+                alert('搜索内容不能为空。');
+                currentSearchTerm = ''; // 重置搜索词
+                return;
+            }
+
+            // 如果搜索词与上次相同且仍有结果，则直接滚动到当前高亮处
+            if (searchText === currentSearchTerm && searchResults.length > 0) {
+                scrollToHighlight(currentHighlightIndex);
+                return;
+            }
+
+            currentSearchTerm = searchText; // 更新当前搜索词
+            clearHighlights(); // 在新搜索前，先清除所有旧的高亮
+
+            // 创建正则表达式，'gi'表示全局（g）和不区分大小写（i）
+            const regex = new RegExp(searchText, 'gi');
+
+            // 定义需要搜索的容器，排除搜索框和蝴蝶动画区域
+            const searchableContainers = document.querySelectorAll('.content-area');
+
+            searchableContainers.forEach(container => {
+                // 使用TreeWalker高效遍历容器内的所有文本节点
+                const treeWalker = document.createTreeWalker(
+                    container,
+                    NodeFilter.SHOW_TEXT, // 只查找文本节点
+                    {
+                        acceptNode: function(node) {
+                            // 排除空的文本节点
+                            if (node.nodeValue.trim().length === 0) {
+                                return NodeFilter.FILTER_SKIP;
+                            }
+                            const parent = node.parentNode;
+                            // 排除在特定标签（如script, style, input, button, textarea）或在搜索容器/蝴蝶元素内的文本
+                            if (parent &&
+                                !['SCRIPT', 'STYLE', 'INPUT', 'BUTTON', 'TEXTAREA'].includes(parent.tagName) &&
+                                !parent.closest('.search-container') &&
+                                !parent.closest('.butterfly')
+                            ) {
+                                return NodeFilter.FILTER_ACCEPT; // 接受此节点
+                            }
+                            return NodeFilter.FILTER_SKIP; // 跳过此节点
+                        }
+                    },
+                    false
+                );
+
+                let textNode;
+                // 收集所有符合条件的文本节点
+                const textNodesToProcess = [];
+                while ((textNode = treeWalker.nextNode())) {
+                    textNodesToProcess.push(textNode);
+                }
+
+                // 遍历并处理每个文本节点
+                textNodesToProcess.forEach(originalTextNode => {
+                    const originalText = originalTextNode.nodeValue;
+                    let lastIndex = 0;
+                    let match;
+                    const newNodes = []; // 存储将替换原始文本节点的新节点（文本片段+高亮span）
+
+                    // 在当前文本节点中查找所有匹配项
+                    while ((match = regex.exec(originalText)) !== null) {
+                        // 添加匹配项之前的部分作为普通文本节点
+                        if (match.index > lastIndex) {
+                            newNodes.push(document.createTextNode(originalText.substring(lastIndex, match.index)));
+                        }
+
+                        // 创建高亮<span>元素
+                        const highlightSpan = document.createElement('span');
+                        highlightSpan.className = 'highlight';
+                        highlightSpan.textContent = match[0]; // 将匹配的文本放入<span>
+                        newNodes.push(highlightSpan);
+                        searchResults.push(highlightSpan); // 将高亮<span>的引用存储起来
+
+                        lastIndex = regex.lastIndex;
+                    }
+
+                    // 添加最后一个匹配项之后的部分作为普通文本节点
+                    if (lastIndex < originalText.length) {
+                        newNodes.push(document.createTextNode(originalText.substring(lastIndex)));
+                    }
+
+                    // 如果有新的节点（即找到了匹配项或文本被分割），则替换原始文本节点
+                    if (newNodes.length > 0) {
+                        newNodes.forEach(newNode => originalTextNode.parentNode.insertBefore(newNode, originalTextNode));
+                        originalTextNode.parentNode.removeChild(originalTextNode); // 移除原始文本节点
+                    }
+                });
+            });
+
+            // 搜索完成后，根据它们在文档中的实际位置对结果进行排序，确保导航顺序正确
+            searchResults.sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+
+            // 如果找到结果，则高亮第一个结果并滚动到它
+            if (searchResults.length > 0) {
+                currentHighlightIndex = 0;
+                scrollToHighlight(currentHighlightIndex);
+            } else {
+                alert('未找到符合的搜索结果。');
+            }
+            updateNavigationButtons(); // 更新导航按钮状态
+        }
+
+        /**
+         * 滚动到指定索引的高亮元素。
+         * @param {number} index 要滚动到的高亮元素的索引。
+         */
+        function scrollToHighlight(index) {
+            if (searchResults.length === 0) return;
+
+            // 移除上一个高亮元素的'active-highlight'类
+            if (currentHighlightIndex !== -1 && searchResults[currentHighlightIndex]) {
+                searchResults[currentHighlightIndex].classList.remove('active-highlight');
+            }
+
+            // 更新索引，并处理循环（例如，从最后一个跳到第一个，从第一个跳到最后一个）
+            currentHighlightIndex = index;
+            if (currentHighlightIndex < 0) {
+                currentHighlightIndex = searchResults.length - 1; // 循环到最后一个
+            } else if (currentHighlightIndex >= searchResults.length) {
+                currentHighlightIndex = 0; // 循环到第一个
+            }
+
+            // 获取目标高亮元素，添加'active-highlight'类，并滚动到视图中
+            const targetElement = searchResults[currentHighlightIndex];
+            if (targetElement) {
+                targetElement.classList.add('active-highlight');
+                // 使用 smooth 行为和 center 对齐，提供更好的用户体验
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            updateNavigationButtons(); // 更新导航按钮状态
+        }
+
+        /**
+         * 根据方向（上一个/下一个）导航搜索结果。
+         * @param {number} direction -1表示上一个，1表示下一个。
+         */
+        function navigateSearchResult(direction) {
+            if (searchResults.length === 0) return;
+            scrollToHighlight(currentHighlightIndex + direction);
+        }
+
+        /**
+         * 更新“上一个”和“下一个”按钮的禁用状态。
+         */
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevButton');
+            const nextBtn = document.getElementById('nextButton');
+
+            // 如果没有搜索结果或只有一个结果，则禁用导航按钮
+            if (searchResults.length <= 1) {
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+            }
+        }
+
+        // =========================================================
+        // DOM加载完成后执行的初始化代码
+        // =========================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // 绑定搜索输入框的回车键事件
+            document.getElementById('searchInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // 阻止表单默认提交行为
+                    searchPage(); // 执行搜索
+                }
+            });
+
+            // 绑定导航按钮的点击事件
+            document.getElementById('prevButton').addEventListener('click', () => navigateSearchResult(-1));
+            document.getElementById('nextButton').addEventListener('click', () => navigateSearchResult(1));
+
+            // 初始化导航按钮状态
+            updateNavigationButtons();
+
+            // 蝴蝶动画初始化
+            const butterflyElem1 = document.getElementById('butterfly1');
+            const butterflyElem2 = document.getElementById('butterfly2');
+
+            if (butterflyElem1 && butterflyElem2) {
+                const butterflies = [
+                    new ButterflyController(butterflyElem1, false),
+                    new ButterflyController(butterflyElem2, true)
+                ];
+
+                butterflies[0].startFlight();
+                setTimeout(() => butterflies[1].startFlight(), 4000 + Math.random() * 2000); // 第二只蝴蝶延迟启动
+
+                // 窗口大小改变时，重新计算路径并开始飞行
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        butterflies.forEach(b => {
+                            if (b.currentAnimation) b.currentAnimation.cancel(); // 取消当前动画
+                            b.isAnimating = false; // 重置动画状态
+                            // 确保元素存在再启动
+                            if (b.element) {
+                                b.startFlight(); // 重新开始
+                            }
+                        });
+                    }, 250); // 防抖处理
+                });
+            } else {
+                console.error("Butterfly elements not found!");
+            }
+        });
+    </script>
+</body>
+</html>

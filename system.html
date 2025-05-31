@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统专区 - 双蝶飞舞</title>
+    <style>
+        /* 原始背景和蝴蝶样式 - 不变 */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(160deg, #b3d9ff 20%, #8ab5ff 80%); /* 淡雅的蓝紫色渐变 */
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Microsoft YaHei', Arial, sans-serif; /* 更常用的中文字体 */
+            color: #333; /* 基础文字颜色 */
+        }
+
+        .butterfly {
+            position: fixed;
+            width: 100px; /* 蝴蝶大小调整，使其不那么显眼 */
+            opacity: 0;
+            transform-origin: center;
+            z-index: 1000; /* 确保蝴蝶在内容之上 */
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .left-wing { animation: flapL 2.8s ease-in-out infinite; }
+        .right-wing { animation: flapR 2.8s ease-in-out infinite; }
+
+        @keyframes flapL {
+            0%,100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(40deg); }
+        }
+        @keyframes flapR {
+            0%,100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(-40deg); }
+        }
+
+        #butterfly1 { filter: drop-shadow(0 0 6px #d8bfd8aa); } /* 淡紫色蝴蝶阴影，略微透明 */
+        #butterfly2 { filter: drop-shadow(0 0 6px #ff8095aa); } /* 粉色蝴蝶阴影，略微透明 */
+
+        /* 新布局样式 */
+        .page-wrapper {
+            max-width: 960px; /* 页面内容最大宽度 */
+            margin: 0 auto;
+            padding: 20px 20px 60px; /* 抬高标题，减少顶部内边距 */
+            position: relative;
+            z-index: 1; /* 内容在蝴蝶之下，但在背景之上 */
+        }
+
+        .main-header-title {
+            text-align: center;
+            font-size: 1.9em; /* 主标题字号缩小 (原2.8em) */
+            color: #5e35b1; /* 深紫色，与背景协调 */
+            margin-bottom: 60px; /* 与下方内容间距增加为原来的两倍 (原30px) */
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .content-area {
+            margin-bottom: 35px;
+            background-color: rgba(255, 255, 255, 0.75); /* 轻微透明的白色背景 */
+            backdrop-filter: blur(8px); /* 毛玻璃效果增强质感 */
+            border-radius: 16px; /* 更大的圆角 */
+            padding: 20px 25px; /* 内边距 */
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* 柔和阴影 */
+        }
+
+        /* 标题和搜索条的容器 */
+        .header-and-search-container {
+            display: flex;
+            justify-content: space-between; /* 标题左对齐，搜索条右对齐 */
+            align-items: center; /* 垂直居中对齐 */
+            margin-bottom: 20px; /* 控制整个区域与下方内容的间距 */
+            flex-wrap: wrap; /* 允许在小屏幕上换行 */
+            padding-bottom: 8px; /* 模拟标题下划线的效果，让标题和搜索条下方有一条线 */
+            border-bottom: 2px solid #ede7f6; /* 淡紫色下划线 */
+        }
+
+        .area-title {
+            font-size: 1.15em; /* 分区标题字号缩小 (原1.7em) */
+            color: #7e57c2; /* 紫色系，比主标题略浅 */
+            margin-top: 0;
+            margin-bottom: 0; /* 移除原有的 margin-bottom，由 .header-and-search-container 统一控制 */
+            text-align: left; /* 标题靠左 */
+            font-weight: 500;
+            flex-grow: 1; /* 确保标题在 flex 容器中可以占据空间 */
+            flex-shrink: 1; /* 允许标题在必要时收缩 */
+            margin-right: 15px; /* 标题与搜索条之间的间距 */
+        }
+
+        /* 软件分区特定样式 */
+        .software-item {
+            display: flex;
+            flex-wrap: wrap; /* 在小屏幕上换行 */
+            align-items: center;
+            margin-bottom: 3.375px; /* 条目间距缩小四分之一 (原4.5px) */
+            padding: 3.6px; /* 内边距缩小四分之一 (原4.8px) */
+            background-color: rgba(248, 245, 252, 0.9); /* 非常淡的紫色背景 */
+            border-radius: 10px; /* 条目圆角 */
+            transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+        }
+        .software-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .software-name-label {
+            flex: 0 0 160px; /* 软件名固定宽度 */
+            background-color: #b39ddb; /* 淡雅紫色矩形背景 */
+            color: white;
+            padding: 3.15px 5.4px; /* 垂直内边距缩小四分之一 (原4.2px) */
+            border-radius: 6px; /* 轻微圆角 */
+            font-weight: bold;
+            text-align: center;
+            margin-right: 15px; /* 与简介条的间距 */
+            font-size: 0.9em;
+            line-height: 1.3; /* 控制行高以适应内容 */
+            height: auto; /* 高度自适应 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .software-info-bar {
+            flex-grow: 1; /* 占据剩余空间 */
+            min-width: 150px; /* 简介最小宽度调整，避免过窄 (原200px) */
+            background-color: #f3e5f5; /* 更淡的紫色圆角长条 */
+            color: #4a4a4a; /* 深灰色文字 */
+            padding: 3.15px 6.75px; /* 垂直内边距缩小四分之一 (原4.2px) */
+            border-radius: 15px; /* 圆角长条 */
+            font-size: 0.85em;
+            line-height: 1.4;
+            height: auto; /* 高度自适应 */
+            display: flex;
+            align-items: center;
+        }
+
+        .download-button-group {
+            display: flex;
+            gap: 8px; /* 按钮间距 */
+            flex-shrink: 0; /* 防止按钮组被压缩 */
+            margin-left: 15px; /* 新增：简介条与按钮组之间的间距 */
+        }
+
+        .download-button-group a {
+            background-color: #9575cd; /* 紫色按钮 */
+            color: white;
+            padding: 2.7px 6.3px; /* 垂直内边距缩小四分之一 (原3.6px) */
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8em;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            white-space: nowrap; /* 防止文字换行 */
+        }
+        .download-button-group a:hover {
+            background-color: #7e57c2; /* 深一点的紫色 */
+            transform: translateY(-1px);
+        }
+
+        /* 疑难问题区特定样式 */
+        .issue-link-bar {
+            display: block; /* 使整个条块可点击 */
+            background-color: #f3e5f5; /* 淡紫色圆角长条 */
+            color: #512da8; /* 较深的紫色文字，增加对比 */
+            padding: 7px 18px; /* 垂直内边距缩小 (原10px) */
+            border-radius: 15px; /* 圆角 */
+            margin-bottom: 6px; /* 条目间距缩小一半 (原12px) */
+            text-decoration: none;
+            font-size: 0.9em;
+            line-height: 1.5;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            min-height: auto; /* 移除最小高度，让padding控制 */
+            height: auto;
+        }
+        .issue-link-bar:hover {
+            background-color: #ede7f6; /* 悬停时背景变浅一点，更柔和 */
+            color: #4527a0; /* 悬停时文字颜色变深 */
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+
+        /* 搜索框样式优化 */
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 8px 12px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            margin-left: auto; 
+            flex-shrink: 0; 
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 14px; 
+            border: 1px solid #dcdcdc; 
+            border-radius: 18px; 
+            font-size: 0.88em; 
+            outline: none;
+            width: 140px; 
+            transition: width 0.3s ease-in-out, border-color 0.3s ease;
+            background-color: #fcfcfc; 
+            color: #333;
+        }
+
+        .search-container input[type="text"]:focus {
+            width: 180px; 
+            border-color: #7e57c2; 
+            box-shadow: 0 0 0 2px rgba(126, 87, 194, 0.2);
+        }
+
+        .search-container button {
+            background-color: #9575cd; 
+            color: white;
+            border: none;
+            padding: 6px 12px; 
+            border-radius: 18px; 
+            cursor: pointer;
+            font-size: 0.88em; 
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+            white-space: nowrap; 
+        }
+
+        .search-container button:hover {
+            background-color: #7e57c2;
+            transform: translateY(-1px); 
+        }
+        .search-container button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-nav-buttons {
+            display: flex;
+            gap: 5px;
+            margin-left: 8px; 
+        }
+
+        .search-nav-buttons button {
+            padding: 5px 10px; 
+            font-size: 0.8em; 
+            border-radius: 15px; 
+        }
+
+        /* 搜索结果高亮样式 */
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        /* 当前高亮结果样式 */
+        .active-highlight {
+            background-color: orange; 
+            outline: 2px solid #5e35b1; 
+            transition: background-color 0.2s, outline 0.2s;
+        }
+
+        /* 修改后的“更多软件”提示链接样式 */
+        .more-software-prompt {
+            text-align: right;
+            margin-top: 20px; /* 稍微增加与上方内容的间距 */
+        }
+
+        .more-software-prompt a {
+            display: inline-block; /* 使 padding 生效，表现如块级元素 */
+            padding: 6px 12px;   /* 合适的内边距，形成按钮感 */
+            font-size: 0.8em;   /* 与下载按钮类似的小字体 */
+            color: white;         /* 文字颜色，与紫色背景形成对比 */
+            background-color: #9575cd; /* 使用页面中已有的紫色按钮颜色 */
+            border-radius: 6px;   /* 与下载按钮一致的圆角 */
+            text-decoration: none; /* 移除默认下划线 */
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 添加细微阴影 */
+            white-space: nowrap; /* 防止文字换行 */
+        }
+
+        .more-software-prompt a:hover {
+            background-color: #7e57c2; /* 鼠标悬停时加深的紫色，保持一致性 */
+            color: white;              /* 确保文字颜色不变 */
+            text-decoration: none;     /* 悬停时也不显示下划线 */
+            transform: translateY(-1px); /* 轻微上移效果 */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* 悬停时阴影增强 */
+        }
+
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .main-header-title {
+                font-size: 1.6em;
+            }
+            .area-title {
+                font-size: 1.0em;
+            }
+            .software-item {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 2.7px;
+            }
+            .software-name-label {
+                margin-right: 0;
+                margin-bottom: 3.6px;
+                flex-basis: auto;
+                padding: 2.25px 4.5px;
+            }
+            .software-info-bar {
+                margin-right: 0;
+                margin-bottom: 3.6px;
+                text-align: center;
+                justify-content: center;
+                min-width: auto;
+                padding: 2.25px 5.4px;
+            }
+            .download-button-group {
+                justify-content: center;
+                width: 100%;
+                margin-left: 0;
+            }
+            .download-button-group a {
+                flex-grow: 1;
+                text-align: center;
+                padding: 2.25px 4.5px;
+            }
+            .issue-link-bar {
+                padding: 6px 15px;
+            }
+            .header-and-search-container {
+                flex-direction: column; 
+                align-items: center; 
+                margin-bottom: 25px; 
+                border-bottom: none; 
+                padding-bottom: 0;
+            }
+            .area-title {
+                text-align: center; 
+                width: 100%; 
+                margin-right: 0; 
+                margin-bottom: 15px; 
+                padding-bottom: 0; 
+                border-bottom: none; 
+            }
+            .search-container {
+                position: relative; 
+                top: auto;
+                right: auto;
+                justify-content: center; 
+                margin: 0 auto; 
+                flex-wrap: wrap; 
+                max-width: 90%; 
+                width: fit-content; 
+                padding: 10px 15px;
+            }
+            .search-container input[type="text"] {
+                width: 100%; 
+                max-width: 280px; 
+                margin-bottom: 8px; 
+                text-align: center; 
+            }
+            .search-container button, .search-nav-buttons button {
+                flex-grow: 1; 
+                max-width: 100px; 
+            }
+            .search-nav-buttons {
+                margin-left: 0; 
+                width: 100%; 
+                justify-content: center; 
+                margin-top: 5px; 
+            }
+        }
+         @media (max-width: 480px) {
+            .page-wrapper {
+                padding: 20px 15px 40px;
+            }
+            .main-header-title {
+                font-size: 1.4em;
+                margin-bottom: 25px;
+            }
+            .area-title {
+                font-size: 0.9em;
+                margin-bottom: 15px;
+            }
+             .software-name-label {
+                padding: 2.25px 4.5px;
+             }
+             .software-info-bar {
+                padding: 2.25px 5.4px;
+             }
+             .download-button-group a {
+                padding: 2.25px 4.5px;
+             }
+             .issue-link-bar {
+                padding: 6px 15px;
+            }
+            .search-container {
+                max-width: 95%;
+            }
+            .search-container input[type="text"] {
+                max-width: 200px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="butterfly1" class="butterfly">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 429">
+            <defs><linearGradient id="grad1_v2"><stop offset="0%" stop-color="#d8bfd8"/><stop offset="100%" stop-color="#b19cd9"/></linearGradient></defs>
+            <g class="left-wing"><path fill="url(#grad1_v2)" d="M42.56,2.5c-8.1,6.9-11.3,21.2-16.1,71-3.9,41.1-6.6,57.7-13.6,83-2.9,10.5-3.5,14.1-3.1,18.9,1.6,17.6,20.9,37.3,52.2,53.3,13.2,6.7,39.3,17,58,22.8,15.2,4.7,45.5,12.5,48.6,12.5,2.4,0,2.9-3.9,2.9-24.9,0-39.9-7-88.3-16.9-118.2-11.4-33.9-28.4-59-64.1-94.8C71.96,7.7,60.36,0,50.96,0c-4.3,0-6,.5-8.4,2.5Z"/><path fill="url(#grad1_v2)" d="M32.76,237.1c-8.9,2.6-22.4,26.1-28.7,49.9-6.4,24.2-5.2,44.6,3.4,56.3,15.6,21.2,52,13.3,107-23.2,12.3-8.1,27.6-20.9,37.6-31.2,8.2-8.5,16.5-19,15.8-20.1-0.3-0.4-2.1-0.8-4.1-0.8-5.3,0-23.5-4.8-56-14.9-46.7-14.5-66.1-18.6-75-16Z"/></g>
+            <g class="right-wing"><path fill="url(#grad1_v2)" d="M405.16,119c-20.1,2.3-56.1,10.1-72.2,15.7-29.1,10.1-53,25.5-79.6,51.1-14.6,14-31.7,32.8-43.9,48.2-9.9,12.5-24.2,33.8-23.7,35.4,0.4,1.3,26.4,12,41.3,17,15.7,5.3,56,15.2,69.2,17,6.2,0.9,17.7,1.6,25.5,1.6,27.2,0,42.9-6.5,50.5-20.8,1.8-3.3,3.2-6.6,3.2-7.3,0-2.4,11.2-29.4,17.2-41.4,3.3-6.6,13.7-25.5,23.1-42,23.1-40.7,28.1-52.3,26.2-62.1-0.9-4.8-5.9-9.9-11.1-11.3-6.1-1.5-17.1-2-25.7-1.1Z"/><path fill="url(#grad1_v2)" d="M184.86,285.1c1.7,29,12.1,63.5,29.2,96.9,7.8,15.3,14.8,25.5,23.3,34.1,10,9.9,16.8,13.4,26.6,13.4s15-2.8,24-11.9c16.2-16.5,28.5-49.1,28.5-75.6,0-9.6-1.4-14-5.2-17.2-4-3.4-19-11.2-31.8-16.6-18.3-7.8-84-31.7-92.9-33.9l-2.4-0.6.7,11.4Z"/></g>
+            <path fill="url(#grad1_v2)" d="M189.66,216.6c-1.2,0.8-2.2,2.5-2.2,3.8,0,1.2-1.2,3.8-2.6,5.7-4.6,6.2-6.3,10.5-7.4,19.5-2,15.2-3.7,20.9-10.8,35.1-10.1,20.3-11.2,23.9-11.1,38.1,0.1,17,0.3,17.2,7.7,7.8,3.4-4.2,7.3-9.6,8.6-11.9,3.2-5.4,6.1-16.6,8.1-31.2,1.8-13.4,3.7-18.9,11.2-33.2,5-9.8,5.3-10.7,5.3-17.7,0-4.1,0.5-7.8,1-8.1,1.7-1,1.1-6.1-0.8-7.8-2.3-2.1-4.1-2.1-7,0.1Z"/>
+        </svg>
+    </div>
+
+    <div id="butterfly2" class="butterfly">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 429">
+            <defs><linearGradient id="grad2_v2"><stop offset="0%" stop-color="#ffb3ba"/><stop offset="100%" stop-color="#ff8095"/></linearGradient></defs>
+            <g class="left-wing"><path fill="url(#grad2_v2)" d="M42.56,2.5c-8.1,6.9-11.3,21.2-16.1,71-3.9,41.1-6.6,57.7-13.6,83-2.9,10.5-3.5,14.1-3.1,18.9,1.6,17.6,20.9,37.3,52.2,53.3,13.2,6.7,39.3,17,58,22.8,15.2,4.7,45.5,12.5,48.6,12.5,2.4,0,2.9-3.9,2.9-24.9,0-39.9-7-88.3-16.9-118.2-11.4-33.9-28.4-59-64.1-94.8C71.96,7.7,60.36,0,50.96,0c-4.3,0-6,.5-8.4,2.5Z"/><path fill="url(#grad2_v2)" d="M32.76,237.1c-8.9,2.6-22.4,26.1-28.7,49.9-6.4,24.2-5.2,44.6,3.4,56.3,15.6,21.2,52,13.3,107-23.2,12.3-8.1,27.6-20.9,37.6-31.2,8.2-8.5,16.5-19,15.8-20.1-0.3-0.4-2.1-0.8-4.1-0.8-5.3,0-23.5-4.8-56-14.9-46.7-14.5-66.1-18.6-75-16Z"/></g>
+            <g class="right-wing"><path fill="url(#grad2_v2)" d="M405.16,119c-20.1,2.3-56.1,10.1-72.2,15.7-29.1,10.1-53,25.5-79.6,51.1-14.6,14-31.7,32.8-43.9,48.2-9.9,12.5-24.2,33.8-23.7,35.4,0.4,1.3,26.4,12,41.3,17,15.7,5.3,56,15.2,69.2,17,6.2,0.9,17.7,1.6,25.5,1.6,27.2,0,42.9-6.5,50.5-20.8,1.8-3.3,3.2-6.6,3.2-7.3,0-2.4,11.2-29.4,17.2-41.4,3.3-6.6,13.7-25.5,23.1-42,23.1-40.7,28.1-52.3,26.2-62.1-0.9-4.8-5.9-9.9-11.1-11.3-6.1-1.5-17.1-2-25.7-1.1Z"/><path fill="url(#grad2_v2)" d="M184.86,285.1c1.7,29,12.1,63.5,29.2,96.9,7.8,15.3,14.8,25.5,23.3,34.1,10,9.9,16.8,13.4,26.6,13.4s15-2.8,24-11.9c16.2-16.5,28.5-49.1,28.5-75.6,0-9.6-1.4-14-5.2-17.2-4-3.4-19-11.2-31.8-16.6-18.3-7.8-84-31.7-92.9-33.9l-2.4-0.6.7,11.4Z"/></g>
+            <path fill="url(#grad2_v2)" d="M189.66,216.6c-1.2,0.8-2.2,2.5-2.2,3.8,0,1.2-1.2,3.8-2.6,5.7-4.6,6.2-6.3,10.5-7.4,19.5-2,15.2-3.7,20.9-10.8,35.1-10.1,20.3-11.2,23.9-11.1,38.1,0.1,17,0.3,17.2,7.7,7.8,3.4-4.2,7.3-9.6,8.6-11.9,3.2-5.4,6.1-16.6,8.1-31.2,1.8-13.4,3.7-18.9,11.2-33.2,5-9.8,5.3-10.7,5.3-17.7,0-4.1,0.5-7.8,1-8.1,1.7-1,1.1-6.1-0.8-7.8-2.3-2.1-4.1-2.1-7,0.1Z"/>
+        </svg>
+    </div>
+
+    <div class="page-wrapper">
+        <h1 class="main-header-title">系统专区</h1>
+
+        <div class="content-area">
+            <div class="header-and-search-container">
+                <h2 class="area-title">软件分区</h2>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="搜索本页内容...">
+                    <button onclick="searchPage()">搜索</button>
+                    <div class="search-nav-buttons">
+                        <button id="prevButton" disabled>上一个</button>
+                        <button id="nextButton" disabled>下一个</button>
+                    </div>
+                </div>
+            </div>
+
+       <div class="software-item">
+                <div class="software-name-label">Windows11下载</div>
+                <div class="software-info-bar">Windows11下载。</div>
+                <div class="download-button-group">
+                    <a href="https://windows.ycgxgy.cn/download/win11.html" target="_blank" title="直接下载 系统之家">直接下载</a>
+                    <a href="https://pan.baidu.com/share/init?surl=bluLiVNi_aXIKOf6NA0nnA&pwd=xtzj" target="_blank" title="网盘下载 win11">网盘下载</a>
+                </div>
+            </div>
+
+
+               <div class="software-item">
+                <div class="software-name-label">AnduinOS</div>
+                <div class="software-info-bar">免费开源 AnduinOS，基于Ubuntu、界面舒适的 Linux 系统。</div>
+                <div class="download-button-group">
+                    <a href="https://www.anduinos.com/#download-links" target="_blank" title="直接下载 全能格式转换">直接下载</a>
+                    <a href="https://www.anduinos.com/#download-links" target="_blank" title="网盘下载 全能格式转换">网盘下载</a>
+                </div>
+            </div>
+
+           <div class="software-item">
+                <div class="software-name-label">Office 2021</div>
+                <div class="software-info-bar">Office2021永久破解版 。</div>
+                <div class="download-button-group">
+                    <a href="https://api.32r.com/down/109053/22" target="_blank" title="直接下载 Office 2021">直接下载</a>
+                    <a href="https://pan.baidu.com/share/init?surl=W-khL6moJxfUO3UdMPIEIg&pwd=1e64"target="_blank" title="网盘下载 Office 2021">网盘下载</a>
+
+                </div>
+            </div>
+
+          <div class="software-item">
+                <div class="software-name-label">Photoshop cs6绿色版</div>
+                <div class="software-info-bar">支持多种音视频、文档格式互转，操作便捷。</div>
+                <div class="download-button-group">
+                    <a href="https://api.ddooo.com/down/213634/4"target=_blank" title="直接下载 Photoshop cs6绿色版">直接下载</a>
+                    <a href="https://pan.baidu.com/share/init?surl=vJHy9hIYOV04iC7Ch7KKDw&pwd=6666"target="_blank" title="网盘下载 Photoshop cs6绿色版">网盘下载</a>
+                </div>
+            </div>
+
+          <div class="software-item">
+                <div class="software-name-label">3DM游戏运行库合集安装包v3.0</div>
+                <div class="software-info-bar">各类运行库Visual C++、.NET、Framework 4.0等等。</div>
+                <div class="download-button-group">
+                    <a href="https://dl1.wsyhn.com//fwqk123/3DM-YOUXIYUNXINGKU.v3.0.7z"target=_blank" title="直接下载 3DM游戏运行库合集安装包v3.0">直接下载</a>
+                    <a href="thunder://QUFodHRwczovL2RsMS53c3lobi5jb20vL2Z3cWsxMjMvM0RNLVlPVVhJWVVOWElOR0tVLnYzLjAuN3paWg=="target="_blank" title="迅雷下载 3DM游戏运行库合集安装包v3.0">迅雷下载</a>
+                </div>
+            </div>
+
+
+            <div class="more-software-prompt">
+                <a href="http://www.runly.com.cn" target="_blank">更多软件请到下载分区搜索</a>
+            </div>
+        </div>
+
+       <div class="content-area">
+            <h2 class="area-title">疑难问题</h2>
+            <a href="http://www.runly.com.cn" target="_blank" class="issue-link-bar" title="查看关于电脑运行缓慢的解决方案">电脑突然变卡了怎么办？常见原因及解决方法汇总。</a>
+            <a href="http://www.runly.com.cn" target="_blank" class="issue-link-bar" title="查看关于无法连接网络的解决方案">网络图标正常但无法上网？试试这几招！</a>
+            <a href="https://baike.baidu.com/item/Windows%E8%93%9D%E5%B1%8F%E4%BB%A3%E7%A0%81/8504424" target="_blank" class="issue-link-bar" title="查看关于蓝屏问题的解决方案">Windows系统蓝屏代码大全及修复指南。</a>
+        </div>
+    </div>
+
+    <script>
+        class ButterflyController {
+            constructor(element, isSecond) {
+                this.element = element;
+                this.isSecond = isSecond; 
+                this.currentAnimation = null;
+                this.isAnimating = false;
+                this.boundaryPadding = { x: 80, y: 80 }; 
+            }
+
+            generatePath() {
+                const visibleWidth = window.innerWidth - 2 * this.boundaryPadding.x;
+                const visibleHeight = window.innerHeight - 2 * this.boundaryPadding.y;
+                const startX = this.boundaryPadding.x + Math.random() * visibleWidth;
+                const startY = this.boundaryPadding.y + Math.random() * visibleHeight;
+                return Array.from({length: this.isSecond ? 6 : 4}, (_,i) => { 
+                    const angle = i * (this.isSecond ? Math.PI / 2.5 : Math.PI / 1.8); 
+                    const radiusX = visibleWidth * (0.3 + Math.random() * 0.3); 
+                    const radiusY = visibleHeight * (0.3 + Math.random() * 0.3); 
+                    return {
+                        x: Math.max(this.boundaryPadding.x, Math.min(startX + Math.cos(angle) * radiusX, window.innerWidth - this.boundaryPadding.x - (this.element.offsetWidth || 0) )),
+                        y: Math.max(this.boundaryPadding.y, Math.min(startY + Math.sin(angle) * radiusY, window.innerHeight - this.boundaryPadding.y - (this.element.offsetHeight || 0) )),
+                        scale: 0.5 + Math.random() * (this.isSecond ? 0.7 : 0.5), 
+                        rotate: (Math.random() - 0.5) * (this.isSecond ? 40 : 25) 
+                    };
+                });
+            }
+
+            startFlight() {
+                if(this.isAnimating || !this.element) return;
+                this.isAnimating = true;
+                this.element.animate([{opacity:0}, {opacity:1}], {
+                    duration: 1200, 
+                    fill: 'forwards'
+                });
+                const pathKeyframes = this.generatePath().map(p => ({
+                    transform: `translate(${p.x}px, ${p.y}px) scale(${p.scale}) rotate(${p.rotate}deg)`,
+                    opacity: 1 
+                }));
+                if (pathKeyframes.length === 0) { 
+                    this.isAnimating = false;
+                    return;
+                }
+                const baseDuration = this.isSecond ? 25000 : 38000; 
+                this.currentAnimation = this.element.animate(pathKeyframes, {
+                    duration: baseDuration + Math.random() * 10000, 
+                    iterations: 1,
+                    easing: this.isSecond ? 'cubic-bezier(0.42, 0, 0.58, 1)' : 'linear' 
+                });
+                this.currentAnimation.onfinish = () => {
+                    this.element.animate([{opacity:1}, {opacity:0}], {
+                        duration: 1200, 
+                        fill: 'forwards'
+                    }).onfinish = () => {
+                        this.isAnimating = false;
+                        setTimeout(() => this.startFlight(), (this.isSecond ? 2000 : 3500) + Math.random() * 2000);
+                    };
+                };
+            }
+        }
+
+        let searchResults = []; 
+        let currentHighlightIndex = -1; 
+        let currentSearchTerm = ''; 
+
+        function clearHighlights() {
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(span => {
+                const parent = span.parentNode;
+                if (parent) {
+                    span.classList.remove('active-highlight');
+                    parent.replaceChild(document.createTextNode(span.textContent), span);
+                    parent.normalize();
+                }
+            });
+            searchResults = []; 
+            currentHighlightIndex = -1; 
+            updateNavigationButtons(); 
+        }
+
+        function searchPage() {
+            const searchText = document.getElementById('searchInput').value.trim();
+            if (!searchText) {
+                if (currentSearchTerm) { 
+                    clearHighlights();
+                }
+                alert('搜索内容不能为空。');
+                currentSearchTerm = ''; 
+                return;
+            }
+            if (searchText === currentSearchTerm && searchResults.length > 0) {
+                scrollToHighlight(currentHighlightIndex);
+                return;
+            }
+            currentSearchTerm = searchText; 
+            clearHighlights(); 
+            const regex = new RegExp(searchText, 'gi');
+            const searchableContainers = document.querySelectorAll('.content-area');
+            searchableContainers.forEach(container => {
+                const treeWalker = document.createTreeWalker(
+                    container,
+                    NodeFilter.SHOW_TEXT, 
+                    {
+                        acceptNode: function(node) {
+                            if (node.nodeValue.trim().length === 0) {
+                                return NodeFilter.FILTER_SKIP;
+                            }
+                            const parent = node.parentNode;
+                            if (parent &&
+                                !['SCRIPT', 'STYLE', 'INPUT', 'BUTTON', 'TEXTAREA'].includes(parent.tagName) &&
+                                !parent.closest('.search-container') &&
+                                !parent.closest('.butterfly')
+                            ) {
+                                return NodeFilter.FILTER_ACCEPT; 
+                            }
+                            return NodeFilter.FILTER_SKIP; 
+                        }
+                    },
+                    false
+                );
+                let textNode;
+                const textNodesToProcess = [];
+                while ((textNode = treeWalker.nextNode())) {
+                    textNodesToProcess.push(textNode);
+                }
+                textNodesToProcess.forEach(originalTextNode => {
+                    const originalText = originalTextNode.nodeValue;
+                    let lastIndex = 0;
+                    let match;
+                    const newNodes = []; 
+                    while ((match = regex.exec(originalText)) !== null) {
+                        if (match.index > lastIndex) {
+                            newNodes.push(document.createTextNode(originalText.substring(lastIndex, match.index)));
+                        }
+                        const highlightSpan = document.createElement('span');
+                        highlightSpan.className = 'highlight';
+                        highlightSpan.textContent = match[0]; 
+                        newNodes.push(highlightSpan);
+                        searchResults.push(highlightSpan); 
+                        lastIndex = regex.lastIndex;
+                    }
+                    if (lastIndex < originalText.length) {
+                        newNodes.push(document.createTextNode(originalText.substring(lastIndex)));
+                    }
+                    if (newNodes.length > 0) {
+                        newNodes.forEach(newNode => originalTextNode.parentNode.insertBefore(newNode, originalTextNode));
+                        originalTextNode.parentNode.removeChild(originalTextNode); 
+                    }
+                });
+            });
+            searchResults.sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+            if (searchResults.length > 0) {
+                currentHighlightIndex = 0;
+                scrollToHighlight(currentHighlightIndex);
+            } else {
+                alert('未找到符合的搜索结果。');
+            }
+            updateNavigationButtons(); 
+        }
+
+        function scrollToHighlight(index) {
+            if (searchResults.length === 0) return;
+            if (currentHighlightIndex !== -1 && searchResults[currentHighlightIndex]) {
+                searchResults[currentHighlightIndex].classList.remove('active-highlight');
+            }
+            currentHighlightIndex = index;
+            if (currentHighlightIndex < 0) {
+                currentHighlightIndex = searchResults.length - 1; 
+            } else if (currentHighlightIndex >= searchResults.length) {
+                currentHighlightIndex = 0; 
+            }
+            const targetElement = searchResults[currentHighlightIndex];
+            if (targetElement) {
+                targetElement.classList.add('active-highlight');
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            updateNavigationButtons(); 
+        }
+
+        function navigateSearchResult(direction) {
+            if (searchResults.length === 0) return;
+            scrollToHighlight(currentHighlightIndex + direction);
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevButton');
+            const nextBtn = document.getElementById('nextButton');
+            if (searchResults.length <= 1) {
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('searchInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); 
+                    searchPage(); 
+                }
+            });
+            document.getElementById('prevButton').addEventListener('click', () => navigateSearchResult(-1));
+            document.getElementById('nextButton').addEventListener('click', () => navigateSearchResult(1));
+            updateNavigationButtons();
+            const butterflyElem1 = document.getElementById('butterfly1');
+            const butterflyElem2 = document.getElementById('butterfly2');
+            if (butterflyElem1 && butterflyElem2) {
+                const butterflies = [
+                    new ButterflyController(butterflyElem1, false),
+                    new ButterflyController(butterflyElem2, true)
+                ];
+                butterflies[0].startFlight();
+                setTimeout(() => butterflies[1].startFlight(), 4000 + Math.random() * 2000); 
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        butterflies.forEach(b => {
+                            if (b.currentAnimation) b.currentAnimation.cancel(); 
+                            b.isAnimating = false; 
+                            if (b.element) {
+                                b.startFlight(); 
+                            }
+                        });
+                    }, 250); 
+                });
+            } else {
+                console.error("Butterfly elements not found!");
+            }
+        });
+    </script>
+</body>
+</html>

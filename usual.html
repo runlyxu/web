@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常用网址导航</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        /* 海洋背景 */
+        body {
+            background: linear-gradient(160deg, 
+                #006994 0%, 
+                #008cba 30%, 
+                #00b4d8 70%, 
+                #90e0ef 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 优化波浪系统 */
+        .wave-container {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            left: -50%;
+            top: 0;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 150px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 43% 47% 42% 44%;
+            animation: waveFlow 20s linear infinite;
+        }
+
+        @keyframes waveFlow {
+            0% { transform: rotate(0deg) scale(1.2); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            100% { transform: rotate(360deg) scale(1.2); }
+        }
+
+        .wave:nth-child(1) {
+            top: 20%;
+            animation-duration: 25s;
+            filter: blur(3px);
+        }
+        .wave:nth-child(2) {
+            top: 45%;
+            animation-duration: 20s;
+            animation-delay: -5s;
+            filter: blur(5px);
+        }
+        .wave:nth-child(3) {
+            top: 70%;
+            animation-duration: 15s;
+            animation-delay: -10s;
+            filter: blur(7px);
+        }
+
+        /* 标题系统 */
+        .page-header {
+            text-align: center;
+            margin: 0 auto 25px;
+            position: relative;
+            z-index: 3;
+            padding: 0 15px;
+        }
+
+        .page-title {
+            font-size: 1.5rem; /* 缩小后的标题 */
+            color: #fff;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-family: 'PingFang SC', sans-serif;
+        }
+
+        .title-underline {
+            width: 400px;
+            height: 2px;
+            margin: 8px auto;
+            background: linear-gradient(90deg, 
+                transparent, 
+                #004d7a 30%, 
+                #0077b6 50%, 
+                #004d7a 70%, 
+                transparent
+            );
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-underline::after {
+            content: '';
+            position: absolute;
+            left: -100%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255,255,255,0.4),
+                transparent
+            );
+            animation: lightFlow 2s ease-in-out infinite;
+        }
+
+        @keyframes lightFlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(250%); }
+        }
+
+        /* 导航系统 */
+        .grid-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+            padding: 0 10px;
+        }
+
+        .nav-card {
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            padding: 8px;
+        }
+
+        .icon-frame {
+            width: 70px;
+            height: 70px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 50%;
+            margin: 0 auto 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .site-icon {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .site-title {
+            color: #fff;
+            font-size: 12px;
+            line-height: 1.3;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 悬停效果 */
+        .nav-card:hover {
+            transform: translateY(-4px);
+        }
+        .nav-card:hover .icon-frame {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+        .nav-card:hover .site-icon {
+            transform: scale(1.15) rotate(8deg);
+        }
+        .nav-card:hover .site-title {
+            color: #ffeb3b;
+        }
+
+        /* 响应式布局 */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 12px;
+            }
+            .icon-frame {
+                width: 150px;
+                height: 60px;
+            }
+            .site-title {
+                font-size: 11px;
+            }
+            .page-title {
+                font-size: 1.3rem;
+            }
+            .title-underline {
+                width: 240px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <h1 class="page-title">常用网址</h1>
+        <div class="title-underline"></div>
+    </header>
+
+    <div class="wave-container">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <div class="grid-container" id="navGrid"></div>
+
+    <script>
+        const websites = [
+            // 保持原有网站数据不变
+            {name: "Google", url: "https://www.google.com", icon: "https://www.google.com/favicon.ico"},
+            {name: "YouTube", url: "https://www.youtube.com", icon: "https://www.youtube.com/favicon.ico"},
+            {name: "GitHub", url: "https://github.com", icon: "https://github.com/favicon.ico"},
+            {name: "Wikipedia", url: "https://wikipedia.org", icon: "https://wikipedia.org/static/favicon/wikipedia.ico"},
+            {name: "Gmail", url: "https://mail.google.com", icon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico"},
+            {name: "Outlook", url: "https://outlook.live.com", icon: "https://outlook.live.com/favicon.ico"},
+
+       
+            {name: "Reddit", url: "https://www.reddit.com", icon: "https://www.redditstatic.com/favicon.ico"},
+            {name: "Cloudflare", url: "https://www.cloudflare-cn.com", icon: "https://www.cloudflare.com/favicon.ico"},
+
+            {name: "特斯拉X", url: "https://x.com", icon: "https://x.com/favicon.ico"},
+            {name: "简书", url: "https://www.jianshu.com", icon: "https://www.jianshu.com/favicon.ico"},
+            {name: "贴吧", url: "https://tieba.baidu.com", icon: "https://tieba.baidu.com/favicon.ico"},
+            {name: "4399游戏", url: "https://www.4399.cn", icon: "https://www.4399.cn/favicon.ico"},
+            {name: "喜马拉雅", url: "https://www.ximalaya.com", icon: "https://www.ximalaya.com/favicon.ico"},
+            {name: "新华网", url: "https://www.xinhuanet.com", icon: "https://www.xinhuanet.com/favicon.ico"},
+            {name: "QQ邮箱", url: "https://mail.qq.com/-", icon: "https://mail.qq.com/favicon.ico"},
+          
+            {name: "21cn个人邮箱", url: "https://mail.21cn.com/w2", icon: "https://mail.21cn.com/w2/favicon.ico"},
+            {name: "百度文库", url: "https://wenku.baidu.com", icon: "https://wenku.baidu.com/favicon.ico"},
+            {name: "粤语发音", url: "https://shyyp.net/", icon: "https://shyyp.net/favicon.ico"},
+            {name: "成语词典", url: "http://www.t7y8.com/", icon: "http://www.t7y8.com/favicon.ico"},
+            {name: "起点书网", url: "https://www.qidian.com/", icon: "https://www.xingming.com/favicon.ico"},
+                    {name: "高德地图", url: "https://www.amap.com", icon: "https://www.amap.com/favicon.ico"},
+            {name: "古诗文网", url: "https://www.gushiwen.cn/", icon: "https://www.gushiwen.cn/favicon.ico"},
+            {name: "CSDN", url: "https://www.csdn.net", icon: "https://www.csdn.net/favicon.ico"},
+            {name: "空气质量", url: "https://aqicn.org/city/beijing/us-embassy/cn/", icon: "https://aqicn.org/favicon.ico"},
+            {name: "算命", url: "https://sheup.org/", icon: "https://www.k366.com//favicon.ico"},
+            {name: "地球在线", url: "https://www.earthol.com/", icon: "https://www.earthol.com/favicon.ico"},
+         
+            {name: "谷歌翻译", url: "https://translate.google.com/?hl=zh-CN&sl=auto&tl=en&op=translate", icon: "https://translate.google.com/favicon.ico"},
+
+        ];
+
+        const container = document.getElementById('navGrid');
+        websites.forEach(site => {
+            const card = document.createElement('a');
+            card.className = 'nav-card';
+            card.href = site.url;
+            card.target = '_blank';
+            card.innerHTML = `
+                <div class="icon-frame">
+                    <img src="${site.icon}" class="site-icon" alt="${site.name}">
+                </div>
+                <div class="site-title">${site.name}</div>
+            `;
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载专区 - 双蝶飞舞</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(160deg, #b3d9ff 20%, #8ab5ff 80%);
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            color: #333;
+            padding-top: 50px;
+        }
+        
+        /* 固定搜索条 - 紧凑版 */
+        .fixed-search-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 4px 8px;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+        }
+        
+        .fixed-search-container .search-container {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 4px 8px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            max-width: 90%;
+        }
+        
+        /* 蝴蝶样式 */
+        .butterfly {
+            position: fixed;
+            width: 80px;
+            opacity: 0;
+            transform-origin: center;
+            z-index: 1000;
+            pointer-events: none;
+            will-change: transform;
+        }
+        
+        .left-wing { animation: flapL 2.8s ease-in-out infinite; }
+        .right-wing { animation: flapR 2.8s ease-in-out infinite; }
+        
+        @keyframes flapL {
+            0%,100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(40deg); }
+        }
+        @keyframes flapR {
+            0%,100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(-40deg); }
+        }
+        
+        #butterfly1 { filter: drop-shadow(0 0 5px #d8bfd8aa); }
+        #butterfly2 { filter: drop-shadow(0 0 5px #ff8095aa); }
+        
+        /* 页面内容区域 */
+        .page-wrapper {
+            max-width: 960px;
+            margin: 15px auto;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-header-title {
+            text-align: center;
+            font-size: 1.7em;
+            color: #5e35b1;
+            margin-bottom: 50px;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+        }
+        
+        .content-area {
+            margin-bottom: 25px;
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 14px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-and-search-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #ede7f6;
+        }
+        
+        .area-title {
+            font-size: 1.1em;
+            color: #7e57c2;
+            font-weight: 500;
+            margin-right: 12px;
+        }
+        
+        .section-header {
+            padding-bottom: 6px;
+            border-bottom: 2px solid #ede7f6;
+            margin-bottom: 15px;
+        }
+        
+        /* 项目框间距 */
+        .software-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 4px;
+            padding: 4px;
+            background-color: rgba(248, 245, 252, 0.9);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .software-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        
+        .software-name-label {
+            flex: 0 0 150px;
+            background-color: #b39ddb;
+            color: white;
+            padding: 3.5px 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            margin-right: 12px;
+            font-size: 0.85em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .software-info-bar {
+            flex-grow: 1;
+            min-width: 140px;
+            background-color: #f3e5f5;
+            color: #4a4a4a;
+            padding: 3.5px 6px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+        
+        .download-button-group {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+        
+        .download-button-group a {
+            background-color: #9575cd;
+            color: white;
+            padding: 3px 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.75em;
+            transition: all 0.2s ease;
+        }
+        .download-button-group a:hover {
+            background-color: #7e57c2;
+            transform: translateY(-1px);
+        }
+        
+        /* 搜索框样式优化 - 紧凑版 */
+        .search-container .search-input-container {
+            flex: 0 0 180px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-container input[type="text"] {
+            width: 100%;
+            padding: 6px 30px 6px 12px;
+            border: none;
+            border-radius: 18px;
+            font-size: 0.85em;
+            outline: none;
+            background: #f8f9fc;
+            color: #333;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        /* 清除按钮样式 */
+        .search-clear-btn {
+            position: absolute;
+            right: 8px;
+            cursor: pointer;
+            color: #999;
+            font-size: 16px;
+            display: none;
+            transition: all 0.2s;
+        }
+        
+        .search-clear-btn:hover {
+            color: #ff6b6b;
+            transform: scale(1.1);
+        }
+        
+        .search-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            white-space: nowrap;
+        }
+        
+        .search-container button:hover {
+            background-color: #43A047;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        
+        .search-nav-buttons {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .search-nav-buttons button {
+            background-color: #7e57c2;
+            color: white;
+            padding: 5px 8px;
+            border-radius: 18px;
+            font-size: 0.75em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .search-nav-buttons button:hover {
+            background-color: #6a45b0;
+            transform: translateY(-1px);
+        }
+        
+        /* 下载结果按钮样式 */
+        .download-results-btn {
+            background-color: #FF9800 !important;
+            padding: 6px 10px !important;
+            border-radius: 18px !important;
+            font-weight: 500;
+            font-size: 0.82em;
+            transition: all 0.2s ease;
+        }
+        
+        .download-results-btn:hover {
+            background-color: #F57C00 !important;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 3px 6px rgba(255, 152, 0, 0.3);
+        }
+        
+        /* 按钮容器 - 紧凑布局 */
+        .buttons-container {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        
+        /* 状态提示 */
+        .status-message {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: fadeOut 3s forwards;
+            opacity: 0;
+            font-size: 0.9em;
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; top: 60px; }
+            70% { opacity: 1; top: 60px; }
+            100% { opacity: 0; top: 40px; }
+        }
+        
+        /* 搜索结果高亮样式 */
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+            padding: 0 2px;
+            border-radius: 3px;
+        }
+        
+        /* 当前高亮结果样式 */
+        .active-highlight {
+            background-color: orange;
+            outline: 2px solid #5e35b1;
+            transition: background-color 0.2s, outline 0.2s;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .fixed-search-container .search-container {
+                flex-wrap: wrap;
+                padding: 6px;
+                width: 95%;
+            }
+            
+            .search-container .search-input-container {
+                flex: 0 0 100%;
+                margin-bottom: 6px;
+            }
+            
+            .search-container input[type="text"] {
+                width: 100%;
+            }
+            
+            .search-container button, 
+            .search-nav-buttons button,
+            .download-results-btn {
+                flex: 1;
+                min-width: 90px;
+                padding: 6px 8px !important;
+                font-size: 0.8em;
+            }
+            
+            .search-nav-buttons {
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+                margin-top: 4px;
+            }
+            
+            .download-results-btn {
+                margin-top: 4px;
+            }
+            
+            .butterfly {
+                width: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 固定搜索条 - 紧凑版 -->
+    <div class="fixed-search-container">
+        <div class="search-container">
+            <div class="search-input-container">
+                <input type="text" id="searchInput" placeholder="搜索软件名称或描述...">
+                <span id="searchClear" class="search-clear-btn">×</span>
+            </div>
+            <div class="buttons-container">
+                <button onclick="searchPage()">搜索内容</button>
+                <div class="search-nav-buttons">
+                    <button id="prevButton" disabled>上一个</button>
+                    <button id="nextButton" disabled>下一个</button>
+                </div>
+                <button class="download-results-btn" onclick="downloadSearchResults()">下载结果</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 状态提示 -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <!-- 蝴蝶动画 -->
+    <div id="butterfly1" class="butterfly">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 429">
+            <defs><linearGradient id="grad1_v2"><stop offset="0%" stop-color="#d8bfd8"/><stop offset="100%" stop-color="#b19cd9"/></linearGradient></defs>
+            <g class="left-wing"><path fill="url(#grad1_v2)" d="M42.56,2.5c-8.1,6.9-11.3,21.2-16.1,71-3.9,41.1-6.6,57.7-13.6,83-2.9,10.5-3.5,14.1-3.1,18.9,1.6,17.6,20.9,37.3,52.2,53.3,13.2,6.7,39.3,17,58,22.8,15.2,4.7,45.5,12.5,48.6,12.5,2.4,0,2.9-3.9,2.9-24.9,0-39.9-7-88.3-16.9-118.2-11.4-33.9-28.4-59-64.1-94.8C71.96,7.7,60.36,0,50.96,0c-4.3,0-6,.5-8.4,2.5Z"/><path fill="url(#grad1_v2)" d="M32.76,237.1c-8.9,2.6-22.4,26.1-28.7,49.9-6.4,24.2-5.2,44.6,3.4,56.3,15.6,21.2,52,13.3,107-23.2,12.3-8.1,27.6-20.9,37.6-31.2,8.2-8.5,16.5-19,15.8-20.1-0.3-0.4-2.1-0.8-4.1-0.8-5.3,0-23.5-4.8-56-14.9-46.7-14.5-66.1-18.6-75-16Z"/></g>
+            <g class="right-wing"><path fill="url(#grad1_v2)" d="M405.16,119c-20.1,2.3-56.1,10.1-72.2,15.7-29.1,10.1-53,25.5-79.6,51.1-14.6,14-31.7,32.8-43.9,48.2-9.9,12.5-24.2,33.8-23.7,35.4,0.4,1.3,26.4,12,41.3,17,15.7,5.3,56,15.2,69.2,17,6.2,0.9,17.7,1.6,25.5,1.6,27.2,0,42.9-6.5,50.5-20.8,1.8-3.3,3.2-6.6,3.2-7.3,0-2.4,11.2-29.4,17.2-41.4,3.3-6.6,13.7-25.5,23.1-42,23.1-40.7,28.1-52.3,26.2-62.1-0.9-4.8-5.9-9.9-11.1-11.3-6.1-1.5-17.1-2-25.7-1.1Z"/><path fill="url(#grad1_v2)" d="M184.86,285.1c1.7,29,12.1,63.5,29.2,96.9,7.8,15.3,14.8,25.5,23.3,34.1,10,9.9,16.8,13.4,26.6,13.4s15-2.8,24-11.9c16.2-16.5,28.5-49.1,28.5-75.6,0-9.6-1.4-14-5.2-17.2-4-3.4-19-11.2-31.8-16.6-18.3-7.8-84-31.7-92.9-33.9l-2.4-0.6.7,11.4Z"/></g>
+            <path fill="url(#grad1_v2)" d="M189.66,216.6c-1.2,0.8-2.2,2.5-2.2,3.8,0,1.2-1.2,3.8-2.6,5.7-4.6,6.2-6.3,10.5-7.4,19.5-2,15.2-3.7,20.9-10.8,35.1-10.1,20.3-11.2,23.9-11.1,38.1,0.1,17,0.3,17.2,7.7,7.8,3.4-4.2,7.3-9.6,8.6-11.9,3.2-5.4,6.1-16.6,8.1-31.2,1.8-13.4,3.7-18.9,11.2-33.2,5-9.8,5.3-10.7,5.3-17.7,0-4.1,0.5-7.8,1-8.1,1.7-1,1.1-6.1-0.8-7.8-2.3-2.1-4.1-2.1-7,0.1Z"/>
+        </svg>
+    </div>
+
+    <div id="butterfly2" class="butterfly">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 429">
+            <defs><linearGradient id="grad2_v2"><stop offset="0%" stop-color="#ffb3ba"/><stop offset="100%" stop-color="#ff8095"/></linearGradient></defs>
+            <g class="left-wing"><path fill="url(#grad2_v2)" d="M42.56,2.5c-8.1,6.9-11.3,21.2-16.1,71-3.9,41.1-6.6,57.7-13.6,83-2.9,10.5-3.5,14.1-3.1,18.9,1.6,17.6,20.9,37.3,52.2,53.3,13.2,6.7,39.3,17,58,22.8,15.2,4.7,45.5,12.5,48.6,12.5,2.4,0,2.9-3.9,2.9-24.9,0-39.9-7-88.3-16.9-118.2-11.4-33.9-28.4-59-64.1-94.8C71.96,7.7,60.36,0,50.96,0c-4.3,0-6,.5-8.4,2.5Z"/><path fill="url(#grad2_v2)" d="M32.76,237.1c-8.9,2.6-22.4,26.1-28.7,49.9-6.4,24.2-5.2,44.6,3.4,56.3,15.6,21.2,52,13.3,107-23.2,12.3-8.1,27.6-20.9,37.6-31.2,8.2-8.5,16.5-19,15.8-20.1-0.3-0.4-2.1-0.8-4.1-0.8-5.3,0-23.5-4.8-56-14.9-46.7-14.5-66.1-18.6-75-16Z"/></g>
+            <g class="right-wing"><path fill="url(#grad2_v2)" d="M405.16,119c-20.1,2.3-56.1,10.1-72.2,15.7-29.1,10.1-53,25.5-79.6,51.1-14.6,14-31.7,32.8-43.9,48.2-9.9,12.5-24.2,33.8-23.7,35.4,0.4,1.3,26.4,12,41.3,17,15.7,5.3,56,15.2,69.2,17,6.2,0.9,17.7,1.6,25.5,1.6,27.2,0,42.9-6.5,50.5-20.8,1.8-3.3,3.2-6.6,3.2-7.3,0-2.4,11.2-29.4,17.2-41.4,3.3-6.6,13.7-25.5,23.1-42,23.1-40.7,28.1-52.3,26.2-62.1-0.9-4.8-5.9-9.9-11.1-11.3-6.1-1.5-17.1-2-25.7-1.1Z"/><path fill="url(#grad2_v2)" d="M184.86,285.1c1.7,29,12.1,63.5,29.2,96.9,7.8,15.3,14.8,25.5,23.3,34.1,10,9.9,16.8,13.4,26.6,13.4s15-2.8,24-11.9c16.2-16.5,28.5-49.1,28.5-75.6,0-9.6-1.4-14-5.2-17.2-4-3.4-19-11.2-31.8-16.6-18.3-7.8-84-31.7-92.9-33.9l-2.4-0.6.7,11.4Z"/></g>
+            <path fill="url(#grad2_v2)" d="M189.66,216.6c-1.2,0.8-2.2,2.5-2.2,3.8,0,1.2-1.2,3.8-2.6,5.7-4.6,6.2-6.3,10.5-7.4,19.5-2,15.2-3.7,20.9-10.8,35.1-10.1,20.3-11.2,23.9-11.1,38.1,0.1,17,0.3,17.2,7.7,7.8,3.4-4.2,7.3-9.6,8.6-11.9,3.2-5.4,6.1-16.6,8.1-31.2,1.8-13.4,3.7-18.9,11.2-33.2,5-9.8,5.3-10.7,5.3-17.7,0-4.1,0.5-7.8,1-8.1,1.7-1,1.1-6.1-0.8-7.8-2.3-2.1-4.1-2.1-7,0.1Z"/>
+        </svg>
+    </div>
+
+    <div class="page-wrapper">
+        <h1 class="main-header-title">下载专区</h1>
+
+        <!-- 常用软件分区 -->
+        <div class="content-area">
+            <div class="header-and-search-container">
+                <h2 class="area-title">常用软件</h2>
+            </div>
+
+          <div class="software-item">
+                <div class="software-name-label">WinRAR</div>
+                <div class="software-info-bar">Winrar破解版提供了多种实用的压缩格式，用户可以在这里快速解压。</div>
+                <div class="download-button-group">
+                    <a href="https://api.kxdw.com/sdown/52970/" target="_blank" title="www.runly.com.cn">直接下载</a>
+                  
+                </div>
+            </div>
+
+            <div class="software-item">
+                <div class="software-name-label">WPS Office</div>
+                <div class="software-info-bar">一站式办公服务平台新升级，无广告，AI办公更高效</div>
+                <div class="download-button-group">
+                    <a href="https://www.wps.cn/" target="_blank" title="WPS Office">官方下载</a>
+                  
+                </div>
+            </div>
+
+            <div class="software-item">
+                <div class="software-name-label">搜狗拼音</div>
+                <div class="software-info-bar">搜狗拼音输入法</div>
+                <div class="download-button-group">
+                    <a href="https://ime-sec.gtimg.com/202505300033/4e41cf70a7d54803a4a258c287e01f1c/pc/sogou_pinyin_guanwang_15.5.exe" target="_blank" title="搜狗">直接下载</a>
+                 
+                </div>
+            </div>
+ <div class="software-item">
+                <div class="software-name-label">极品五笔</div>
+                <div class="software-info-bar">极品五笔属于原生五笔输入法范畴，适应多种操作系统，通用性能较好。</div>
+                <div class="download-button-group">
+                    <a href="http://www.jpwb.cc/soft/jpwb875.exe" target="_blank" title="极品五笔">直接下载</a>
+                  
+                </div>
+            </div>
+
+ <div class="software-item">
+                <div class="software-name-label">微信</div>
+                <div class="software-info-bar">微信  for Windows 全新发布</div>
+                <div class="download-button-group">
+                    <a href="https://weixin.qq.com/updates/windows/405" target="_blank" title="微信">官方下载</a>
+                  
+                </div>
+            </div>
+
+ <div class="software-item">
+                <div class="software-name-label">腾讯QQ</div>
+                <div class="software-info-bar">腾讯QQ,全新版本QQ9上线了!</div>
+                <div class="download-button-group">
+                    <a href="https://im.qq.com/index/#downloadAnchor" target="_blank" title="腾讯QQ">官方下载</a>
+                  
+                </div>
+            </div>
+
+ <div class="software-item">
+                <div class="software-name-label">钉钉</div>
+                <div class="software-info-bar">钉钉科技有限公司 标签职场沟通 </div>
+                <div class="download-button-group">
+                    <a href="https://www.dingtalk.com/download#/" target="_blank" title="钉钉">官方下载</a>
+                  
+                </div>
+            </div>
+
+ <div class="software-item">
+                <div class="software-name-label">谷歌浏览器</div>
+                <div class="software-info-bar">Google 正在集成人工智能,以进一步提高旗下产品的实用性。</div>
+                <div class="download-button-group">
+                    <a href="https://api.ddooo.com/down/127186/2" target="_blank" title="谷歌浏览器免安装绿色版">直接下载</a>
+                    <a href="https://www.google.cn/intl/zh-CN/chrome/" target="_blank" title="谷歌浏览器">官方下载</a>
+                </div>
+            </div>
+
+ <div class="software-item">
+                <div class="software-name-label">360浏览器</div>
+                <div class="software-info-bar">360浏览器下载 全新版本下载,全网视频,精品游戏,小工具全搞定。</div>
+                <div class="download-button-group">
+                    <a href="https://aqllq.njblqs.com/channel_1.html?wordId=1105179504385&creativeid=118463005634&bfsemuserid=13916&&pid=sembd101047&bd_vid=4144230917779587422" target="_blank" title="360浏览器">官方下载</a>
+                  
+                </div>
+            </div>
+
+ <div class="software-item">
+                <div class="software-name-label">百度网盘</div>
+                <div class="software-info-bar">百度网盘是一款国民级产品,已连续12年为超过10亿用户提供稳定存储空间。</div>
+                <div class="download-button-group">
+                    <a href="https://www.baidu.com/s?wd=%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98&rsv_spt=1&rsv_iqid=0xec590d4e01512638&issp=1&f=8&rsv_bp=1&rsv_idx=2&ie=utf-8&tn=baiduhome_pg&rsv_dl=ib&rsv_enter=1&rsv_sug3=13&rsv_sug1=11&rsv_sug7=100" target="_blank" title="百度网盘">官方下载</a>
+                  
+                </div>
+            </div>
+
+ <div class="software-item">
+                <div class="software-name-label">迅雷下载</div>
+                <div class="software-info-bar">迅雷,是一款专业下载工具。</div>
+                <div class="download-button-group">
+                    <a href="https://pc.xunlei.com/" target="_blank" title="迅雷下载">官方下载</a>
+                  
+                </div>
+            </div>
+
+ <div class="software-item">
+                <div class="software-name-label">酷我音乐</div>
+                <div class="software-info-bar">酷我音乐-无损音质正版在线试听网站,酷我音乐为您提供高品质音乐。</div>
+                <div class="download-button-group">
+                    <a href="https://www.kuwo.cn/down" target="_blank" title="酷我音乐">官方下载</a>
+                  
+                </div>
+            </div>
+
+<div class="software-item">
+                <div class="software-name-label">酷狗音乐</div>
+                <div class="software-info-bar">酷狗音乐，是腾讯音乐娱乐集团旗下的在线音乐流媒体平台。</div>
+                <div class="download-button-group">
+                    <a href="https://baoku.360.cn/sinfo/72_4001807.html" target="_blank" title="酷狗音乐">官方下载</a>
+                  
+                </div>
+            </div>
+
+<div class="software-item">
+                <div class="software-name-label">Potplayer播放器</div>
+                <div class="software-info-bar">PotPlayer 是暂时最好的网络播放器。</div>
+                <div class="download-button-group">
+                    <a href="https://potplayer.tv/" target="_blank" title="Potplayer播放器">官方下载</a>
+                  
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 官网及驱动分区 -->
+        <div class="content-area">
+            <div class="section-header">
+                <h2 class="area-title">官网及驱动</h2>
+            </div>
+            
+             <div class="software-item">
+                <div class="software-name-label">GIGABYTE 技嘉驱动</div>
+                <div class="software-info-bar">技嘉致力于创新科技,提供消费者个人电脑的更佳体验,。</div>
+                <div class="download-button-group">
+                    <a href="https://www.gigabyte.cn/Support/Consumer/Download" target="_blank" title="GIGABYTE ">官方下载</a>
+                    
+                </div>
+            </div>
+            
+            <div class="software-item">
+                <div class="software-name-label">Intel驱动程序</div>
+                <div class="software-info-bar">Intel官方驱动程序支持，包括网卡、芯片组等。</div>
+                <div class="download-button-group">
+                    <a href="https://www.intel.cn/content/www/cn/zh/download-center/home.html" target="_blank" title="Intel官方下载">官网下载</a>
+                </div>
+            </div>
+            
+<div class="software-item">
+                <div class="software-name-label">Nvidia（英伟达）</div>
+                <div class="software-info-bar">一家提供全栈计算的人工智能公司，致力于开发CPU、DPU、GPU和AI软件。</div>
+                <div class="download-button-group">
+                    <a href="https://www.nvidia.cn/drivers/lookup/" target="_blank" title="Nvidia ">官方下载</a>
+                    
+                </div>
+            </div>
+
+<div class="software-item">
+                <div class="software-name-label">GIGABYTE 技嘉驱动</div>
+                <div class="software-info-bar">技嘉致力于创新科技,提供消费者个人电脑的更佳体验,。</div>
+                <div class="download-button-group">
+                    <a href="https://www.gigabyte.cn/Support/Consumer/Download" target="_blank" title="GIGABYTE ">官方下载</a>
+                    
+                </div>
+            </div>
+            <div class="software-item">
+                <div class="software-name-label">Realtek声卡驱动</div>
+                <div class="software-info-bar">Realtek高清音频驱动程序官方下载</div>
+                <div class="download-button-group">
+                    <a href="https://www.realtek.com/" target="_blank" title="Realtek官网">官网下载</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 其它软件分区 -->
+        <div class="content-area">
+            <div class="section-header">
+                <h2 class="area-title">其它软件</h2>
+            </div>
+            
+                <div class="software-item">
+                <div class="software-name-label">局域网共享一键通</div>
+                <div class="software-info-bar">局域网共享一键通，该工具可以帮助用户快速的创建文件共享。</div>
+                <div class="download-button-group">
+                    <a href="https://down.365ncg.com/kuai/6VW/OEE18pYw/Hw90E9EBw" target="_blank" title="局域网共享一键通">直接下载</a>
+                    <a href="https://download.downza.cn/hudsnjkl/7529?module=soft&id=7529&token=b07477e77652c0fa5ee7485831d52c71&isxzq=0" target="_blank" title="绿色版英文名Okshare">直接下载</a>
+                </div>
+            </div>
+            
+            <div class="software-item">
+                <div class="software-name-label">网络测速工具</div>
+                <div class="software-info-bar">快速测试网络上传下载速度，支持多种网络环境</div>
+                <div class="download-button-group">
+                    <a href="https://www.speedtest.net/apps" target="_blank" title="Speedtest官方">官网下载</a>
+                    <a href="https://www.speedtest.cn/" target="_blank" title="网页版测速">网页版</a>
+                </div>
+            </div>
+            
+            <div class="software-item">
+                <div class="software-name-label">远程控制工具</div>
+                <div class="software-info-bar">支持多平台远程控制，提供安全稳定的连接</div>
+                <div class="download-button-group">
+                    <a href="https://anydesk.com/zhs" target="_blank" title="AnyDesk">AnyDesk</a>
+                    <a href="https://www.teamviewer.cn/cn/" target="_blank" title="TeamViewer">TeamViewer</a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script>
+        // 搜索功能相关变量
+        let searchResults = [];
+        let currentHighlightIndex = -1;
+        let currentSearchTerm = '';
+        
+        /**
+         * 显示状态消息
+         * @param {string} message 要显示的消息
+         */
+        function showStatus(message) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 3000);
+        }
+        
+        /**
+         * 清除页面上所有的高亮显示
+         */
+        function clearHighlights() {
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(span => {
+                const parent = span.parentNode;
+                if (parent) {
+                    span.classList.remove('active-highlight');
+                    parent.replaceChild(document.createTextNode(span.textContent), span);
+                    parent.normalize();
+                }
+            });
+            searchResults = [];
+            currentHighlightIndex = -1;
+            updateNavigationButtons();
+        }
+        
+        /**
+         * 在页面中执行搜索并高亮所有匹配项
+         */
+        function searchPage() {
+            const searchText = document.getElementById('searchInput').value.trim();
+            
+            if (!searchText) {
+                if (currentSearchTerm) {
+                    clearHighlights();
+                }
+                showStatus('搜索内容不能为空');
+                currentSearchTerm = '';
+                return;
+            }
+            
+            // 如果搜索词与上次相同且仍有结果，则直接滚动到当前高亮处
+            if (searchText === currentSearchTerm && searchResults.length > 0) {
+                scrollToHighlight(currentHighlightIndex);
+                return;
+            }
+            
+            currentSearchTerm = searchText;
+            clearHighlights();
+            
+            const regex = new RegExp(searchText, 'gi');
+            const searchableContainers = document.querySelectorAll('.content-area');
+            
+            let foundCount = 0;
+            
+            searchableContainers.forEach(container => {
+                const treeWalker = document.createTreeWalker(
+                    container,
+                    NodeFilter.SHOW_TEXT,
+                    {
+                        acceptNode: function(node) {
+                            if (node.nodeValue.trim().length === 0) {
+                                return NodeFilter.FILTER_SKIP;
+                            }
+                            const parent = node.parentNode;
+                            if (parent &&
+                                !['SCRIPT', 'STYLE', 'INPUT', 'BUTTON', 'TEXTAREA'].includes(parent.tagName) &&
+                                !parent.closest('.search-container') &&
+                                !parent.closest('.butterfly')
+                            ) {
+                                return NodeFilter.FILTER_ACCEPT;
+                            }
+                            return NodeFilter.FILTER_SKIP;
+                        }
+                    },
+                    false
+                );
+                
+                let textNode;
+                const textNodesToProcess = [];
+                while ((textNode = treeWalker.nextNode())) {
+                    textNodesToProcess.push(textNode);
+                }
+                
+                textNodesToProcess.forEach(originalTextNode => {
+                    const originalText = originalTextNode.nodeValue;
+                    let lastIndex = 0;
+                    let match;
+                    const newNodes = [];
+                    
+                    while ((match = regex.exec(originalText)) !== null) {
+                        if (match.index > lastIndex) {
+                            newNodes.push(document.createTextNode(originalText.substring(lastIndex, match.index)));
+                        }
+                        
+                        const highlightSpan = document.createElement('span');
+                        highlightSpan.className = 'highlight';
+                        highlightSpan.textContent = match[0];
+                        newNodes.push(highlightSpan);
+                        searchResults.push(highlightSpan);
+                        foundCount++;
+                        
+                        lastIndex = regex.lastIndex;
+                    }
+                    
+                    if (lastIndex < originalText.length) {
+                        newNodes.push(document.createTextNode(originalText.substring(lastIndex)));
+                    }
+                    
+                    if (newNodes.length > 0) {
+                        newNodes.forEach(newNode => originalTextNode.parentNode.insertBefore(newNode, originalTextNode));
+                        originalTextNode.parentNode.removeChild(originalTextNode);
+                    }
+                });
+            });
+            
+            // 搜索完成后，对结果排序
+            searchResults.sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+            
+            if (foundCount > 0) {
+                currentHighlightIndex = 0;
+                scrollToHighlight(currentHighlightIndex);
+                showStatus(`找到 ${foundCount} 个匹配项`);
+            } else {
+                showStatus('未找到匹配的搜索结果');
+            }
+            updateNavigationButtons();
+        }
+        
+        /**
+         * 滚动到指定索引的高亮元素
+         * @param {number} index 要滚动到的高亮元素的索引
+         */
+        function scrollToHighlight(index) {
+            if (searchResults.length === 0) return;
+            
+            if (currentHighlightIndex !== -1 && searchResults[currentHighlightIndex]) {
+                searchResults[currentHighlightIndex].classList.remove('active-highlight');
+            }
+            
+            currentHighlightIndex = index;
+            if (currentHighlightIndex < 0) {
+                currentHighlightIndex = searchResults.length - 1;
+            } else if (currentHighlightIndex >= searchResults.length) {
+                currentHighlightIndex = 0;
+            }
+            
+            const targetElement = searchResults[currentHighlightIndex];
+            if (targetElement) {
+                targetElement.classList.add('active-highlight');
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            updateNavigationButtons();
+        }
+        
+        /**
+         * 导航搜索结果
+         * @param {number} direction -1表示上一个，1表示下一个
+         */
+        function navigateSearchResult(direction) {
+            if (searchResults.length === 0) return;
+            scrollToHighlight(currentHighlightIndex + direction);
+        }
+        
+        /**
+         * 更新导航按钮状态
+         */
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevButton');
+            const nextBtn = document.getElementById('nextButton');
+            
+            if (searchResults.length <= 1) {
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+            }
+        }
+        
+        /**
+         * 下载搜索结果功能
+         * 收集包含搜索关键词的所有软件项目
+         */
+        function downloadSearchResults() {
+            const searchText = document.getElementById('searchInput').value.trim();
+            
+            if (!searchText) {
+                showStatus('请输入搜索内容');
+                return;
+            }
+            
+            // 获取所有软件项目
+            const softwareItems = document.querySelectorAll('.software-item');
+            const matchedItems = [];
+            
+            // 使用正则表达式进行不区分大小写的匹配
+            const regex = new RegExp(searchText, 'i');
+            
+            // 收集匹配的项目
+            softwareItems.forEach(item => {
+                if (regex.test(item.textContent)) {
+                    matchedItems.push({
+                        name: item.querySelector('.software-name-label').textContent,
+                        desc: item.querySelector('.software-info-bar').textContent,
+                        links: Array.from(item.querySelectorAll('.download-button-group a')).map(link => ({
+                            href: link.href,
+                            title: link.title,
+                            text: link.textContent
+                        }))
+                    });
+                }
+            });
+            
+            if (matchedItems.length === 0) {
+                showStatus('未找到匹配的软件项目');
+                return;
+            }
+            
+            // 构建下载结果页面的HTML
+            let resultHTML = `
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>搜索结果: ${searchText}</title>
+                    <style>
+                        body {
+                            font-family: 'Microsoft YaHei', Arial, sans-serif;
+                            background: #f0f4ff;
+                            margin: 0;
+                            padding: 20px;
+                        }
+                        .download-result-page {
+                            max-width: 800px;
+                            margin: 0 auto;
+                            padding: 40px 20px;
+                            background: #f9f9ff;
+                            min-height: 100vh;
+                        }
+                        .download-result-header {
+                            text-align: center;
+                            margin-bottom: 40px;
+                        }
+                        .download-result-header h1 {
+                            color: #5e35b1;
+                            font-size: 2em;
+                            margin-bottom: 10px;
+                        }
+                        .download-result-header p {
+                            color: #7e57c2;
+                            font-size: 1.1em;
+                        }
+                        .download-result-item {
+                            background: white;
+                            border-radius: 12px;
+                            padding: 20px;
+                            margin-bottom: 20px;
+                            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                            transition: transform 0.3s ease;
+                        }
+                        .download-result-item:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+                        }
+                        .download-result-item h3 {
+                            color: #5e35b1;
+                            margin-top: 0;
+                            border-bottom: 2px solid #ede7f6;
+                            padding-bottom: 10px;
+                            margin-bottom: 15px;
+                        }
+                        .download-result-desc {
+                            color: #555;
+                            margin-bottom: 15px;
+                            line-height: 1.6;
+                        }
+                        .download-result-buttons {
+                            display: flex;
+                            gap: 10px;
+                            flex-wrap: wrap;
+                        }
+                        .download-result-buttons a {
+                            background: #9575cd;
+                            color: white;
+                            padding: 8px 15px;
+                            border-radius: 6px;
+                            text-decoration: none;
+                            transition: all 0.2s ease;
+                        }
+                        .download-result-buttons a:hover {
+                            background: #7e57c2;
+                            transform: translateY(-2px);
+                            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="download-result-page">
+                        <div class="download-result-header">
+                            <h1>搜索结果: ${searchText}</h1>
+                            <p>找到 ${matchedItems.length} 个匹配的项目</p>
+                        </div>
+            `;
+            
+            // 添加每个匹配的项目
+            matchedItems.forEach(item => {
+                resultHTML += `
+                    <div class="download-result-item">
+                        <h3>${item.name}</h3>
+                        <div class="download-result-desc">${item.desc}</div>
+                        <div class="download-result-buttons">
+                `;
+                
+                // 添加每个下载链接
+                item.links.forEach(link => {
+                    resultHTML += `<a href="${link.href}" title="${link.title}" target="_blank">${link.text}</a>`;
+                });
+                
+                resultHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultHTML += `
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            // 打开新窗口并写入内容
+            const resultWindow = window.open('', '_blank');
+            resultWindow.document.write(resultHTML);
+            resultWindow.document.close();
+        }
+        
+        // 蝴蝶动画控制器
+        class ButterflyController {
+            constructor(element, isSecond) {
+                this.element = element;
+                this.isSecond = isSecond;
+                this.currentAnimation = null;
+                this.isAnimating = false;
+                this.boundaryPadding = { x: 80, y: 80 };
+            }
+            
+            generatePath() {
+                const visibleWidth = window.innerWidth - 2 * this.boundaryPadding.x;
+                const visibleHeight = window.innerHeight - 2 * this.boundaryPadding.y;
+                const startX = this.boundaryPadding.x + Math.random() * visibleWidth;
+                const startY = this.boundaryPadding.y + Math.random() * visibleHeight;
+                
+                return Array.from({length: this.isSecond ? 6 : 4}, (_,i) => {
+                    const angle = i * (this.isSecond ? Math.PI / 2.5 : Math.PI / 1.8);
+                    const radiusX = visibleWidth * (0.3 + Math.random() * 0.3);
+                    const radiusY = visibleHeight * (0.3 + Math.random() * 0.3);
+                    
+                    return {
+                        x: Math.max(this.boundaryPadding.x, Math.min(startX + Math.cos(angle) * radiusX, window.innerWidth - this.boundaryPadding.x - (this.element.offsetWidth || 0) )),
+                        y: Math.max(this.boundaryPadding.y, Math.min(startY + Math.sin(angle) * radiusY, window.innerHeight - this.boundaryPadding.y - (this.element.offsetHeight || 0) )),
+                        scale: 0.5 + Math.random() * (this.isSecond ? 0.7 : 0.5),
+                        rotate: (Math.random() - 0.5) * (this.isSecond ? 40 : 25)
+                    };
+                });
+            }
+            
+            startFlight() {
+                if(this.isAnimating || !this.element) return;
+                this.isAnimating = true;
+                
+                this.element.animate([{opacity:0}, {opacity:1}], {
+                    duration: 1200,
+                    fill: 'forwards'
+                });
+                
+                const pathKeyframes = this.generatePath().map(p => ({
+                    transform: `translate(${p.x}px, ${p.y}px) scale(${p.scale}) rotate(${p.rotate}deg)`,
+                    opacity: 1
+                }));
+                
+                if (pathKeyframes.length === 0) {
+                    this.isAnimating = false;
+                    return;
+                }
+                
+                const baseDuration = this.isSecond ? 25000 : 38000;
+                this.currentAnimation = this.element.animate(pathKeyframes, {
+                    duration: baseDuration + Math.random() * 10000,
+                    iterations: 1,
+                    easing: this.isSecond ? 'cubic-bezier(0.42, 0, 0.58, 1)' : 'linear'
+                });
+                
+                this.currentAnimation.onfinish = () => {
+                    this.element.animate([{opacity:1}, {opacity:0}], {
+                        duration: 1200,
+                        fill: 'forwards'
+                    }).onfinish = () => {
+                        this.isAnimating = false;
+                        setTimeout(() => this.startFlight(), (this.isSecond ? 2000 : 3500) + Math.random() * 2000);
+                    };
+                };
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 绑定搜索输入框的回车键事件
+            document.getElementById('searchInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    searchPage();
+                }
+            });
+            
+            // 绑定导航按钮的点击事件
+            document.getElementById('prevButton').addEventListener('click', () => navigateSearchResult(-1));
+            document.getElementById('nextButton').addEventListener('click', () => navigateSearchResult(1));
+            
+            // 清空按钮事件
+            const clearBtn = document.getElementById('searchClear');
+            const searchInput = document.getElementById('searchInput');
+            
+            clearBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                this.style.display = 'none';
+                clearHighlights();
+                currentSearchTerm = '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                showStatus('搜索已清除');
+            });
+            
+            searchInput.addEventListener('input', function() {
+                clearBtn.style.display = this.value.trim() ? 'block' : 'none';
+            });
+            
+            // 蝴蝶动画初始化
+            const butterflyElem1 = document.getElementById('butterfly1');
+            const butterflyElem2 = document.getElementById('butterfly2');
+            
+            if (butterflyElem1 && butterflyElem2) {
+                const butterflies = [
+                    new ButterflyController(butterflyElem1, false),
+                    new ButterflyController(butterflyElem2, true)
+                ];
+                
+                butterflies[0].startFlight();
+                setTimeout(() => butterflies[1].startFlight(), 4000 + Math.random() * 2000);
+                
+                // 窗口大小改变时重新启动蝴蝶动画
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        butterflies.forEach(b => {
+                            if (b.currentAnimation) b.currentAnimation.cancel();
+                            b.isAnimating = false;
+                            if (b.element) {
+                                b.startFlight();
+                            }
+                        });
+                    }, 250);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
