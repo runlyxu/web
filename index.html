@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>专业导航门户</title>
     <style>
-        :root {
-            --primary-blue: #315efb;
-            --hover-blue: #1a4cff;
-            --text-dark: #2d3748;
-            --text-light: #4a5568;
-            --border-color: #e2e8f0;
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          :root {
+            --primary-blue: #3B82F6;
+            --hover-blue: #2563EB;
+            --text-dark: #333333;
+            --text-light: #6B7280;
+            --border-color: #E5E7EB;
+            --card-bg: #FFFFFF;
+            --shadow-light: 0 4px 10px rgba(0, 0, 0, 0.06);
+            --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --transition-fast: all 0.2s ease-in-out;
+            --transition-normal: all 0.3s ease-in-out;
+            --underline-color: rgba(59, 130, 246, 0.2);
         }
 
         * {
@@ -22,9 +27,41 @@
             letter-spacing: -0.2px;
         }
 
+        /* 新增流动天空导航条 */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            background: linear-gradient(120deg, 
+                #e3f2fd 0%, 
+                #bbdefb 25%, 
+                #90caf9 50%, 
+                #64b5f6 75%, 
+                #42a5f5 100%);
+            background-size: 400% 400%;
+            animation: skyFlow 15s ease infinite;
+            box-shadow: var(--shadow-medium);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        @keyframes skyFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .left-nav a, .meta-link {
+            text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+        }
+
         body {
-            background: #f8fafc;
-            line-height: 1.4;
+            background: #F9FAFB;
+            line-height: 1.6;
+            color: var(--text-dark);
         }
 
         .container {
@@ -33,104 +70,174 @@
             padding: 0 15px;
         }
 
-        /* 顶部导航 */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 3px 0;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 15px;
-        }
-
         .left-nav {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 20px;
         }
 
         .home-link {
-            font-size: 0.9rem;
+            position: relative;
+            font-size: 1rem;
             color: var(--text-dark);
             text-decoration: none;
-            padding: 2px 5px;
-            border-radius: 3px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .home-link::before {
+            content: "🏠";
+            font-size: 1rem;
+        }
+
+        .home-link:hover {
+            color: var(--hover-blue);
+            background: rgba(59, 130, 246, 0.05);
         }
 
         .weather-link {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            text-decoration: none;
             display: flex;
-            gap: 6px;
-            padding: 3px 8px;
-            border-radius: 3px;
-            transition: var(--transition);
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow-light);
+            transition: var(--transition-normal);
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+ .weather-link span:first-child {
+        color: #16a34a; /* 使用柔和的绿色 */
+    }
+        .weather-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
         }
 
-        /* 右侧导航 */
         .meta-links {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             align-items: center;
         }
 
         .meta-link {
-            font-size: 0.85rem;
-            color: var(--text-light);
+            padding: 6px 15px;
+            border-radius: 20px;
+            background: rgba(59, 130, 246, 0.08);
+            transition: var(--transition-normal);
             text-decoration: none;
-            padding: 3px 8px;
-            border-radius: 3px;
-            transition: var(--transition);
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+.meta-link[title="星座运势"] {
+    color: #FF007F !important;  /* 仅修改文字颜色 */
+    background: inherit !important; /* 保持原有背景 */
+}
+.meta-link[title="星座运势"]:hover {
+    color: #ff3399 !important;  /* 悬停颜色 */
+    background: inherit !important; /* 保持悬停背景 */
+}
+        .meta-link:hover {
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
         }
 
-        /* 服务导航 */
+        .divider {
+            color: var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .meta-links:hover .divider {
+            transform: none;
+        }
+
+        /* 搜索条修改 */
+        #engineSelector option {
+            font-weight: 600;
+        }
+        #engineSelector option[value="baidu"] { color: #1a3c8f; }
+        #engineSelector option[value="google"] { color: #ea4335; }
+        #engineSelector option[value="bing"] { color: #f25022; }
+        #engineSelector option[value="sogou"] { color: #00b140; }
+        #engineSelector option[value="zhihu"] { color: #2d1559; }
+
+       .engine-selector {
+    width: 150px;
+    height: 52px;
+    padding: 0 35px 0 20px !important;  /* 修正：右侧腾出箭头空间 */
+    border: none;
+    border-right: 2px solid #1D4ED8 !important;
+    appearance: none;
+    background: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"><path d="M7 10l5 5 5-5z"/></svg>') 
+        no-repeat right 15px center/12px,
+        linear-gradient(145deg, #2563EB 0%, #3B82F6 100%) 
+        !important;
+    font-size: 15px;
+    color: white !important;  /* 强制覆盖为白色 */
+    cursor: pointer;
+    outline: none;
+    
+    /* 新增居中定位属性 */
+    text-align: center !important;     /* 水平居中 */
+    text-indent: 10px !important;      /* 视觉补偿 */
+    letter-spacing: 0.5px !important;  /* 字间距微调 */
+    box-sizing: border-box !important; /* 确保尺寸计算准确 */
+}
+
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-            gap: 2px;
-            padding: 4px 0;
-            margin-bottom: 8px;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 8px;
+            padding: 20px 0;
+            margin-bottom: 25px;
+            justify-content: center;
         }
 
         .service-item {
             list-style: none;
             text-align: center;
-            margin: 1px 0; 
         }
 
         .service-link {
             display: block;
-            padding:  3px 4px !important;
-            font-size: 0.82rem;
+            padding: 10px 0px;
+            font-size: 0.9rem;
             color: var(--text-dark);
             text-decoration: none;
-            line-height: 1.15 !important;
-            border-radius: 3px;
-            transition: var(--transition);
+            line-height: 1.3;
+            border-radius: 8px;
+            transition: var(--transition-normal);
+            transform-origin: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* 搜索条 */
+        .service-link:hover {
+             color: #16a34a;  /* 柔和的绿色 */
+    background: rgba(22, 163, 74, 0.08);  /* 配套绿色半透明背景 */
+            box-shadow: var(--shadow-light);
+            transform: translateY(-2px);
+            font-weight: 500;
+        }
+
         .search-engine-container {
             max-width: 800px;
-            margin: 30px auto;
+            margin: 40px auto;
             position: relative;
             display: flex;
-            gap: 5px;
-        }
+            border-radius: 28px;
+            overflow: hidden;
 
-        .engine-selector {
-            width: 140px;
-            height: 48px;
-            padding: 0 15px;
+            box-shadow: var(--shadow-medium);
             border: 2px solid var(--primary-blue);
-            border-radius: 24px 0 0 24px;
-            appearance: none;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23315efb"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 15px center/12px;
-            font-size: 14px;
-            color: var(--text-dark);
-            cursor: pointer;
         }
 
         .search-wrapper {
@@ -140,51 +247,74 @@
 
         .enhanced-search-input {
             width: 100%;
-            height: 48px;
+            height: 52px;
             padding: 0 120px 0 20px;
-            border: 2px solid var(--primary-blue);
-            border-left: none;
-            border-radius: 0 24px 24px 0;
+            border: none;
             font-size: 16px;
-            transition: all 0.3s ease;
+            transition: var(--transition-normal);
+            outline: none;
         }
 
         .enhanced-search-btn {
             position: absolute;
-            right: 6px;
-            top: 6px;
-            height: 36px;
+            right: 0;
+            top: 0;
+            height: 100%;
             padding: 0 30px;
             background: var(--primary-blue);
             border: none;
             color: white;
-            border-radius: 18px;
+            border-radius: 0;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: var(--transition-normal);
+            font-size: 16px;
+        }
+        .enhanced-search-btn:hover {
+            background: var(--hover-blue);
         }
 
-        /* 中部四列样式 */
+        /* 微博热榜背景修改 */
+        .news-bar {
+            max-width: 800px;
+            margin: 25px auto;
+            background: #a7f3d0; 
+            border-color: #fb7185; /* 配套边框颜色 */
+            border-radius: 10px;
+            border: 1px solid #d1c4e9;
+            box-shadow: 0 4px 12px rgba(251, 113, 133, 0.1);
+            height: 50px;
+            overflow: hidden;
+            position: relative;
+            transition: var(--transition-normal);
+        }
+
         .content-columns {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
             margin: 50px 0;
             padding: 0 20px;
         }
 
         .category-column {
-            background: #fff;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-light);
+            transition: var(--transition-normal);
+        }
+        .category-column:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-3px);
         }
 
         .category-header {
-            font-size: 1.1rem;
-            color: #2d3748;
+            font-size: 1.2rem;
+            color: var(--text-dark);
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #315efb;
+            border-bottom: 2px solid var(--primary-blue);
+            font-weight: 600;
         }
 
         .site-list {
@@ -196,43 +326,50 @@
         .site-item {
             display: flex;
             align-items: center;
-            margin: 10px 0;
-            padding: 8px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+            transition: var(--transition-normal);
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.95rem;
         }
 
         .site-item:hover {
-            background: rgba(49, 94, 251, 0.05);
-            transform: translateX(5px);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateX(3px);
         }
 
         .site-icon {
-            width: 20px;
-            height: 20px;
-            margin-right: 12px;
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
             object-fit: contain;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .site-item a {
+            text-decoration: none;
+            color: inherit;
         }
 
         .more-link {
-            display: block;
+            display: inline-block;
             text-align: center;
-            margin-top: 15px;
-            color: #315efb;
+            margin-top: 20px;
+            padding: 8px 18px;
+            border: 1px solid var(--primary-blue);
+            border-radius: 20px;
+            background: transparent;
+            color: var(--primary-blue);
             text-decoration: none;
             font-weight: 500;
+            transition: var(--transition-normal);
         }
-
-        /* 实时热榜样式 */
-        .news-bar {
-            max-width: 800px;
-            margin: 12px auto;
-            background: rgba(49,94,251,0.05);
-            border-radius: 8px;
-            border: 1px solid rgba(49,94,251,0.15);
-            height: 40px;
-            overflow: hidden;
-            position: relative;
+        .more-link:hover {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: var(--shadow-light);
         }
 
         .news-container {
@@ -243,12 +380,13 @@
         }
 
         .news-label {
-            font-size: 0.9rem;
-            color: #315efb;
+            font-size: 1rem;
+            color: var(--primary-blue);
             font-weight: 600;
-            padding-right: 20px;
-            border-right: 1px solid rgba(49,94,251,0.2);
-            margin-right: 20px;
+            padding-right: 25px;
+            border-right: 1px solid var(--border-color);
+            margin-right: 25px;
+            flex-shrink: 0;
         }
 
         .scroll-wrapper {
@@ -273,44 +411,52 @@
         }
 
         .news-item {
-            color: #2d3748;
-            font-size: 0.92rem;
+            color: var(--text-dark);
+            font-size: 0.95rem;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            transition: all 0.2s ease;
-            height: 40px;
+            transition: var(--transition-fast);
+            height: 50px;
             padding: 0 10px;
+            flex-shrink: 0;
         }
 
         .news-item:hover {
-            color: #315efb;
+            color: var(--primary-blue);
             transform: translateY(-1px);
         }
 
         .rank {
-            background: #315efb;
+            background: var(--primary-blue);
             color: white;
-            width: 22px;
-            height: 22px;
-            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
         }
 
         @keyframes scroll {
             0% { transform: translateX(100%); }
-            100% { transform: translateX(-200%); } /* 延长滚动距离 */
+            100% { transform: translateX(-200%); }
         }
 
-        .news-status {
-            color: #666;
+        .footer-divider {
+            margin-top: 50px;
+            border: 0;
+            border-top: 1px solid var(--border-color);
+        }
+        .contact-info {
+            text-align: center;
             font-size: 0.85rem;
-            padding-left: 15px;
-            display: none; /* 隐藏状态提示 */
+            color: var(--text-light);
+            padding: 20px 0;
         }
 
         @media (max-width: 768px) {
@@ -319,38 +465,201 @@
             }
             .top-bar {
                 flex-direction: column;
-                gap: 6px;
-                padding: 8px 0;
+                gap: 10px;
+                padding: 10px 0;
             }
             .engine-selector {
-                width: 110px;
-                font-size: 13px;
+z
+
+                width: 120px;
+                font-size: 14px;
             }
             .enhanced-search-input {
                 padding-right: 90px;
-                font-size: 14px;
+                font-size: 15px;
             }
             .enhanced-search-btn {
                 padding: 0 20px;
             }
             .news-bar {
-                height: 36px;
-                margin: 10px auto;
+                height: 40px;
+                margin: 15px auto;
             }
             .news-label {
-                font-size: 0.85rem;
+                font-size: 0.9rem;
                 padding-right: 15px;
                 margin-right: 15px;
             }
             .news-item {
-                font-size: 0.88rem;
-                height: 36px;
+                font-size: 0.9rem;
+                height: 40px;
             }
             .rank {
+                width: 22px;
+                height: 22px;
+                font-size: 0.8rem;
+            }
+            .category-column {
+                padding: 15px;
+            }
+            .site-item {
+                font-size: 0.9rem;
+            }
+            .site-icon {
                 width: 20px;
                 height: 20px;
-                font-size: 0.76rem;
+                margin-right: 10px;
             }
+            .more-link {
+                margin-top: 15px;
+            }
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 5px;
+                padding: 15px 0;
+            }
+            .service-link {
+                font-size: 0.85rem;
+                padding: 8px 3px;
+            }
+        }
+
+        .weather-animation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            background-color: rgba(0,0,0,0.1);
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .weather-animation-overlay.fade-in {
+            opacity: 1;
+        }
+        .weather-animation-overlay.fade-out {
+            opacity: 0;
+        }
+
+        .rain-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 30px;
+        }
+        .rain-container .cloud {
+            width: 200px;
+            height: 100px;
+            background: #778899;
+            border-radius: 50px;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0,0,0,0.2);
+        }
+        .rain-container .cloud::before, .rain-container .cloud::after {
+            content: '';
+            position: absolute;
+            background: #778899;
+            border-radius: 50%;
+        }
+        .rain-container .cloud::before {
+            width: 100px; height: 100px; top: -50px; left: 25px;
+        }
+        .rain-container .cloud::after {
+            width: 120px; height: 120px; top: -60px; right: 20px;
+        }
+        .rain-drop {
+            position: absolute;
+            bottom: -20px;
+            width: 2px;
+            height: 15px;
+            background: #87CEFA;
+            border-radius: 50%;
+            animation: fall 0.7s linear infinite;
+            opacity: 0;
+        }
+        @keyframes fall {
+            0% { transform: translateY(0px); opacity: 1; }
+            100% { transform: translateY(180px); opacity: 0; }
+        }
+
+        .overcast-layer {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #a0a0b0, #c0c0d0);
+            opacity: 0;
+            animation: fadeInOvercastEffect 3.5s ease-out forwards;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .overcast-layer::after {
+            content: "☁️";
+            font-size: 15vw;
+            opacity: 0.3;
+            animation: driftCloudEmoji 15s linear infinite alternate;
+        }
+        @keyframes fadeInOvercastEffect {
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 0.75; transform: translateY(0); }
+        }
+        @keyframes driftCloudEmoji {
+            from { transform: translateX(-10px); }
+            to { transform: translateX(10px); }
+        }
+
+        .sunny-sky {
+            display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;
+        }
+        .sun-wrapper {
+            opacity: 0;
+            transform: scale(0.3) rotate(-45deg);
+            animation: sun-appear-effect 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+        @keyframes sun-appear-effect {
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        .sun {
+            width: 200px; height: 200px;
+            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            animation: sun-spin-effect 25s linear infinite;
+        }
+        @keyframes sun-spin-effect {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .sun-core {
+            width: 100%; height: 100%;
+            background: gold;
+            border-radius: 50%;
+            box-shadow: 0 0 40px gold, 0 0 80px #FFD700, 0 0 120px orange;
+            animation: sun-pulse-glow-effect 2.5s ease-in-out infinite alternate;
+            display: flex; justify-content: center; align-items: center;
+        }
+        @keyframes sun-pulse-glow-effect {
+            from { transform: scale(1); box-shadow: 0 0 40px gold, 0 0 80px #FFD700, 0 0 120px orange; }
+            to { transform: scale(1.08); box-shadow: 0 0 50px #FFD700, 0 0 100px orange, 0 0 150px darkorange; }
+        }
+        .sun-face {
+            font-size: 70px;
+            color: #B8860B;
+            font-weight: bold;
+            animation: sun-face-smile-effect 3s ease-in-out infinite alternate;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        @keyframes sun-face-smile-effect {
+            0% { transform: scale(1) rotate(-5deg); }
+            50% { transform: scale(1.15) rotate(5deg); }
+            100% { transform: scale(1) rotate(-5deg); }
         }
     </style>
 </head>
@@ -359,26 +668,31 @@
         <nav class="top-bar">
             <div class="left-nav">
                 <a class="home-link" onclick="setHomePage()">设为首页</a>
-                <a href="http://www.weather.com.cn/weather/101280801.shtml" 
+                <a href="http://www.weather.com.cn/weather/101280801.shtml"
                    class="weather-link"
                    target="_blank">
                     <span>佛山</span>
                     <span>雨 20~28℃ 优</span>
                 </a>
             </div>
-            
+
             <div class="meta-links">
-                <a href="https://time.is/zh/China" 
+                <a href="https://time.is/zh/China"
                    class="meta-link"
                    target="_blank"
                    title="当前时间">
                     <script>
-                        const date = new Date();
-                        document.write(`${date.getMonth()+1}月${date.getDate()}日`);
-                    </script> 星期六
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const date = new Date();
+                            const timeElements = document.querySelectorAll('.meta-link[title="当前时间"]');
+                            timeElements.forEach(el => {
+                                el.textContent = `${date.getMonth()+1}月${date.getDate()}日 星期${['日','一','二','三','四','五','六'][date.getDay()]}`;
+                            });
+                        });
+                    </script>
                 </a>
                 <span class="divider">|</span>
-                <a href="https://www.xzw.com" 
+                <a href="https://www.xzw.com"
                    class="meta-link"
                    target="_blank"
                    title="星座运势">
@@ -399,7 +713,7 @@
             <li class="service-item"><a href="https://10000.gd.cn/#/" class="service-link" target="_blank">电信测速</a></li>
             <li class="service-item"><a href="https://www.deepl.com/zh/translator" class="service-link" target="_blank">即时翻译</a></li>
             <li class="service-item"><a href="https://www.xinss.com/" class="service-link" target="_blank">新三水网</a></li>
-             <li class="service-item"><a href="https://www.foshan.gov.cn/" class="service-link" target="_blank">佛山政府网</a></li>
+            <li class="service-item"><a href="https://www.foshan.gov.cn/" class="service-link" target="_blank">佛山政府网</a></li>
         </ul>
 
         <section class="search-section">
@@ -411,10 +725,10 @@
                     <option value="sogou">搜狗搜索</option>
                     <option value="zhihu">知乎搜索</option>
                 </select>
-                
+
                 <div class="search-wrapper">
-                    <input type="text" 
-                           class="enhanced-search-input" 
+                    <input type="text"
+                           class="enhanced-search-input"
                            id="enhancedSearchInput"
                            placeholder="输入搜索关键词..."
                            aria-label="多功能搜索框">
@@ -425,7 +739,7 @@
 
         <section class="news-bar">
             <div class="news-container">
-                <span class="news-label">🔥 百度热榜</span>
+                <span class="news-label">🔥 微博热榜</span>
                 <div class="scroll-wrapper">
                     <div class="news-scroll"></div>
                 </div>
@@ -433,186 +747,369 @@
         </section>
 
         <div class="content-columns">
-            <!-- 常用网址 -->
             <div class="category-column">
                 <h3 class="category-header">常用网址</h3>
                 <ul class="site-list">
-                    <li class="site-item"><img src="https://www.baidu.com/favicon.ico" class="site-icon"><a href="https://www.baidu.com" target="_blank">百度</a></li>
-                    <li class="site-item"><img src="https://www.163.com/favicon.ico" class="site-icon"><a href="https://www.163.com" target="_blank">网易</a></li>
-                    <li class="site-item"><img src="https://movie.douban.com//favicon.ico" class="site-icon"><a href="https://movie.douban.com/" target="_blank">豆瓣影视</a></li>
-                    <li class="site-item"><img src="https://www.zhihu.com/favicon.ico" class="site-icon"><a href="https://www.zhihu.com" target="_blank">知乎</a></li>
-                    <li class="site-item"><img src="https://weibo.com/favicon.ico" class="site-icon"><a href="https://weibo.com" target="_blank">微博</a></li>
-                     <li class="site-item"><img src="https://www.jd.com/favicon.ico" class="site-icon"><a href="https://www.jd.com" target="_blank">京东</a></li>
-                    <li class="site-item"><img src="https://www.taobao.com/favicon.ico" class="site-icon"><a href="https://www.taobao.com" target="_blank">淘宝</a></li>
-                    <li class="site-item"><img src="https://zh.voicedic.com//favicon.ico" class="site-icon"><a href="https://zh.voicedic.com/" target="_blank">汉语发音</a></li>
+                    <li class="site-item">
+                        <img src="https://www.baidu.com/favicon.ico" class="site-icon" alt="百度图标">
+                        <a href="https://www.baidu.com" target="_blank">百度</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.163.com/favicon.ico" class="site-icon" alt="网易图标">
+                        <a href="https://www.163.com" target="_blank">网易</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://movie.douban.com//favicon.ico" class="site-icon" alt="豆瓣图标">
+                        <a href="https://movie.douban.com/" target="_blank">豆瓣影视</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.zhihu.com/favicon.ico" class="site-icon" alt="知乎图标">
+                        <a href="https://www.zhihu.com" target="_blank">知乎</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://weibo.com/favicon.ico" class="site-icon" alt="微博图标">
+                        <a href="https://weibo.com" target="_blank">微博</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.jd.com/favicon.ico" class="site-icon" alt="京东图标">
+                        <a href="https://www.jd.com" target="_blank">京东</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.taobao.com/favicon.ico" class="site-icon" alt="淘宝图标">
+                        <a href="https://www.taobao.com" target="_blank">淘宝</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://zh.voicedic.com//favicon.ico" class="site-icon" alt="汉语发音图标">
+                        <a href="https://zh.voicedic.com/" target="_blank">汉语发音</a>
+                    </li>
                     <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
 
-            <!-- 电影网址 -->
             <div class="category-column">
                 <h3 class="category-header">影视资源</h3>
                 <ul class="site-list">
-                   <li class="site-item"><img src="https://www.bilibili.com/favicon.ico" class="site-icon"><a href="https://www.bilibili.com" target="_blank">哔哩哔哩</a></li>
-                    <li class="site-item"><img src="https://www.xbplays.com/favicon.ico" class="site-icon"><a href="https://www.xbplays.com" target="_blank">小兵免费</a></li>
-                    <li class="site-item"><img src="http://www.shrzw.net/favicon.ico" class="site-icon"><a href="https://939394.xyz/" target="_blank">粤语电影</a></li>
-                    <li class="site-item"><img src="https://www.iqiyi.com/favicon.ico" class="site-icon"><a href="https://www.iqiyi.com" target="_blank">爱奇艺</a></li>
-                     <li class="site-item"><img src="https://v.qq.com/favicon.ico" class="site-icon"><a href="https://v.qq.com" target="_blank">腾讯视频</a></li>
-                    <li class="site-item"><img src="https://www.youku.com/favicon.ico" class="site-icon"><a href="https://www.youku.com" target="_blank">优酷</a></li>
-                    <li class="site-item"><img src="https://www.mgtv.com/favicon.ico" class="site-icon"><a href="https://www.mgtv.com" target="_blank">芒果TV</a></li>
-                     <li class="site-item"><img src="https://www.youtube.com/favicon.ico" class="site-icon"><a href="https://www.youtube.com" target="_blank">YouTube（海外)</a></li>
-                     <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
-                </ul>
-            </div>
-
-            <!-- AI工具 -->
-            <div class="category-column">
-                <h3 class="category-header">AI工具</h3>
-                <ul class="site-list">
-               <li class="site-item"><img src="https://www.doubao.com/favicon.ico" class="site-icon"><a href="https://www.doubao.com" target="_blank">豆包 ML</a></li>   
-               <li class="site-item"><img src="https://www.deepseek.com/favicon.ico" class="site-icon"><a href="https://chat.deepseek.com/" target="_blank">深度求索</a></li>  
-                <li class="site-item"><img src="https://openai.com/favicon.ico" class="site-icon"><a href="https://openai.com" target="_blank">OpenAI（海外)</a></li>
-                    <li class="site-item"><img src="https://www.google.com//favicon.ico" class="site-icon"><a href="https://gemini.google.com/" target="_blank">谷歌Gemini（海外)</a></li>
-                    <li class="site-item"><img src="https://copilot.microsoft.com/favicon.ico" class="site-icon"><a href="https://copilot.microsoft.com/" target="_blank">微软Copilot（海外)</a></li>
-                    <li class="site-item"><img src="https://huggingface.co/favicon.ico" class="site-icon"><a href="https://huggingface.co" target="_blank">Hugging Face（海外)</a></li>
-                     <li class="site-item"><img src="https://colab.research.google.com/favicon.ico" class="site-icon"><a href="https://colab.research.google.com" target="_blank">Colab（海外)</a></li>
-                     <li class="site-item"><img src="https://www.x.com/favicon.ico" class="site-icon"><a href="https://x.com/i/grok" target="_blank">特拉斯X（海外)</a></li>
+                    <li class="site-item">
+                        <img src="https://www.bilibili.com/favicon.ico" class="site-icon" alt="哔哩哔哩图标">
+                        <a href="https://www.bilibili.com" target="_blank">哔哩哔哩</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.xbplays.com/favicon.ico" class="site-icon" alt="小兵免费图标">
+                        <a href="https://www.xbplays.com" target="_blank">小兵免费</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://939394.xyz/favicon.ico" class="site-icon" alt="粤语电影图标">
+                        <a href="https://939394.xyz/" target="_blank">粤语电影</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.iqiyi.com/favicon.ico" class="site-icon" alt="爱奇艺图标">
+                        <a href="https://www.iqiyi.com" target="_blank">爱奇艺</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://v.qq.com/favicon.ico" class="site-icon" alt="腾讯视频图标">
+                        <a href="https://v.qq.com" target="_blank">腾讯视频</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.youku.com/favicon.ico" class="site-icon" alt="优酷图标">
+                        <a href="https://www.youku.com" target="_blank">优酷</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.mgtv.com/favicon.ico" class="site-icon" alt="芒果TV图标">
+                        <a href="https://www.mgtv.com" target="_blank">芒果TV</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.youtube.com/favicon.ico" class="site-icon" alt="YouTube图标">
+                        <a href="https://www.youtube.com" target="_blank">YouTube（海外)</a>
+                    </li>
                     <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
 
-            <!-- 电脑工具 -->
+            <div class="category-column">
+                <h3 class="category-header">AI工具</h3>
+                <ul class="site-list">
+                    <li class="site-item">
+                        <img src="https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/samantha/logo-icon-white-bg.png" class="site-icon" alt="豆包图标">
+                        <a href="https://www.doubao.com" target="_blank">豆包 ML</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.deepseek.com/favicon.ico" class="site-icon" alt="深度求索图标">
+                        <a href="https://chat.deepseek.com/" target="_blank">深度求索</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://chatgpt.com/favicon.ico" class="site-icon" alt="ChatGPT图标">
+                        <a href="https://chatgpt.com/" target="_blank">ChatGPT（海外)</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.google.com//favicon.ico" class="site-icon" alt="谷歌图标">
+                        <a href="https://gemini.google.com/" target="_blank">谷歌Gemini（海外)</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://copilot.microsoft.com/favicon.ico" class="site-icon" alt="微软图标">
+                        <a href="https://copilot.microsoft.com/" target="_blank">微软Copilot（海外)</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://huggingface.co/favicon.ico" class="site-icon" alt="Hugging Face图标">
+                        <a href="https://huggingface.co" target="_blank">Hugging Face（海外)</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://colab.research.google.com/favicon.ico" class="site-icon" alt="Colab图标">
+                        <a href="https://colab.research.google.com" target="_blank">Colab（海外)</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.x.com/favicon.ico" class="site-icon" alt="X图标">
+                        <a href="https://x.com/i/grok" target="_blank">特拉斯X（海外)</a>
+                    </li>
+                    <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
+                </ul>
+            </div>
+
             <div class="category-column">
                 <h3 class="category-header">电脑工具</h3>
                 <ul class="site-list">
-                    <li class="site-item"><img src="https://www.microsoft.com/favicon.ico" class="site-icon"><a href="https://www.microsoft.com" target="_blank">微软官网</a></li>
-                    <li class="site-item"><img src="https://github.com/favicon.ico" class="site-icon"><a href="https://github.com/" target="_blank">Github</a></li>
-                    <li class="site-item"><img src="https://www.nvidia.com/favicon.ico" class="site-icon"><a href="https://www.nvidia.com" target="_blank">NVIDIA驱动</a></li>
-                    <li class="site-item"><img src="https://www.intel.com/favicon.ico" class="site-icon"><a href="https://www.intel.com" target="_blank">Intel支持</a></li>
-                    <li class="site-item"><img src="https://www.ccleaner.com/favicon.ico" class="site-icon"><a href="https://www.ccleaner.com" target="_blank">CCleaner</a></li>
-                    <li class="site-item"><img src="https://www.7-zip.org/favicon.ico" class="site-icon"><a href="https://www.7-zip.org" target="_blank">7-Zip</a></li>
-                    <li class="site-item"><img src="https://www.winrar.com/favicon.ico" class="site-icon"><a href="https://www.win-rar.com" target="_blank">WinRAR</a></li>
-                    <li class="site-item"><img src="https://www.teamviewer.com/favicon.ico" class="site-icon"><a href="https://www.teamviewer.com" target="_blank">TeamViewer</a></li>
+                    <li class="site-item">
+                        <img src="https://www.microsoft.com/favicon.ico" class="site-icon" alt="微软图标">
+                        <a href="https://www.microsoft.com" target="_blank">微软官网</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://github.com/favicon.ico" class="site-icon" alt="Github图标">
+                        <a href="https://github.com/" target="_blank">Github</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://guanjia.lenovo.com.cn/favicon.ico" class="site-icon" alt="联想电脑管家图标">
+                        <a href="https://guanjia.lenovo.com.cn/" target="_blank">联想电脑管家</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.360.cn/favicon.ico" class="site-icon" alt="360l图标">
+                        <a href=""https://www.360.cn/" target="_blank">360安全卫士</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.ccleaner.com/favicon.ico" class="site-icon" alt="CCleaner图标">
+                        <a href="https://www.ccleaner.com" target="_blank">系统专区</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.tp-link.com.cn/favicon.ico" class="site-icon" alt="tp-link图标">
+                        <a href="https://www.7-zip.org" target="_blank">网络专区</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://www.hp.com/favicon.ico" class="site-icon" alt="hp图标">
+                        <a href="https://www.win-rar.com" target="_blank">打印机专区</a>
+                    </li>
+                    <li class="site-item">
+                        <img src="https://pc.xunlei.com/favicon.ico" class="site-icon" alt="迅雷图标">
+                        <a href="https://www.teamviewer.com" target="_blank">下载专区</a>
+                    </li>
                     <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
         </div>
+
+        <footer>
+            <hr class="footer-divider">
+            <p class="contact-info">联系人：Runly@21cn.com<br>© 2024 专业导航门户. 版权所有.</p>
+        </footer>
     </div>
 
-
+    <div class="weather-animation-overlay"></div>
 
     <script>
-        // CU API配置
-        const CU_API = {
-            url: 'https://www.coderutil.com/api/resou/v1/baidu',
-            headers: {
-                'access-key': '0632961789e817ee8eb6c79419ec56be',
-                'secret-key': '0a78fa6d133377581da722c2457548f2'
-            }
+        const WEIBO_API = {
+            url: 'https://www.coderutil.com/api/resou/v1/weibo.jsonp',
+            accessKey: '0632961789e817ee8eb6c79419ec56be',
+            secretKey: '0a78fa6d133377581da722c2457548f2'
         };
 
-        // 获取热搜数据
-        async function fetchHotNews() {
+        function handleWeiboHotData(response) {
+            console.log("API响应:", response);
             try {
-                const response = await fetch(CU_API.url, {
-                    headers: CU_API.headers,
-                    signal: AbortSignal.timeout(8000)
-                });
-                
-                if (!response.ok) throw new Error('请求失败');
-                const data = await response.json();
-                
-                return data.data.slice(0, 10).map((item, index) => ({
-                    rank: index + 1,
-                    title: item.keyword,
-                    url: item.url || `https://www.baidu.com/s?wd=${encodeURIComponent(item.keyword)}`
-                }));
-                
+                let rawData = [];
+                if (Array.isArray(response)) {
+                    rawData = response;
+                } else if (response.code === 200 && Array.isArray(response.data)) {
+                    rawData = response.data;
+                } else if (Array.isArray(response.list)) {
+                    rawData = response.list;
+                } else {
+                    throw new Error("无法识别的数据格式");
+                }
+
+                const validData = rawData
+                    .filter(item => item.keyword && item.keyword.trim())
+                    .slice(0, 10)
+                    .map((item, index) => ({
+                        rank: item.rank || index + 1,
+                        title: item.keyword,
+                        url: item.url || `https://s.weibo.com/weibo?q=${encodeURIComponent(item.keyword)}&Refer=hot`
+                    }));
+
+                if (validData.length === 0) throw new Error("有效数据为空");
+                renderNews(validData);
             } catch (error) {
-                console.log('使用本地数据:', error);
-                return [
-                    { title: "神舟十八号发射成功", url: "https://www.baidu.com/s?wd=神舟十八号" },
-                    { title: "AI医疗新突破", url: "https://www.baidu.com/s?wd=AI医疗" },
-                    { title: "五一出行指南", url: "https://www.baidu.com/s?wd=五一出行" },
-                    { title: "OpenAI新模型发布", url: "https://www.baidu.com/s?wd=OpenAI" },
-                    { title: "国际油价波动", url: "https://www.baidu.com/s?wd=国际油价" },
-                    { title: "量子计算进展", url: "https://www.baidu.com/s?wd=量子计算" },
-                    { title: "火星探测新发现", url: "https://www.baidu.com/s?wd=火星探测" },
-                    { title: "5G网络覆盖", url: "https://www.baidu.com/s?wd=5G覆盖" },
-                    { title: "新能源汽车政策", url: "https://www.baidu.com/s?wd=新能源补贴" },
-                    { title: "全球气候峰会", url: "https://www.baidu.com/s?wd=气候峰会" }
-                ].map((item, index) => ({ ...item, rank: index + 1 }));
+                console.error("数据处理失败:", error);
+                renderNews(getBackupData());
             }
         }
 
-        // 渲染热榜
-        async function renderNews() {
+        function fetchHotNews() {
+            const script = document.createElement('script');
+            script.src = `${WEIBO_API.url}?access-key=${WEIBO_API.accessKey}&secret-key=${WEIBO_API.secretKey}&callback=handleWeiboHotData&_=${Date.now()}`;
+            script.onerror = () => {
+                console.error("网络请求失败，启用备用数据");
+                renderNews(getBackupData());
+            };
+            document.body.appendChild(script);
+        }
+
+        function getBackupData() {
+            return [
+                { title: "雪碧悄悄换了配方", url: "https://s.weibo.com/weibo?q=%23%E9%9B%AA%E7%A2%A7%E6%9B%9D%E6%96%B0%E9%85%8D%E6%96%B9%23", rank: 1 },
+                { title: "神舟十八号发射成功", url: "https://s.weibo.com/weibo?q=%23%E7%A5%9E%E8%88%9F%E5%8D%81%E5%85%AB%E5%8F%B7%23", rank: 2 },
+                { title: "五一假期出行预警", url: "https://s.weibo.com/weibo?q=%23%E4%BA%94%E4%B8%80%E4%BA%BA%E4%BB%8E%E4%BC%97%23", rank: 3 },
+                { title: "AI医疗新突破", url: "https://s.weibo.com/weibo?q=%23AI%E5%8C%BB%E7%96%97%23", rank: 4 },
+                { title: "国际油价剧烈波动", url: "https://s.weibo.com/weibo?q=%23%E6%B2%B9%E4%BB%B7%E6%9A%B4%E8%B7%8C%23", rank: 5 }
+            ];
+        }
+
+        function renderNews(data) {
             const container = document.querySelector('.news-scroll');
-            const newsData = await fetchHotNews();
-            
-            container.innerHTML = newsData.map(item => `
-                <a href="${item.url}" class="news-item" target="_blank">
+            if (!container) return;
+
+            container.innerHTML = '';
+            data.forEach(item => {
+                const link = document.createElement('a');
+                link.className = 'news-item';
+                link.href = item.url;
+                link.target = '_blank';
+                link.innerHTML = `
                     <span class="rank">${item.rank}</span>
                     <span class="title">${item.title}</span>
-                </a>
-            `).join('');
+                `;
+                container.appendChild(link);
+            });
 
-            // 重启动画
-            container.style.animation = 'none';
-            void container.offsetWidth;
-            container.style.animation = 'scroll 60s linear infinite';
+            const resetAnimation = () => {
+                container.style.animation = 'none';
+                void container.offsetWidth;
+                container.style.animation = 'scroll 60s linear infinite';
+            };
+            setTimeout(resetAnimation, 50);
         }
 
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            renderNews();
-            setInterval(renderNews, 10 * 60 * 1000);
-            
-            // 悬停控制
-            document.querySelector('.scroll-wrapper').addEventListener('mouseenter', () => {
-                document.querySelector('.news-scroll').style.animationPlayState = 'paused';
-            });
-            document.querySelector('.scroll-wrapper').addEventListener('mouseleave', () => {
-                document.querySelector('.news-scroll').style.animationPlayState = 'running';
-            });
-        });
+        function initializeWeatherAnimation() {
+            const weatherLink = document.querySelector('.weather-link');
+            if (!weatherLink) return;
 
-        // 其他原有功能保持不变
-        const searchEngines = {
-            baidu: { url: 'https://www.baidu.com/s?wd=' },
-            google: { url: 'https://www.google.com/search?q=' },
-            bing: { url: 'https://www.bing.com/search?q=' },
-            sogou: { url: 'https://www.sogou.com/web?query=' },
-            zhihu: { url: 'https://www.zhihu.com/search?type=content&q=' }
-        };
+            const weatherSpans = weatherLink.querySelectorAll('span');
+            if (weatherSpans.length < 2 || !weatherSpans[1].textContent) return;
+
+            const weatherText = weatherSpans[1].textContent.trim();
+            let weatherCondition = '';
+            if (weatherText.startsWith('雨')) weatherCondition = 'rain';
+            else if (weatherText.startsWith('阴') || weatherText.includes('多云')) weatherCondition = 'cloudy';
+            else if (weatherText.startsWith('晴')) weatherCondition = 'sunny';
+
+            if (weatherCondition) createWeatherAnimation(weatherCondition);
+        }
+
+        function createWeatherAnimation(condition) {
+            const overlay = document.createElement('div');
+            overlay.className = 'weather-animation-overlay';
+
+            setTimeout(() => {
+                overlay.classList.add('fade-in');
+                overlay.style.pointerEvents = 'all';
+            }, 50);
+
+            if (condition === 'rain') {
+                let dropsHtml = '';
+                for (let i = 0; i < 15; i++) {
+                    dropsHtml += `<div class="rain-drop" style="left: ${Math.random() * 90 + 5}%; animation-delay: ${Math.random() * 1.5}s; transform: scale(${Math.random() * 0.5 + 0.5});"></div>`;
+                }
+                overlay.innerHTML = `
+                    <div class="rain-container">
+                        <div class="cloud"></div>
+                        ${dropsHtml}
+                    </div>
+                `;
+            } else if (condition === 'cloudy') {
+                overlay.innerHTML = `<div class="overcast-layer"></div>`;
+            } else if (condition === 'sunny') {
+                overlay.innerHTML = `
+                    <div class="sunny-sky">
+                        <div class="sun-wrapper">
+                            <div class="sun">
+                                <div class="sun-core">
+                                    <div class="sun-face">:)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.body.appendChild(overlay);
+
+            setTimeout(() => {
+                overlay.classList.remove('fade-in');
+                overlay.classList.add('fade-out');
+                overlay.style.pointerEvents = 'none';
+            }, 3500);
+
+            setTimeout(() => {
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+            }, 4000);
+        }
 
         function enhancedSearch() {
             const engine = document.getElementById('engineSelector').value;
-            const keyword = document.getElementById('enhancedSearchInput').value;
-            if(keyword.trim()) {
-                window.open(`${searchEngines[engine].url}${encodeURIComponent(keyword)}`);
-            }
+            const keyword = document.getElementById('enhancedSearchInput').value.trim();
+            if (!keyword) return alert('请输入搜索关键词');
+
+            const engines = {
+                baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(keyword)}`,
+                google: `https://www.google.com/search?q=${encodeURIComponent(keyword)}`,
+                bing: `https://www.bing.com/search?q=${encodeURIComponent(keyword)}`,
+                sogou: `https://www.sogou.com/web?query=${encodeURIComponent(keyword)}`,
+                zhihu: `https://www.zhihu.com/search?q=${encodeURIComponent(keyword)}&type=content`
+            };
+            window.open(engines[engine] || engines.baidu, '_blank');
         }
 
-        document.getElementById('enhancedSearchInput').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') enhancedSearch();
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                renderNews(getBackupData());
+                setTimeout(fetchHotNews, 1000);
+                setInterval(fetchHotNews, 10 * 60 * 1000);
+
+                const scrollWrapper = document.querySelector('.scroll-wrapper');
+                if (scrollWrapper) {
+                    scrollWrapper.addEventListener('mouseenter', () => {
+                        const scroll = document.querySelector('.news-scroll');
+                        if (scroll) scroll.style.animationPlayState = 'paused';
+                    });
+                    scrollWrapper.addEventListener('mouseleave', () => {
+                        const scroll = document.querySelector('.news-scroll');
+                        if (scroll) scroll.style.animationPlayState = 'running';
+                    });
+                }
+                initializeWeatherAnimation();
+            } catch (error) {
+                console.error("初始化失败:", error);
+            }
         });
 
         function setHomePage() {
             try {
-                window.sidebar.addPanel(document.title, location.href, "");
-            } catch(e) {
-                alert("请使用浏览器设置主页功能（Ctrl+D添加书签）");
+                if (document.all) {
+                    document.body.style.behavior = 'url(#default#homepage)';
+                    document.body.setHomePage(window.location.href);
+                } else {
+                    alert('按Ctrl+D将本页加入收藏夹');
+                }
+            } catch (e) {
+                alert('您的浏览器不支持自动设置首页，请手动设置');
             }
         }
-
-        function updateDate() {
-            const date = new Date();
-            const options = { weekday: 'long' };
-            document.querySelector('.meta-link').innerHTML = 
-                `${date.getMonth()+1}月${date.getDate()}日 ${date.toLocaleDateString('zh-CN', options)}`;
-        }
-        setInterval(updateDate, 1000);
     </script>
 </body>
 </html>
