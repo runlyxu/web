@@ -112,9 +112,9 @@
             color: var(--text-dark);
             font-size: 0.95rem;
         }
-        .weather-link span:first-child {
-            color: #16a34a; /* 使用柔和的绿色 */
-        }
+ .weather-link span:first-child {
+        color: #16a34a; /* 使用柔和的绿色 */
+    }
         .weather-link:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-medium);
@@ -135,14 +135,14 @@
             color: var(--text-dark);
             font-size: 0.9rem;
         }
-        .meta-link[title="星座运势"] {
-            color: #FF007F !important;  /* 仅修改文字颜色 */
-            background: inherit !important; /* 保持原有背景 */
-        }
-        .meta-link[title="星座运势"]:hover {
-            color: #ff3399 !important;  /* 悬停颜色 */
-            background: inherit !important; /* 保持悬停背景 */
-        }
+.meta-link[title="星座运势"] {
+    color: #FF007F !important;  /* 仅修改文字颜色 */
+    background: inherit !important; /* 保持原有背景 */
+}
+.meta-link[title="星座运势"]:hover {
+    color: #ff3399 !important;  /* 悬停颜色 */
+    background: inherit !important; /* 保持悬停背景 */
+}
         .meta-link:hover {
             background: rgba(59, 130, 246, 0.15);
             transform: translateY(-2px);
@@ -168,28 +168,28 @@
         #engineSelector option[value="zhihu"] { color: #2d1559; }
 
        .engine-selector {
-            width: 150px;
-            height: 52px;
-            padding: 0 35px 0 20px !important;  /* 修正：右侧腾出箭头空间 */
-            border: none;
-            border-right: 2px solid #1D4ED8 !important;
-            appearance: none;
-            background: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"><path d="M7 10l5 5 5-5z"/></svg>') 
-                no-repeat right 15px center/12px,
-                linear-gradient(145deg, #2563EB 0%, #3B82F6 100%) 
-                !important;
-            font-size: 15px;
-            color: white !important;  /* 强制覆盖为白色 */
-            cursor: pointer;
-            outline: none;
-            
-            /* 新增居中定位属性 */
-            text-align: center !important;     /* 水平居中 */
-            text-indent: 10px !important;      /* 视觉补偿 */
-            letter-spacing: 0.5px !important;  /* 字间距微调 */
-            box-sizing: border-box !important; /* 确保尺寸计算准确 */
-        }
+    width: 150px;
+    height: 52px;
+    padding: 0 35px 0 20px !important;  /* 修正：右侧腾出箭头空间 */
+    border: none;
+    border-right: 2px solid #1D4ED8 !important;
+    appearance: none;
+    background: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"><path d="M7 10l5 5 5-5z"/></svg>') 
+        no-repeat right 15px center/12px,
+        linear-gradient(145deg, #2563EB 0%, #3B82F6 100%) 
+        !important;
+    font-size: 15px;
+    color: white !important;  /* 强制覆盖为白色 */
+    cursor: pointer;
+    outline: none;
+    
+    /* 新增居中定位属性 */
+    text-align: center !important;     /* 水平居中 */
+    text-indent: 10px !important;      /* 视觉补偿 */
+    letter-spacing: 0.5px !important;  /* 字间距微调 */
+    box-sizing: border-box !important; /* 确保尺寸计算准确 */
+}
 
         .services-grid {
             display: grid;
@@ -222,7 +222,7 @@
 
         .service-link:hover {
              color: #16a34a;  /* 柔和的绿色 */
-            background: rgba(22, 163, 74, 0.08);  /* 配套绿色半透明背景 */
+    background: rgba(22, 163, 74, 0.08);  /* 配套绿色半透明背景 */
             box-shadow: var(--shadow-light);
             transform: translateY(-2px);
             font-weight: 500;
@@ -469,6 +469,8 @@
                 padding: 10px 0;
             }
             .engine-selector {
+z
+
                 width: 120px;
                 font-size: 14px;
             }
@@ -600,7 +602,7 @@
             align-items: center;
         }
         .overcast-layer::after {
-            content: ☁️";
+            content: "☁️";
             font-size: 15vw;
             opacity: 0.3;
             animation: driftCloudEmoji 15s linear infinite alternate;
@@ -666,9 +668,11 @@
         <nav class="top-bar">
             <div class="left-nav">
                 <a class="home-link" onclick="setHomePage()">设为首页</a>
-                 <a href="#" class="weather-link" target="_blank">
-                    <span id="weather-city">加载中..</span>
-                    <span id="weather-details"></span>
+                <a href="http://www.weather.com.cn/weather/101280801.shtml"
+                   class="weather-link"
+                   target="_blank">
+                    <span>佛山</span>
+                    <span>雨 20~28℃ 优</span>
                 </a>
             </div>
 
@@ -677,7 +681,15 @@
                    class="meta-link"
                    target="_blank"
                    title="当前时间">
-                   <!-- 时间将由JS动态填充 -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const date = new Date();
+                            const timeElements = document.querySelectorAll('.meta-link[title="当前时间"]');
+                            timeElements.forEach(el => {
+                                el.textContent = `${date.getMonth()+1}月${date.getDate()}日 星期${['日','一','二','三','四','五','六'][date.getDay()]}`;
+                            });
+                        });
+                    </script>
                 </a>
                 <span class="divider">|</span>
                 <a href="https://www.xzw.com"
@@ -739,38 +751,38 @@
                 <h3 class="category-header">常用网址</h3>
                 <ul class="site-list">
                     <li class="site-item">
-                        <img src="https://www.baidu.com/favicon.ico" class="site-icon" alt="百度图标" onerror="this.style.display='none'">
+                        <img src="https://www.baidu.com/favicon.ico" class="site-icon" alt="百度图标">
                         <a href="https://www.baidu.com" target="_blank">百度</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.163.com/favicon.ico" class="site-icon" alt="网易图标" onerror="this.style.display='none'">
+                        <img src="https://www.163.com/favicon.ico" class="site-icon" alt="网易图标">
                         <a href="https://www.163.com" target="_blank">网易</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://movie.douban.com//favicon.ico" class="site-icon" alt="豆瓣图标" onerror="this.style.display='none'">
+                        <img src="https://movie.douban.com//favicon.ico" class="site-icon" alt="豆瓣图标">
                         <a href="https://movie.douban.com/" target="_blank">豆瓣影视</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.zhihu.com/favicon.ico" class="site-icon" alt="知乎图标" onerror="this.style.display='none'">
+                        <img src="https://www.zhihu.com/favicon.ico" class="site-icon" alt="知乎图标">
                         <a href="https://www.zhihu.com" target="_blank">知乎</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://weibo.com/favicon.ico" class="site-icon" alt="微博图标" onerror="this.style.display='none'">
+                        <img src="https://weibo.com/favicon.ico" class="site-icon" alt="微博图标">
                         <a href="https://weibo.com" target="_blank">微博</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.jd.com/favicon.ico" class="site-icon" alt="京东图标" onerror="this.style.display='none'">
+                        <img src="https://www.jd.com/favicon.ico" class="site-icon" alt="京东图标">
                         <a href="https://www.jd.com" target="_blank">京东</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.taobao.com/favicon.ico" class="site-icon" alt="淘宝图标" onerror="this.style.display='none'">
+                        <img src="https://www.taobao.com/favicon.ico" class="site-icon" alt="淘宝图标">
                         <a href="https://www.taobao.com" target="_blank">淘宝</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://zh.voicedic.com//favicon.ico" class="site-icon" alt="汉语发音图标" onerror="this.style.display='none'">
+                        <img src="https://zh.voicedic.com//favicon.ico" class="site-icon" alt="汉语发音图标">
                         <a href="https://zh.voicedic.com/" target="_blank">汉语发音</a>
                     </li>
-                    <a href="https://www.runly.com.cn/usual.html" class="more-link" target="_blank">更多选项 →</a>
+                    <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
 
@@ -778,38 +790,38 @@
                 <h3 class="category-header">影视资源</h3>
                 <ul class="site-list">
                     <li class="site-item">
-                        <img src="https://www.bilibili.com/favicon.ico" class="site-icon" alt="哔哩哔哩图标" onerror="this.style.display='none'">
+                        <img src="https://www.bilibili.com/favicon.ico" class="site-icon" alt="哔哩哔哩图标">
                         <a href="https://www.bilibili.com" target="_blank">哔哩哔哩</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.xbplays.com/favicon.ico" class="site-icon" alt="小兵免费图标" onerror="this.style.display='none'">
+                        <img src="https://www.xbplays.com/favicon.ico" class="site-icon" alt="小兵免费图标">
                         <a href="https://www.xbplays.com" target="_blank">小兵免费</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://939394.xyz/favicon.ico" class="site-icon" alt="粤语电影图标" onerror="this.style.display='none'">
+                        <img src="https://939394.xyz/favicon.ico" class="site-icon" alt="粤语电影图标">
                         <a href="https://939394.xyz/" target="_blank">粤语电影</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.iqiyi.com/favicon.ico" class="site-icon" alt="爱奇艺图标" onerror="this.style.display='none'">
+                        <img src="https://www.iqiyi.com/favicon.ico" class="site-icon" alt="爱奇艺图标">
                         <a href="https://www.iqiyi.com" target="_blank">爱奇艺</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://v.qq.com/favicon.ico" class="site-icon" alt="腾讯视频图标" onerror="this.style.display='none'">
+                        <img src="https://v.qq.com/favicon.ico" class="site-icon" alt="腾讯视频图标">
                         <a href="https://v.qq.com" target="_blank">腾讯视频</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.youku.com/favicon.ico" class="site-icon" alt="优酷图标" onerror="this.style.display='none'">
+                        <img src="https://www.youku.com/favicon.ico" class="site-icon" alt="优酷图标">
                         <a href="https://www.youku.com" target="_blank">优酷</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.mgtv.com/favicon.ico" class="site-icon" alt="芒果TV图标" onerror="this.style.display='none'">
+                        <img src="https://www.mgtv.com/favicon.ico" class="site-icon" alt="芒果TV图标">
                         <a href="https://www.mgtv.com" target="_blank">芒果TV</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.youtube.com/favicon.ico" class="site-icon" alt="YouTube图标" onerror="this.style.display='none'">
+                        <img src="https://www.youtube.com/favicon.ico" class="site-icon" alt="YouTube图标">
                         <a href="https://www.youtube.com" target="_blank">YouTube（海外)</a>
                     </li>
-                    <a href="https://www.runly.com.cn/mm.html" class="more-link" target="_blank">更多选项 →</a>
+                    <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
 
@@ -817,38 +829,38 @@
                 <h3 class="category-header">AI工具</h3>
                 <ul class="site-list">
                     <li class="site-item">
-                        <img src="https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/samantha/logo-icon-white-bg.png" class="site-icon" alt="豆包图标" onerror="this.style.display='none'">
+                        <img src="https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/samantha/logo-icon-white-bg.png" class="site-icon" alt="豆包图标">
                         <a href="https://www.doubao.com" target="_blank">豆包 ML</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.deepseek.com/favicon.ico" class="site-icon" alt="深度求索图标" onerror="this.style.display='none'">
+                        <img src="https://www.deepseek.com/favicon.ico" class="site-icon" alt="深度求索图标">
                         <a href="https://chat.deepseek.com/" target="_blank">深度求索</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://chatgpt.com/favicon.ico" class="site-icon" alt="ChatGPT图标" onerror="this.style.display='none'">
+                        <img src="https://chatgpt.com/favicon.ico" class="site-icon" alt="ChatGPT图标">
                         <a href="https://chatgpt.com/" target="_blank">ChatGPT（海外)</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.google.com//favicon.ico" class="site-icon" alt="谷歌图标" onerror="this.style.display='none'">
+                        <img src="https://www.google.com//favicon.ico" class="site-icon" alt="谷歌图标">
                         <a href="https://gemini.google.com/" target="_blank">谷歌Gemini（海外)</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://copilot.microsoft.com/favicon.ico" class="site-icon" alt="微软图标" onerror="this.style.display='none'">
+                        <img src="https://copilot.microsoft.com/favicon.ico" class="site-icon" alt="微软图标">
                         <a href="https://copilot.microsoft.com/" target="_blank">微软Copilot（海外)</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://huggingface.co/favicon.ico" class="site-icon" alt="Hugging Face图标" onerror="this.style.display='none'">
+                        <img src="https://huggingface.co/favicon.ico" class="site-icon" alt="Hugging Face图标">
                         <a href="https://huggingface.co" target="_blank">Hugging Face（海外)</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://colab.research.google.com/favicon.ico" class="site-icon" alt="Colab图标" onerror="this.style.display='none'">
+                        <img src="https://colab.research.google.com/favicon.ico" class="site-icon" alt="Colab图标">
                         <a href="https://colab.research.google.com" target="_blank">Colab（海外)</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.x.com/favicon.ico" class="site-icon" alt="X图标" onerror="this.style.display='none'">
+                        <img src="https://www.x.com/favicon.ico" class="site-icon" alt="X图标">
                         <a href="https://x.com/i/grok" target="_blank">特拉斯X（海外)</a>
                     </li>
-                    <a href="https://www.runly.com.cn/AI.html" class="more-link" target="_blank">更多选项 →</a>
+                    <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
 
@@ -856,38 +868,38 @@
                 <h3 class="category-header">电脑工具</h3>
                 <ul class="site-list">
                     <li class="site-item">
-                        <img src="https://www.microsoft.com/favicon.ico" class="site-icon" alt="微软图标" onerror="this.style.display='none'">
+                        <img src="https://www.microsoft.com/favicon.ico" class="site-icon" alt="微软图标">
                         <a href="https://www.microsoft.com" target="_blank">微软官网</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://github.com/favicon.ico" class="site-icon" alt="Github图标" onerror="this.style.display='none'">
+                        <img src="https://github.com/favicon.ico" class="site-icon" alt="Github图标">
                         <a href="https://github.com/" target="_blank">Github</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://guanjia.lenovo.com.cn/favicon.ico" class="site-icon" alt="联想电脑管家图标" onerror="this.style.display='none'">
+                        <img src="https://guanjia.lenovo.com.cn/favicon.ico" class="site-icon" alt="联想电脑管家图标">
                         <a href="https://guanjia.lenovo.com.cn/" target="_blank">联想电脑管家</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.360.cn/favicon.ico" class="site-icon" alt="360l图标" onerror="this.style.display='none'">
-                        <a href="https://www.360.cn/" target="_blank">360安全卫士</a>
+                        <img src="https://www.360.cn/favicon.ico" class="site-icon" alt="360l图标">
+                        <a href=""https://www.360.cn/" target="_blank">360安全卫士</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.ccleaner.com/favicon.ico" class="site-icon" alt="CCleaner图标" onerror="this.style.display='none'">
-                        <a href="https://www.runly.com.cn/system.html" target="_blank">系统专区</a>
+                        <img src="https://www.ccleaner.com/favicon.ico" class="site-icon" alt="CCleaner图标">
+                        <a href="https://www.ccleaner.com" target="_blank">系统专区</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.tp-link.com.cn/favicon.ico" class="site-icon" alt="tp-link图标" onerror="this.style.display='none'">
-                        <a href="https://www.runly.com.cn/network" target="_blank">网络专区</a>
+                        <img src="https://www.tp-link.com.cn/favicon.ico" class="site-icon" alt="tp-link图标">
+                        <a href="https://www.7-zip.org" target="_blank">网络专区</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://www.hp.com/favicon.ico" class="site-icon" alt="hp图标" onerror="this.style.display='none'">
-                        <a href="https://www.runly.com.cn/print.html" target="_blank">打印机专区</a>
+                        <img src="https://www.hp.com/favicon.ico" class="site-icon" alt="hp图标">
+                        <a href="https://www.win-rar.com" target="_blank">打印机专区</a>
                     </li>
                     <li class="site-item">
-                        <img src="https://pc.xunlei.com/favicon.ico" class="site-icon" alt="迅雷图标" onerror="this.style.display='none'">
-                        <a href="https://www.runly.com.cn/download.html" target="_blank">下载专区</a>
+                        <img src="https://pc.xunlei.com/favicon.ico" class="site-icon" alt="迅雷图标">
+                        <a href="https://www.teamviewer.com" target="_blank">下载专区</a>
                     </li>
-                    <a href="https://www.runly.com.cn/download.html" class="more-link" target="_blank">更多选项 →</a>
+                    <a href="https://www.baidu.com" class="more-link" target="_blank">更多选项 →</a>
                 </ul>
             </div>
         </div>
@@ -901,114 +913,113 @@
     <div class="weather-animation-overlay"></div>
 
     <script>
-        // --- 全局配置 ---
-        const QWEATHER_API_KEY = '946a3771b8cf4c6a9985c597deeffcd8'; // 和风天气 API Key
         const WEIBO_API = {
             url: 'https://www.coderutil.com/api/resou/v1/weibo.jsonp',
             accessKey: '0632961789e817ee8eb6c79419ec56be',
             secretKey: '0a78fa6d133377581da722c2457548f2'
         };
 
-        // --- 天气功能 ---
-
-        /**
-         * 主函数：获取IP定位并更新天气
-         */
-        async function updateWeather() {
+        function handleWeiboHotData(response) {
+            console.log("API响应:", response);
             try {
-                // 1. 通过IP获取地理位置 (更换为更稳定的ip-api.com)
-                const locationResponse = await fetch('https://ip-api.com/json/?lang=zh-CN');
-                if (!locationResponse.ok) throw new Error('IP定位服务请求失败');
-                const locationData = await locationResponse.json();
-                
-                // 检查返回状态是否成功
-                if (locationData.status !== 'success') {
-                    throw new Error(`IP定位失败: ${locationData.message || '未知错误'}`);
+                let rawData = [];
+                if (Array.isArray(response)) {
+                    rawData = response;
+                } else if (response.code === 200 && Array.isArray(response.data)) {
+                    rawData = response.data;
+                } else if (Array.isArray(response.list)) {
+                    rawData = response.list;
+                } else {
+                    throw new Error("无法识别的数据格式");
                 }
-                const city = locationData.city || '北京'; // 如果定位的城市名为空，默认北京
 
-                // 2. 使用和风天气API获取城市ID
-                const geoApiUrl = `https://geoapi.qweather.com/v2/city/lookup?location=${city}&key=${QWEATHER_API_KEY}`;
-                const geoResponse = await fetch(geoApiUrl);
-                if (!geoResponse.ok) throw new Error(`获取城市ID失败, 状态: ${geoResponse.status}`);
-                const geoData = await geoResponse.json();
-                if (geoData.code !== '200' || !geoData.location || geoData.location.length === 0) {
-                     throw new Error('和风天气找不到该城市');
-                }
-                const locationId = geoData.location[0].id;
-                const cityName = geoData.location[0].name;
+                const validData = rawData
+                    .filter(item => item.keyword && item.keyword.trim())
+                    .slice(0, 10)
+                    .map((item, index) => ({
+                        rank: item.rank || index + 1,
+                        title: item.keyword,
+                        url: item.url || `https://s.weibo.com/weibo?q=${encodeURIComponent(item.keyword)}&Refer=hot`
+                    }));
 
-                // 3. 使用城市ID获取实时天气
-                const weatherApiUrl = `https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${QWEATHER_API_KEY}`;
-                const weatherResponse = await fetch(weatherApiUrl);
-                 if (!weatherResponse.ok) throw new Error(`获取天气信息失败, 状态: ${weatherResponse.status}`);
-                const weatherData = await weatherResponse.json();
-                if (weatherData.code !== '200') throw new Error('获取天气数据格式错误');
-                
-                // 4. 更新UI并触发动画
-                updateWeatherUI(cityName, weatherData.now);
-
+                if (validData.length === 0) throw new Error("有效数据为空");
+                renderNews(validData);
             } catch (error) {
-                console.error("天气更新流程失败:", error);
-                // 如果出错，显示默认信息
-                updateWeatherUI('佛山', { text: '雨', temp: '25', fxLink: 'http://www.weather.com.cn/weather/101280801.shtml'});
+                console.error("数据处理失败:", error);
+                renderNews(getBackupData());
             }
         }
-        
-        /**
-         * 更新天气UI元素
-         * @param {string} city - 城市名称
-         * @param {object} weather - 天气数据对象 (e.g., {text: '晴', temp: '25'})
-         */
-        function updateWeatherUI(city, weather) {
-            const cityEl = document.getElementById('weather-city');
-            const detailsEl = document.getElementById('weather-details');
+
+        function fetchHotNews() {
+            const script = document.createElement('script');
+            script.src = `${WEIBO_API.url}?access-key=${WEIBO_API.accessKey}&secret-key=${WEIBO_API.secretKey}&callback=handleWeiboHotData&_=${Date.now()}`;
+            script.onerror = () => {
+                console.error("网络请求失败，启用备用数据");
+                renderNews(getBackupData());
+            };
+            document.body.appendChild(script);
+        }
+
+        function getBackupData() {
+            return [
+                { title: "雪碧悄悄换了配方", url: "https://s.weibo.com/weibo?q=%23%E9%9B%AA%E7%A2%A7%E6%9B%9D%E6%96%B0%E9%85%8D%E6%96%B9%23", rank: 1 },
+                { title: "神舟十八号发射成功", url: "https://s.weibo.com/weibo?q=%23%E7%A5%9E%E8%88%9F%E5%8D%81%E5%85%AB%E5%8F%B7%23", rank: 2 },
+                { title: "五一假期出行预警", url: "https://s.weibo.com/weibo?q=%23%E4%BA%94%E4%B8%80%E4%BA%BA%E4%BB%8E%E4%BC%97%23", rank: 3 },
+                { title: "AI医疗新突破", url: "https://s.weibo.com/weibo?q=%23AI%E5%8C%BB%E7%96%97%23", rank: 4 },
+                { title: "国际油价剧烈波动", url: "https://s.weibo.com/weibo?q=%23%E6%B2%B9%E4%BB%B7%E6%9A%B4%E8%B7%8C%23", rank: 5 }
+            ];
+        }
+
+        function renderNews(data) {
+            const container = document.querySelector('.news-scroll');
+            if (!container) return;
+
+            container.innerHTML = '';
+            data.forEach(item => {
+                const link = document.createElement('a');
+                link.className = 'news-item';
+                link.href = item.url;
+                link.target = '_blank';
+                link.innerHTML = `
+                    <span class="rank">${item.rank}</span>
+                    <span class="title">${item.title}</span>
+                `;
+                container.appendChild(link);
+            });
+
+            const resetAnimation = () => {
+                container.style.animation = 'none';
+                void container.offsetWidth;
+                container.style.animation = 'scroll 60s linear infinite';
+            };
+            setTimeout(resetAnimation, 50);
+        }
+
+        function initializeWeatherAnimation() {
             const weatherLink = document.querySelector('.weather-link');
+            if (!weatherLink) return;
 
-            if (cityEl && detailsEl && weatherLink) {
-                cityEl.textContent = city;
-                detailsEl.textContent = `${weather.text} ${weather.temp}°C`;
-                weatherLink.href = weather.fxLink || '#'; // 使用和风天气提供的链接
-                
-                // 根据天气文本触发动画
-                triggerAnimationByWeather(weather.text);
-            }
+            const weatherSpans = weatherLink.querySelectorAll('span');
+            if (weatherSpans.length < 2 || !weatherSpans[1].textContent) return;
+
+            const weatherText = weatherSpans[1].textContent.trim();
+            let weatherCondition = '';
+            if (weatherText.startsWith('雨')) weatherCondition = 'rain';
+            else if (weatherText.startsWith('阴') || weatherText.includes('多云')) weatherCondition = 'cloudy';
+            else if (weatherText.startsWith('晴')) weatherCondition = 'sunny';
+
+            if (weatherCondition) createWeatherAnimation(weatherCondition);
         }
 
-        /**
-         * 根据天气文本触发对应的动画
-         * @param {string} weatherText - 天气状况文本 (e.g., "晴", "多云")
-         */
-        function triggerAnimationByWeather(weatherText) {
-             let weatherCondition = '';
-             if (weatherText.includes('雨')) {
-                weatherCondition = 'rain';
-            } else if (weatherText.includes('雪')) {
-                weatherCondition = 'rain'; // 暂时用雨天动画代替雪
-            } else if (weatherText.includes('阴') || weatherText.includes('多云')) {
-                weatherCondition = 'cloudy';
-            } else if (weatherText.includes('晴')) {
-                weatherCondition = 'sunny';
-            }
-
-            if (weatherCondition) {
-                createWeatherAnimation(weatherCondition);
-            }
-        }
-
-
-        /**
-         * 创建天气动画
-         * @param {string} condition - 天气条件 ('rain', 'cloudy', 'sunny')
-         */
         function createWeatherAnimation(condition) {
-            const existingOverlay = document.querySelector('.weather-animation-overlay');
-            if(existingOverlay && existingOverlay.classList.contains('fade-in')) return; // 防止重复触发
-
             const overlay = document.createElement('div');
             overlay.className = 'weather-animation-overlay';
-            
-            // 根据天气条件生成不同动画
+
+            setTimeout(() => {
+                overlay.classList.add('fade-in');
+                overlay.style.pointerEvents = 'all';
+            }, 50);
+
             if (condition === 'rain') {
                 let dropsHtml = '';
                 for (let i = 0; i < 15; i++) {
@@ -1038,13 +1049,6 @@
 
             document.body.appendChild(overlay);
 
-            // 延迟显示以确保样式应用和过渡效果
-            setTimeout(() => {
-                overlay.classList.add('fade-in');
-                overlay.style.pointerEvents = 'all'; // 动画期间阻止交互
-            }, 50);
-
-            // 动画结束后淡出并移除
             setTimeout(() => {
                 overlay.classList.remove('fade-in');
                 overlay.classList.add('fade-out');
@@ -1052,106 +1056,15 @@
             }, 3500);
 
             setTimeout(() => {
-                if (overlay.parentNode) {
-                    overlay.parentNode.removeChild(overlay);
-                }
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
             }, 4000);
         }
 
-        // --- 微博热搜功能 ---
-        
-        /**
-         * [已修复] 处理微博热搜数据, 增强了对不同返回格式的兼容性
-         * @param {object} response - JSONP返回的数据
-         */
-        function handleWeiboHotData(response) {
-            try {
-                let rawData = [];
-                // 增强了对不同API返回格式的兼容性
-                if (response && response.code === 200 && Array.isArray(response.data)) {
-                    rawData = response.data;
-                } else if (response && Array.isArray(response.list)) { // 兼容 list 格式
-                    rawData = response.list;
-                } else if (Array.isArray(response)) { // 兼容直接返回数组的格式
-                    rawData = response;
-                } else {
-                   throw new Error("API数据格式不正确或为空");
-                }
-
-                const validData = rawData
-                    .filter(item => item.keyword && item.keyword.trim())
-                    .slice(0, 10)
-                    .map((item, index) => ({
-                        rank: item.rank || index + 1,
-                        title: item.keyword,
-                        url: item.url || `https://s.weibo.com/weibo?q=${encodeURIComponent(item.keyword)}&Refer=hot`
-                    }));
-
-                if (validData.length === 0) throw new Error("有效数据为空");
-                renderNews(validData);
-
-            } catch (error) {
-                console.error("微博热搜数据处理失败:", error);
-                renderNews(getBackupData()); // 使用备用数据
-            }
-        }
-        
-        // 获取微博热搜数据
-        function fetchHotNews() {
-            const script = document.createElement('script');
-            script.src = `${WEIBO_API.url}?access-key=${WEIBO_API.accessKey}&secret-key=${WEIBO_API.secretKey}&callback=handleWeiboHotData&_=${Date.now()}`;
-            script.onerror = () => {
-                console.error("微博热搜网络请求失败，启用备用数据");
-                renderNews(getBackupData());
-            };
-            document.body.appendChild(script);
-            // 移除旧的script标签，防止内存泄漏
-            script.onload = () => document.body.removeChild(script);
-        }
-
-        // 备用数据
-        function getBackupData() {
-            return [
-                { title: "雪碧悄悄换了配方", url: "https://s.weibo.com/weibo?q=%23%E9%9B%AA%E7%A2%A7%E6%9B%9D%E6%96%B0%E9%85%8D%E6%96%B9%23", rank: 1 },
-                { title: "神舟十八号发射成功", url: "https://s.weibo.com/weibo?q=%23%E7%A5%9E%E8%88%9F%E5%8D%81%E5%85%AB%E5%8F%B7%23", rank: 2 },
-                { title: "五一假期出行预警", url: "https://s.weibo.com/weibo?q=%23%E4%BA%94%E4%B8%80%E4%BA%BA%E4%BB%8E%E4%BC%97%23", rank: 3 },
-                { title: "AI医疗新突破", url: "https://s.weibo.com/weibo?q=%23AI%E5%8C%BB%E7%96%97%23", rank: 4 },
-                { title: "国际油价剧烈波动", url: "https://s.weibo.com/weibo?q=%23%E6%B2%B9%E4%BB%B7%E6%9A%B4%E8%B7%8C%23", rank: 5 }
-            ];
-        }
-
-        // 渲染新闻列表
-        function renderNews(data) {
-            const container = document.querySelector('.news-scroll');
-            if (!container) return;
-
-            container.innerHTML = '';
-            data.forEach(item => {
-                const link = document.createElement('a');
-                link.className = 'news-item';
-                link.href = item.url;
-                link.target = '_blank';
-                link.innerHTML = `<span class="rank">${item.rank}</span><span class="title">${item.title}</span>`;
-                container.appendChild(link);
-            });
-
-            // 重置动画以确保平滑滚动
-            container.style.animation = 'none';
-            void container.offsetWidth; // 触发重绘
-            container.style.animation = 'scroll 60s linear infinite';
-        }
-
-
-        // --- 其他功能 ---
-
-        // 搜索功能
         function enhancedSearch() {
             const engine = document.getElementById('engineSelector').value;
             const keyword = document.getElementById('enhancedSearchInput').value.trim();
-            if (!keyword) {
-                alert('请输入搜索关键词');
-                return;
-            }
+            if (!keyword) return alert('请输入搜索关键词');
+
             const engines = {
                 baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(keyword)}`,
                 google: `https://www.google.com/search?q=${encodeURIComponent(keyword)}`,
@@ -1162,58 +1075,104 @@
             window.open(engines[engine] || engines.baidu, '_blank');
         }
 
-        // 设为首页功能
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                renderNews(getBackupData());
+                setTimeout(fetchHotNews, 1000);
+                setInterval(fetchHotNews, 10 * 60 * 1000);
+
+                const scrollWrapper = document.querySelector('.scroll-wrapper');
+                if (scrollWrapper) {
+                    scrollWrapper.addEventListener('mouseenter', () => {
+                        const scroll = document.querySelector('.news-scroll');
+                        if (scroll) scroll.style.animationPlayState = 'paused';
+                    });
+                    scrollWrapper.addEventListener('mouseleave', () => {
+                        const scroll = document.querySelector('.news-scroll');
+                        if (scroll) scroll.style.animationPlayState = 'running';
+                    });
+                }
+                initializeWeatherAnimation();
+            } catch (error) {
+                console.error("初始化失败:", error);
+            }
+        });
+
         function setHomePage() {
             try {
                 if (document.all) {
                     document.body.style.behavior = 'url(#default#homepage)';
                     document.body.setHomePage(window.location.href);
                 } else {
-                    alert('现代浏览器不支持自动设为首页，请按Ctrl+D将本页加入收藏夹');
+                    alert('按Ctrl+D将本页加入收藏夹');
                 }
             } catch (e) {
-                alert('您的浏览器不支持此功能，请手动设置');
+                alert('您的浏览器不支持自动设置首页，请手动设置');
             }
         }
-        
-        // 动态更新时间
-        function updateTime() {
-             const timeElement = document.querySelector('.meta-link[title="当前时间"]');
-             if (timeElement) {
-                const date = new Date();
-                timeElement.textContent = `${date.getMonth()+1}月${date.getDate()}日 星期${['日','一','二','三','四','五','六'][date.getDay()]}`;
-             }
-        }
-
-        // --- 页面加载后初始化 ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // 初始化时间显示
-            updateTime();
-
-            // 初始化天气
-            updateWeather();
-
-            // 初始化并定时获取微博热搜
-            fetchHotNews();
-            setInterval(fetchHotNews, 10 * 60 * 1000); // 10分钟更新一次
-
-            // 搜索框回车事件
-            document.getElementById('enhancedSearchInput').addEventListener('keyup', (event) => {
-                if (event.key === 'Enter') {
-                    enhancedSearch();
-                }
-            });
-
-            // 热搜榜鼠标悬停控制
-            const scrollWrapper = document.querySelector('.scroll-wrapper');
-            if (scrollWrapper) {
-                const scroll = document.querySelector('.news-scroll');
-                if (scroll) {
-                    scrollWrapper.addEventListener('mouseenter', () => scroll.style.animationPlayState = 'paused');
-                    scrollWrapper.addEventListener('mouseleave', () => scroll.style.animationPlayState = 'running');
-                }
-            }
-        });
     </script>
+
+<script>
+const HEFENG_API_KEY = '946a3771b8cf4c6a9985c597deeffcd8';
+
+// Step 1: 获取访问者的IP城市（无需授权）
+async function fetchCityByIP() {
+    try {
+        const res = await fetch('https://restapi.amap.com/v3/ip?key=9f6bdfec3d1b7a89f5b1ad5803cf901f');
+        const data = await res.json();
+        return data.city || '佛山';
+    } catch {
+        return '佛山';
+    }
+}
+
+// Step 2: 获取和风天气城市ID
+async function fetchHeFengLocation(cityName) {
+    const url = `https://geoapi.qweather.com/v2/city/lookup?location=${cityName}&key=${HEFENG_API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.code === '200' && data.location && data.location.length > 0) {
+        return data.location[0].id;
+    }
+    throw new Error('获取城市ID失败');
+}
+
+// Step 3: 获取天气
+async function fetchWeather(locationId) {
+    const url = `https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${HEFENG_API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.code === '200') return data.now;
+    throw new Error('获取天气失败');
+}
+
+// Step 4: 更新页面天气信息并触发动画
+function updateWeatherInfo(city, weather) {
+    const weatherLink = document.querySelector('.weather-link');
+    if (!weatherLink) return;
+
+    const [citySpan, infoSpan] = weatherLink.querySelectorAll('span');
+    if (citySpan) citySpan.textContent = city;
+    if (infoSpan) {
+        infoSpan.textContent = `${weather.text} ${weather.temp}℃ 湿度${weather.humidity}%`;
+        setTimeout(() => initializeWeatherAnimation(), 200); // 触发动画
+    }
+}
+
+// 自动加载
+async function autoUpdateWeather() {
+    try {
+        const city = await fetchCityByIP();
+        const cityId = await fetchHeFengLocation(city);
+        const weather = await fetchWeather(cityId);
+        updateWeatherInfo(city, weather);
+    } catch (e) {
+        console.error('天气自动更新失败：', e);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', autoUpdateWeather);
+</script>
+
 </body>
 </html>
