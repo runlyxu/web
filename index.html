@@ -1112,67 +1112,9 @@ z
         }
     </script>
 
+
 <script>
 const HEFENG_API_KEY = '946a3771b8cf4c6a9985c597deeffcd8';
-
-// Step 1: 获取访问者的IP城市（无需授权）
-async function fetchCityByIP() {
-    try {
-        const res = await fetch('https://restapi.amap.com/v3/ip?key=9f6bdfec3d1b7a89f5b1ad5803cf901f');
-        const data = await res.json();
-        return data.city || '佛山';
-    } catch {
-        return '佛山';
-    }
-}
-
-// Step 2: 获取和风天气城市ID
-async function fetchHeFengLocation(cityName) {
-    const url = `https://geoapi.qweather.com/v2/city/lookup?location=${cityName}&key=${HEFENG_API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.code === '200' && data.location && data.location.length > 0) {
-        return data.location[0].id;
-    }
-    throw new Error('获取城市ID失败');
-}
-
-// Step 3: 获取天气
-async function fetchWeather(locationId) {
-    const url = `https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${HEFENG_API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.code === '200') return data.now;
-    throw new Error('获取天气失败');
-}
-
-// Step 4: 更新页面天气信息并触发动画
-function updateWeatherInfo(city, weather) {
-    const weatherLink = document.querySelector('.weather-link');
-    if (!weatherLink) return;
-
-    const [citySpan, infoSpan] = weatherLink.querySelectorAll('span');
-    if (citySpan) citySpan.textContent = city;
-    if (infoSpan) {
-        infoSpan.textContent = `${weather.text} ${weather.temp}℃ 湿度${weather.humidity}%`;
-        setTimeout(() => initializeWeatherAnimation(), 200); // 触发动画
-    }
-}
-
-// 自动加载
-async function autoUpdateWeather() {
-    try {
-        const city = await fetchCityByIP();
-        const cityId = await fetchHeFengLocation(city);
-        const weather = await fetchWeather(cityId);
-        updateWeatherInfo(city, weather);
-    } catch (e) {
-        console.error('天气自动更新失败：', e);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', autoUpdateWeather);
-    const HEFENG_API_KEY = '946a3771b8cf4c6a9985c597deeffcd8';
 
 // ✅ 固定返回哈尔滨
 async function fetchCityByIP() {
@@ -1225,6 +1167,8 @@ async function autoUpdateWeather() {
 }
 
 document.addEventListener('DOMContentLoaded', autoUpdateWeather);
+
+
 </script>
 
 </body>
