@@ -668,12 +668,7 @@ z
         <nav class="top-bar">
             <div class="left-nav">
                 <a class="home-link" onclick="setHomePage()">设为首页</a>
-                <a href="http://www.weather.com.cn/weather/101280801.shtml"
-                   class="weather-link"
-                   target="_blank">
-                    <span>佛山</span>
-                    <span>雨 20~28℃ 优</span>
-                </a>
+                <a href="#" class="weather-link" target="_blank"><span>定位中...</span><span>天气获取中...</span></a>
             </div>
 
             <div class="meta-links">
@@ -689,7 +684,41 @@ z
                                 el.textContent = `${date.getMonth()+1}月${date.getDate()}日 星期${['日','一','二','三','四','五','六'][date.getDay()]}`;
                             });
                         });
-                    </script>
+                    
+    async function updateWeatherInfo() {
+        try {
+            const ipRes = await fetch('https://ip-api.com/json/?lang=zh-CN');
+            const ipData = await ipRes.json();
+            const cityName = ipData.city;
+            if (!cityName) throw new Error('IP 定位失败');
+
+            const locationRes = await fetch(`https://geoapi.qweather.com/v2/city/lookup?location=${cityName}&key=946a3771b8cf4c6a9985c597deeffcd8`);
+            const locationData = await locationRes.json();
+            if (!locationData.location || locationData.location.length === 0) throw new Error('未找到城市');
+
+            const locationId = locationData.location[0].id;
+            const finalCity = locationData.location[0].name;
+
+            const weatherRes = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=946a3771b8cf4c6a9985c597deeffcd8`);
+            const weatherData = await weatherRes.json();
+            const weather = weatherData.now.text;
+            const temp = weatherData.now.temp;
+
+            const weatherLink = document.querySelector('.weather-link');
+            if (weatherLink) {
+                const spans = weatherLink.querySelectorAll('span');
+                spans[0].textContent = finalCity;
+                spans[1].textContent = `${weather} ${temp}℃`;
+                weatherLink.href = `https://www.qweather.com/weather/${locationId}.html`;
+                setTimeout(() => {
+                    initializeWeatherAnimation();
+                }, 100);
+            }
+        } catch (err) {
+            console.error('天气更新失败:', err);
+        }
+    }
+</script>
                 </a>
                 <span class="divider">|</span>
                 <a href="https://www.xzw.com"
@@ -1076,6 +1105,7 @@ z
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+        updateWeatherInfo();
             try {
                 renderNews(getBackupData());
                 setTimeout(fetchHotNews, 1000);
@@ -1111,60 +1141,5 @@ z
             }
         }
     </script>
-
-
-<script>
-const HEFENG_API_KEY = '946a3771b8cf4c6a9985c597deeffcd8';
-
-// ✅ 固定城市返回
-async function fetchCityByIP() {
-    return "哈尔滨";
-}
-
-// 和风城市ID
-async function fetchHeFengLocation(cityName) {
-    const url = `https://geoapi.qweather.com/v2/city/lookup?location=${cityName}&key=${HEFENG_API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.code === '200' && data.location && data.location.length > 0) {
-        return data.location[0].id;
-    }
-    throw new Error('获取城市ID失败');
-}
-
-// 当前天气
-async function fetchWeather(locationId) {
-    const url = `https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=${HEFENG_API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.code === '200') return data.now;
-    throw new Error('获取天气失败');
-}
-
-// 更新显示
-function updateWeatherInfo(city, weather) {
-    const weatherLink = document.querySelector('.weather-link');
-    if (!weatherLink) return;
-
-    const [citySpan, infoSpan] = weatherLink.querySelectorAll('span');
-    if (citySpan) citySpan.textContent = city;
-    if (infoSpan) {
-        infoSpan.textContent = `${weather.text} ${weather.temp}℃ 湿度${weather.humidity}%`;
-        setTimeout(() => initializeWeatherAnimation(), 200);
-    }
-}
-
-// 入口函数：在加载完 DOM 后执行
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const city = await fetchCityByIP();
-        const cityId = await fetchHeFengLocation(city);
-        const weather = await fetchWeather(cityId);
-        updateWeatherInfo(city, weather);
-    } catch (e) {
-        console.error('天气自动更新失败：', e);
-    }
-});
-</script>
 </body>
 </html>
