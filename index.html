@@ -142,6 +142,16 @@
             transform: translateY(-2px);
             box-shadow: var(--shadow-medium);
         }
+        
+        .city-selector {
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-left: 10px;
+            cursor: pointer;
+        }
 
         .meta-links {
             display: flex;
@@ -536,6 +546,20 @@
             from { opacity: 0; top: 60px; }
             to { opacity: 1; top: 70px; }
         }
+        
+        .error-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: none;
+        }
 
         @media (max-width: 768px) {
             .content-columns { grid-template-columns: 1fr; }
@@ -553,6 +577,7 @@
             .more-link { margin-top: 15px; }
             .services-grid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 5px; padding: 15px 0; }
             .service-link { font-size: 0.85rem; padding: 8px 3px; }
+            .city-selector { margin-left: 5px; padding: 3px 5px; font-size: 0.8rem; }
         }
 
         /* === 天气动画样式 (V4 - 精致雾气版) === */
@@ -809,8 +834,9 @@
 </head>
 
 <body>
+    <div class="error-message" id="weatherError"></div>
+    
     <div class="container">
-        <!-- The rest of your page content remains the same -->
         <nav class="top-bar">
             <div class="left-nav">
                 <a class="home-link" onclick="setHomePage()">设为首页</a>
@@ -818,6 +844,17 @@
                     <span id="weather-icon">⏳</span>
                     <span id="weather-text">定位中<span class="location-pin">📍</span></span>
                 </a>
+                <select class="city-selector" id="citySelector" onchange="changeCity(this.value)">
+                    <option value="auto">自动定位</option>
+                    <option value="110000">北京</option>
+                    <option value="310000">上海</option>
+                    <option value="440100">广州</option>
+                    <option value="440300">深圳</option>
+                    <option value="440600">佛山</option>
+                    <option value="330100">杭州</option>
+                    <option value="510100">成都</option>
+                    <option value="420100">武汉</option>
+                </select>
             </div>
             <div class="meta-links">
                 <a class="meta-link" href="https://time.is/zh/China" target="_blank" title="当前时间">
@@ -918,7 +955,7 @@
                         <img alt="汉语发音图标" class="site-icon" src="https://zh.voicedic.com//favicon.ico"/>
                         <a href="https://zh.voicedic.com/" target="_blank">汉语发音</a>
                     </li>
-                    <a class="more-link" href="https://www.baidu.com" target="_blank">更多选项 →</a>
+                    <a class="more-link" href="https://www.runly.com.cn/usual.html" target="_blank">更多选项 →</a>
                 </ul>
             </div>
             <div class="category-column">
@@ -929,8 +966,8 @@
                         <a href="https://www.bilibili.com" target="_blank">哔哩哔哩</a>
                     </li>
                     <li class="site-item">
-                        <img alt="小兵免费图标" class="site-icon" src="https://www.xbplays.com/favicon.ico"/>
-                        <a href="https://www.xbplays.com" target="_blank">小兵免费</a>
+                        <img alt="本站电影官网|密码：888" class="site-icon" src="https://www.xbplays.com/favicon.ico"/>
+                        <a href="tv.runly.com.cn" target="_blank">密码：888</a>
                     </li>
                     <li class="site-item">
                         <img alt="粤语电影图标" class="site-icon" src="https://939394.xyz/favicon.ico"/>
@@ -956,7 +993,7 @@
                         <img alt="YouTube图标" class="site-icon" src="https://www.youtube.com/favicon.ico"/>
                         <a href="https://www.youtube.com" target="_blank">YouTube（海外)</a>
                     </li>
-                    <a class="more-link" href="https://www.baidu.com" target="_blank">更多选项 →</a>
+                    <a class="more-link" href="https://www.runly.com.cn/mm.html" target="_blank">更多选项 →</a>
                 </ul>
             </div>
             <div class="category-column">
@@ -994,7 +1031,7 @@
                         <img alt="X图标" class="site-icon" src="https://www.x.com/favicon.ico"/>
                         <a href="https://x.com/i/grok" target="_blank">特拉斯X（海外)</a>
                     </li>
-                    <a class="more-link" href="https://www.baidu.com" target="_blank">更多选项 →</a>
+                    <a class="more-link" href="https://www.runly.com.cn/AI.html" target="_blank">更多选项 →</a>
                 </ul>
             </div>
             <div class="category-column">
@@ -1018,21 +1055,21 @@
                     </li>
                     <li class="site-item">
                         <img alt="CCleaner图标" class="site-icon" src="https://www.ccleaner.com/favicon.ico"/>
-                        <a href="https://www.ccleaner.com" target="_blank">系统专区</a>
+                        <a href="https://www.runly.com.cn/system.html" target="_blank">系统专区</a>
                     </li>
                     <li class="site-item">
                         <img alt="tp-link图标" class="site-icon" src="https://www.tp-link.com.cn/favicon.ico"/>
-                        <a href="https://www.7-zip.org" target="_blank">网络专区</a>
+                        <a href="https://www.runly.com.cn/network.html" target="_blank">网络专区</a>
                     </li>
                     <li class="site-item">
                         <img alt="hp图标" class="site-icon" src="https://www.hp.com/favicon.ico"/>
-                        <a href="https://www.win-rar.com" target="_blank">打印机专区</a>
+                        <a href="https://www.runly.com.cn/print.html" target="_blank">打印机专区</a>
                     </li>
                     <li class="site-item">
                         <img alt="迅雷图标" class="site-icon" src="https://pc.xunlei.com/favicon.ico"/>
-                        <a href="https://www.teamviewer.com" target="_blank">下载专区</a>
+                        <a href="https://www.runly.com.cn/downnload.html" target="_blank">下载专区</a>
                     </li>
-                    <a class="more-link" href="https://www.baidu.com" target="_blank">更多选项 →</a>
+                    <a class="more-link" href="https://www.runly.com.cn/downnload.html" target="_blank">更多选项 →</a>
                 </ul>
             </div>
         </div>
@@ -1046,6 +1083,13 @@
     <div class="weather-animation-overlay"></div>
 
     <script>
+        // 高德地图API配置
+        const AMAP_CONFIG = {
+            API_KEY: '0fbfefade592e82a46151af1ecb4eae9', // 请替换为您的API密钥
+            IP_LOCATION_URL: 'https://restapi.amap.com/v3/ip',
+            WEATHER_URL: 'https://restapi.amap.com/v3/weather/weatherInfo'
+        };
+        
         // 天气图标映射
         const weatherIcons = {
             "晴": "☀️", "多云": "⛅", "阴": "☁️", "小雨": "🌧️", "中雨": "🌧️",
@@ -1064,35 +1108,85 @@
             "雾": "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%)"
         };
         
-        // 使用IP定位获取位置信息
+        // 显示错误消息
+        function showError(message) {
+            const errorDiv = document.getElementById('weatherError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 使用高德IP定位获取位置信息
         async function getLocationByIP() {
             try {
-                const response = await fetch('https://ipapi.co/json/');
+                const apiUrl = `${AMAP_CONFIG.IP_LOCATION_URL}?key=${AMAP_CONFIG.API_KEY}`;
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                if (data && data.city) {
-                    return { city: data.city, latitude: data.latitude, longitude: data.longitude };
+                
+                if (data.status === '1' && data.city) {
+                    return {
+                        city: data.city,
+                        adcode: data.adcode,
+                        province: data.province
+                    };
                 }
                 throw new Error('无法获取位置信息');
             } catch (error) {
                 console.error('IP定位失败:', error);
-                return { city: "佛山", latitude: 23.0215, longitude: 113.1214 }; // 备用位置
+                showError('定位失败，使用默认位置：佛山');
+                return { 
+                    city: "佛山", 
+                    adcode: "440600",
+                    province: "广东省"
+                };
             }
         }
         
-        // 获取天气信息
-        async function getWeatherByLocation(latitude, longitude) {
+        // 获取天气信息 - 使用高德天气API
+        async function getWeatherByAdcode(adcode) {
             try {
-                const API_KEY = '946a3771b8cf4c6a9985c597deeffcd8'; // 和风天气API密钥
-                const response = await fetch(`https://devapi.qweather.com/v7/weather/now?location=${longitude},${latitude}&key=${API_KEY}`);
+                const apiUrl = `${AMAP_CONFIG.WEATHER_URL}?key=${AMAP_CONFIG.API_KEY}&city=${adcode}&extensions=base`;
+                const response = await fetch(apiUrl);
                 const data = await response.json();
-                if (data.code === '200') return data.now;
+                
+                if (data.status === '1' && data.lives && data.lives.length > 0) {
+                    const weather = data.lives[0];
+                    return {
+                        temp: weather.temperature,
+                        feelsLike: weather.temperature, // 高德不提供体感温度
+                        humidity: weather.humidity,
+                        windDir: weather.winddirection,
+                        windScale: weather.windpower,
+                        precip: "0.0", // 高德不提供实时降水量
+                        pressure: weather.pressure,
+                        vis: weather.visibility,
+                        text: weather.weather,
+                        cityName: weather.city
+                    };
+                }
                 throw new Error('天气API返回错误');
             } catch (error) {
                 console.error('获取天气失败:', error);
-                // 返回一个随机天气用于测试动画
+                showError('天气获取失败，使用模拟数据');
+                
+                // 返回模拟数据
                 const testWeathers = ["晴", "多云", "阴", "小雨", "中雨", "大雨", "暴雨", "雷阵雨", "雪", "雾", "霾", "风"];
                 const randomWeather = testWeathers[Math.floor(Math.random() * testWeathers.length)];
-                return { temp: "24", text: randomWeather, feelsLike: "25", humidity: "45", windDir: "南风", windScale: "3", precip: "0.0", pressure: "1013", vis: "10" }; 
+                return { 
+                    temp: Math.floor(15 + Math.random() * 20), 
+                    text: randomWeather, 
+                    feelsLike: Math.floor(15 + Math.random() * 20), 
+                    humidity: Math.floor(30 + Math.random() * 50), 
+                    windDir: "南风", 
+                    windScale: (1 + Math.random() * 5).toFixed(1), 
+                    precip: (Math.random() * 10).toFixed(1), 
+                    pressure: Math.floor(1000 + Math.random() * 30), 
+                    vis: (5 + Math.random() * 15).toFixed(1),
+                    cityName: "模拟数据"
+                };
             }
         }
 
@@ -1217,7 +1311,7 @@
                     overlay.classList.remove('visible');
                     setTimeout(() => {
                         overlay.innerHTML = '';
-                    }, 500); // 等待fade-out动画结束后再清空内容
+                    }, 500);
                 }, 5000);
             }
         }
@@ -1243,36 +1337,59 @@
         }
         
         // 更新天气显示
-        function updateWeatherDisplay(location, weather) {
+        function updateWeatherDisplay(weather) {
             document.getElementById('weather-icon').textContent = weatherIcons[weather.text] || '🌤️';
-            document.getElementById('weather-text').innerHTML = `${location.city} ${weather.text} ${weather.temp}°C`;
+            document.getElementById('weather-text').innerHTML = `${weather.cityName} ${weather.text} ${weather.temp}°C`;
             document.getElementById('weather-link').onclick = () => showWeatherDetail(weather);
             
             let bgKey = Object.keys(weatherBackgrounds).find(key => weather.text.includes(key)) || '晴';
             document.body.style.backgroundImage = weatherBackgrounds[bgKey];
 
-            // *** 调用动画函数 ***
             playWeatherAnimation(weather.text);
         }
         
         // 主函数
-        async function main() {
+        async function main(adcode = 'auto') {
             try {
-                const location = await getLocationByIP();
-                const weather = await getWeatherByLocation(location.latitude, location.longitude);
-                updateWeatherDisplay(location, weather);
-            } catch (error)
-                {
+                document.getElementById('weather-text').innerHTML = '获取天气中...';
+                
+                let location, weather;
+                
+                if (adcode === 'auto') {
+                    location = await getLocationByIP();
+                    weather = await getWeatherByAdcode(location.adcode);
+                } else {
+                    // 使用用户选择的城市编码
+                    weather = await getWeatherByAdcode(adcode);
+                }
+                
+                updateWeatherDisplay(weather);
+            } catch (error) {
                 console.error('初始化失败:', error);
-                document.getElementById('weather-text').innerHTML = '定位失败';
-                // 使用备用数据和位置进行显示
+                showError('天气初始化失败');
+                document.getElementById('weather-text').innerHTML = '天气获取失败';
+                
+                // 使用备用数据
                 const testWeathers = ["晴", "多云", "阴", "小雨", "中雨", "大雨", "暴雨", "雷阵雨", "雪", "雾", "霾", "风"];
                 const randomWeather = testWeathers[Math.floor(Math.random() * testWeathers.length)];
-                updateWeatherDisplay(
-                    {city: "佛山"}, 
-                    { text: randomWeather, temp: "24", feelsLike: "25", humidity: "45", windDir: "南风", windScale: "3", precip: "0.0", pressure: "1013", vis: "10" }
-                );
+                updateWeatherDisplay({ 
+                    text: randomWeather, 
+                    temp: Math.floor(15 + Math.random() * 20), 
+                    feelsLike: Math.floor(15 + Math.random() * 20), 
+                    humidity: Math.floor(30 + Math.random() * 50), 
+                    windDir: "南风", 
+                    windScale: (1 + Math.random() * 5).toFixed(1), 
+                    precip: (Math.random() * 10).toFixed(1), 
+                    pressure: Math.floor(1000 + Math.random() * 30), 
+                    vis: (5 + Math.random() * 15).toFixed(1),
+                    cityName: "模拟数据"
+                });
             }
+        }
+        
+        // 城市选择
+        function changeCity(adcode) {
+            main(adcode);
         }
         
         // 微博热榜API
@@ -1343,7 +1460,7 @@
         // 初始化页面
         document.addEventListener('DOMContentLoaded', () => {
             main(); // 初始化天气
-            setInterval(main, 60 * 60 * 1000); // 每小时更新天气
+            setInterval(() => main(), 60 * 60 * 1000); // 每小时更新天气
             fetchHotNews(); // 初始化微博热榜
             setInterval(fetchHotNews, 10 * 60 * 1000);
 
