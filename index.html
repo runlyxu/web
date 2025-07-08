@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>专业导航门户 </title>
+    <title>专业导航门户 - 精准天气预报</title>
     <style>
         :root {
             --primary-blue: #3B82F6;
@@ -147,16 +141,6 @@
         .weather-link:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-medium);
-        }
-        
-        .city-selector {
-            padding: 5px 10px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            background: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            margin-left: 10px;
-            cursor: pointer;
         }
 
         .meta-links {
@@ -552,20 +536,6 @@
             from { opacity: 0; top: 60px; }
             to { opacity: 1; top: 70px; }
         }
-        
-        .error-message {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ff6b6b;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            z-index: 2000;
-            display: none;
-        }
 
         @media (max-width: 768px) {
             .content-columns { grid-template-columns: 1fr; }
@@ -583,10 +553,9 @@
             .more-link { margin-top: 15px; }
             .services-grid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 5px; padding: 15px 0; }
             .service-link { font-size: 0.85rem; padding: 8px 3px; }
-            .city-selector { margin-left: 5px; padding: 3px 5px; font-size: 0.8rem; }
         }
 
-        /* === 天气动画样式 (V4 - 精致雾气版) === */
+        /* === 天气动画样式 (V6 - 云朵重制版) === */
         .weather-animation-overlay {
             position: fixed;
             top: 0;
@@ -607,13 +576,6 @@
         }
         
         /* 1. 晴天动画 */
-        .anim-sunny-container {
-            animation: anim-sun-rise 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-        }
-        @keyframes anim-sun-rise {
-            from { transform: translateY(200px) scale(0.5); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
-        }
         .anim-sun {
             width: 180px; height: 180px;
             background: radial-gradient(circle, #FFD033 60%, #FFC700 100%);
@@ -621,6 +583,13 @@
             position: relative;
             animation: anim-sun-spin 20s linear infinite, anim-sun-glow 3s ease-in-out infinite alternate;
             box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+        }
+        .anim-sunny-container {
+            animation: anim-sun-rise 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+        @keyframes anim-sun-rise {
+            from { transform: translateY(200px) scale(0.5); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
         @keyframes anim-sun-spin {
             to { transform: rotate(360deg); }
@@ -660,40 +629,80 @@
         .anim-sun .cheek.left { left: 30px; }
         .anim-sun .cheek.right { right: 30px; }
 
-        /* 2/3. 云朵动画 (多云/阴天) */
-        .anim-cloud-container {
-            width: 400px; height: 300px;
+        /* 2. 多云动画 (V6 REWORK) */
+        .partly-cloudy-container {
+            width: 300px; height: 300px;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .anim-cloud-puff {
+        .partly-cloudy-container .anim-sun {
+            transform: scale(0.9);
+            z-index: 1;
+            animation: none; /* 取消自带的动画，由容器控制 */
+        }
+        .partly-cloudy-container .pink-cloud {
             position: absolute;
+            background: #FFC0CB; /* 淡粉色 */
             border-radius: 50%;
-            background: white; /* 默认为白色 */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            animation: anim-cloud-drift 2s ease-out forwards;
+            z-index: 2;
+            animation: anim-pink-cloud-drift 4s ease-in-out forwards;
+            opacity: 0;
         }
-        .anim-cloud-puff.grey { background: #D3D3D3; } /* 阴天颜色 */
-        .anim-cloud-puff.grey .puff { background: #C0C0C0; }
+        .partly-cloudy-container .pink-cloud::before,
+        .partly-cloudy-container .pink-cloud::after {
+            content: '';
+            position: absolute;
+            background: #FFB6C1;
+            border-radius: 50%;
+        }
+        .pink-cloud.c1 { width: 150px; height: 80px; top: 40px; left: -80px; }
+        .pink-cloud.c1::before { width: 80px; height: 80px; top: -40px; left: 20px; }
+        .pink-cloud.c1::after { width: 70px; height: 70px; top: -20px; right: 10px; }
+        .pink-cloud.c2 { width: 180px; height: 100px; bottom: 40px; right: -100px; animation-delay: 0.5s; }
+        .pink-cloud.c2::before { width: 100px; height: 100px; bottom: 0; left: 30px; }
+        .pink-cloud.c2::after { width: 90px; height: 90px; bottom: 10px; right: 20px; }
+        @keyframes anim-pink-cloud-drift {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 0.9; transform: scale(1); }
+        }
 
-        .anim-cloud-puff .puff {
+        /* 3. 阴天动画 (V6 REWORK) */
+        .overcast-container {
+            width: 100%; height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .overcast-container .grey-cloud {
             position: absolute;
+            background: #d4d7dc;
             border-radius: 50%;
-            background: #F0F8FF;
+            animation-name: anim-grey-cloud-drift;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
         }
-        .c1 { width: 150px; height: 150px; top: 50px; left: 100px; }
-        .c1 .puff:nth-child(1) { width: 80px; height: 80px; top: -40px; left: 35px; }
-        .c1 .puff:nth-child(2) { width: 60px; height: 60px; top: 10px; left: -30px; }
-        .c1 .puff:nth-child(3) { width: 70px; height: 70px; top: 15px; right: -35px; }
-        .c2 { width: 100px; height: 100px; top: 120px; left: 20px; animation-delay: 0.3s; }
-        .c2 .puff:nth-child(1) { width: 50px; height: 50px; top: -25px; left: 25px; }
-        .c2 .puff:nth-child(2) { width: 40px; height: 40px; top: 10px; left: -20px; }
-        .c3 { width: 120px; height: 120px; top: 100px; left: 200px; animation-delay: 0.5s; }
-        .c3 .puff:nth-child(1) { width: 60px; height: 60px; top: -30px; left: 30px; }
-        .c3 .puff:nth-child(2) { width: 50px; height: 50px; top: 10px; right: -25px; }
-        @keyframes anim-cloud-drift {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+        .overcast-container .grey-cloud::before,
+        .overcast-container .grey-cloud::after {
+            content: '';
+            position: absolute;
+            background: #c8cdd3;
+            border-radius: 50%;
         }
+        .grey-cloud.gc1 { width: 200px; height: 120px; top: 15%; animation-duration: 25s; }
+        .grey-cloud.gc1::before { width: 120px; height: 120px; top: -60px; left: 30px; }
+        .grey-cloud.gc1::after { width: 100px; height: 100px; top: -40px; right: 20px; }
+        .grey-cloud.gc2 { width: 250px; height: 150px; top: 35%; animation-duration: 30s; animation-direction: reverse; }
+        .grey-cloud.gc2::before { width: 150px; height: 150px; top: -75px; left: 40px; }
+        .grey-cloud.gc2::after { width: 130px; height: 130px; top: -50px; right: 30px; }
+        .grey-cloud.gc3 { width: 180px; height: 100px; top: 60%; animation-duration: 20s; }
+        .grey-cloud.gc3::before { width: 100px; height: 100px; top: -50px; left: 25px; }
+        .grey-cloud.gc3::after { width: 80px; height: 80px; top: -30px; right: 15px; }
+        @keyframes anim-grey-cloud-drift {
+            from { transform: translateX(-250px); }
+            to { transform: translateX(100vw); }
+        }
+
 
         /* 4. 下雨动画 */
         .rain-container {
@@ -704,8 +713,12 @@
             position: absolute;
             top: 20%; left: 50%;
             transform: translateX(-50%);
-            animation: anim-cloud-drift 1s ease-out forwards;
+            animation: anim-cloud-drift-rain 1s ease-out forwards;
             z-index: 1;
+        }
+        @keyframes anim-cloud-drift-rain {
+            from { opacity: 0; transform: translate(-50%, 50px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
         }
         .rain-cloud {
             width: 220px; height: 80px;
@@ -790,7 +803,7 @@
             filter: drop-shadow(0 0 3px white);
         }
         
-        /* 6. 雾/霾动画 (V4 REWORK) */
+        /* 6. 雾/霾动画 */
         .fog-container {
             position: absolute;
             width: 100%;
@@ -840,9 +853,8 @@
 </head>
 
 <body>
-    <div class="error-message" id="weatherError"></div>
-    
     <div class="container">
+        <!-- The rest of your page content remains the same -->
         <nav class="top-bar">
             <div class="left-nav">
                 <a class="home-link" onclick="setHomePage()">设为首页</a>
@@ -850,17 +862,6 @@
                     <span id="weather-icon">⏳</span>
                     <span id="weather-text">定位中<span class="location-pin">📍</span></span>
                 </a>
-                <select class="city-selector" id="citySelector" onchange="changeCity(this.value)">
-                    <option value="auto">自动定位</option>
-                    <option value="110000">北京</option>
-                    <option value="310000">上海</option>
-                    <option value="440100">广州</option>
-                    <option value="440300">深圳</option>
-                    <option value="440600">佛山</option>
-                    <option value="330100">杭州</option>
-                    <option value="510100">成都</option>
-                    <option value="420100">武汉</option>
-                </select>
             </div>
             <div class="meta-links">
                 <a class="meta-link" href="https://time.is/zh/China" target="_blank" title="当前时间">
@@ -927,7 +928,7 @@
         
         <div class="content-columns">
             <div class="category-column">
-                <h3 class="category-header">常用网址</h3>
+                  <h3 class="category-header">常用网址</h3>
                 <ul class="site-list">
                     <li class="site-item">
                         <img alt="百度图标" class="site-icon" src="https://www.baidu.com/favicon.ico"/>
@@ -1089,13 +1090,6 @@
     <div class="weather-animation-overlay"></div>
 
     <script>
-        // 高德地图API配置
-        const AMAP_CONFIG = {
-            API_KEY: '0fbfefade592e82a46151af1ecb4eae9', // 请替换为您的API密钥
-            IP_LOCATION_URL: 'https://restapi.amap.com/v3/ip',
-            WEATHER_URL: 'https://restapi.amap.com/v3/weather/weatherInfo'
-        };
-        
         // 天气图标映射
         const weatherIcons = {
             "晴": "☀️", "多云": "⛅", "阴": "☁️", "小雨": "🌧️", "中雨": "🌧️",
@@ -1114,96 +1108,39 @@
             "雾": "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%)"
         };
         
-        // 显示错误消息
-        function showError(message) {
-            const errorDiv = document.getElementById('weatherError');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
-        }
-        
-        // 使用高德IP定位获取位置信息
-        async function getLocationByIP() {
-            try {
-                const apiUrl = `${AMAP_CONFIG.IP_LOCATION_URL}?key=${AMAP_CONFIG.API_KEY}`;
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                
-                if (data.status === '1' && data.city) {
-                    return {
-                        city: data.city,
-                        adcode: data.adcode,
-                        province: data.province
-                    };
-                }
-                throw new Error('无法获取位置信息');
-            } catch (error) {
-                console.error('IP定位失败:', error);
-                showError('定位失败，使用默认位置：佛山');
-                return { 
-                    city: "佛山", 
-                    adcode: "440600",
-                    province: "广东省"
-                };
-            }
-        }
-        
-        // 获取天气信息 - 使用高德天气API
-        async function getWeatherByAdcode(adcode) {
-            try {
-                const apiUrl = `${AMAP_CONFIG.WEATHER_URL}?key=${AMAP_CONFIG.API_KEY}&city=${adcode}&extensions=base`;
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                
-                if (data.status === '1' && data.lives && data.lives.length > 0) {
-                    const weather = data.lives[0];
-                    return {
-                        temp: weather.temperature,
-                        feelsLike: weather.temperature, // 高德不提供体感温度
-                        humidity: weather.humidity,
-                        windDir: weather.winddirection,
-                        windScale: weather.windpower,
-                        precip: "0.0", // 高德不提供实时降水量
-                        pressure: weather.pressure,
-                        vis: weather.visibility,
-                        text: weather.weather,
-                        cityName: weather.city
-                    };
-                }
-                throw new Error('天气API返回错误');
-            } catch (error) {
-                console.error('获取天气失败:', error);
-                showError('天气获取失败，使用模拟数据');
-                
-                // 返回模拟数据
-                const testWeathers = ["晴", "多云", "阴", "小雨", "中雨", "大雨", "暴雨", "雷阵雨", "雪", "雾", "霾", "风"];
-                const randomWeather = testWeathers[Math.floor(Math.random() * testWeathers.length)];
-                return { 
-                    temp: Math.floor(15 + Math.random() * 20), 
-                    text: randomWeather, 
-                    feelsLike: Math.floor(15 + Math.random() * 20), 
-                    humidity: Math.floor(30 + Math.random() * 50), 
-                    windDir: "南风", 
-                    windScale: (1 + Math.random() * 5).toFixed(1), 
-                    precip: (Math.random() * 10).toFixed(1), 
-                    pressure: Math.floor(1000 + Math.random() * 30), 
-                    vis: (5 + Math.random() * 15).toFixed(1),
-                    cityName: "模拟数据"
-                };
-            }
-        }
+        // *** NEW: GaoDe Weather Functions ***
+        const GAO_DE_KEY = "0fbfefade592e82a46151af1ecb4eae9"; // 请在此处替换为您自己的高德Web服务API密钥
 
-        // *** 播放天气动画 (V4) ***
+        async function getGaoDeWeather() {
+            // 1. Get adcode from IP
+            // 注意：高德的IP定位API可能需要您在后台配置白名单，或者有使用次数限制。
+            const ipUrl = `https://restapi.amap.com/v3/ip?key=${GAO_DE_KEY}`;
+            const ipResponse = await fetch(ipUrl);
+            const ipData = await ipResponse.json();
+            if (ipData.status !== '1') {
+                throw new Error('高德IP定位失败: ' + ipData.info);
+            }
+            const adcode = ipData.adcode;
+
+            // 2. Get weather from adcode
+            const weatherUrl = `https://restapi.amap.com/v3/weather/weatherInfo?city=${adcode}&key=${GAO_DE_KEY}`;
+            const weatherResponse = await fetch(weatherUrl);
+            const weatherData = await weatherResponse.json();
+
+            if (weatherData.status !== '1' || !weatherData.lives || weatherData.lives.length === 0) {
+                 throw new Error('高德天气获取失败: ' + weatherData.info);
+            }
+            
+            return weatherData.lives[0];
+        }
+        
+        // *** 播放天气动画 (V6) ***
         function playWeatherAnimation(weather) {
             const overlay = document.querySelector('.weather-animation-overlay');
             if (!overlay) return;
 
             let animationHtml = '';
             
-            // 根据天气关键词决定使用哪个动画
             if (weather.includes("雷")) {
                 let streaksHtml = '';
                 for (let i = 0; i < 80; i++) {
@@ -1285,16 +1222,21 @@
                 fogHtml += '</div>';
                 animationHtml = fogHtml;
             } else if (weather.includes("阴")) {
-                animationHtml = `<div class="anim-cloud-container">
-                    <div class="anim-cloud-puff c1 grey"><div class="puff"></div><div class="puff"></div><div class="puff"></div></div>
-                    <div class="anim-cloud-puff c2 grey"><div class="puff"></div><div class="puff"></div></div>
-                    <div class="anim-cloud-puff c3 grey"><div class="puff"></div><div class="puff"></div></div>
-                </div>`;
+                let cloudHtml = '<div class="overcast-container">';
+                // 生成5-6朵云
+                for(let i = 1; i <= 5; i++){
+                    cloudHtml += `<div class="grey-cloud gc${i}" style="animation-delay: ${Math.random() * 5}s;"></div>`;
+                }
+                cloudHtml += '</div>';
+                animationHtml = cloudHtml;
             } else if (weather.includes("多云")) {
-                animationHtml = `<div class="anim-cloud-container">
-                    <div class="anim-cloud-puff c1"><div class="puff"></div><div class="puff"></div><div class="puff"></div></div>
-                    <div class="anim-cloud-puff c2"><div class="puff"></div><div class="puff"></div></div>
-                    <div class="anim-cloud-puff c3"><div class="puff"></div><div class="puff"></div></div>
+                animationHtml = `<div class="partly-cloudy-container">
+                    <div class="anim-sun">
+                        <div class="eye left"></div><div class="eye right"></div>
+                        <div class="mouth"></div><div class="cheek left"></div><div class="cheek right"></div>
+                    </div>
+                    <div class="pink-cloud c1"></div>
+                    <div class="pink-cloud c2"></div>
                 </div>`;
             } else if (weather.includes("晴")) {
                 animationHtml = `<div class="anim-sunny-container">
@@ -1312,7 +1254,6 @@
                 overlay.innerHTML = animationHtml;
                 overlay.classList.add('visible');
 
-                // 动画持续5秒后消失
                 setTimeout(() => {
                     overlay.classList.remove('visible');
                     setTimeout(() => {
@@ -1330,10 +1271,9 @@
             detailDiv.innerHTML = `
                 <div style="margin-bottom: 10px; font-weight: bold; text-align: center;">详细天气预报</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>温度:</div><div>${weather.temp}°C</div><div>体感温度:</div><div>${weather.feelsLike}°C</div>
-                    <div>湿度:</div><div>${weather.humidity}%</div><div>风向:</div><div>${weather.windDir} ${weather.windScale}级</div>
-                    <div>降水量:</div><div>${weather.precip}mm</div><div>气压:</div><div>${weather.pressure}hPa</div>
-                    <div>能见度:</div><div>${weather.vis}公里</div>
+                    <div>温度:</div><div>${weather.temp}°C</div>
+                    <div>湿度:</div><div>${weather.humidity}%</div>
+                    <div>风向:</div><div>${weather.windDir} ${weather.windScale}级</div>
                 </div>
                 <div style="margin-top: 10px; text-align: center; font-size: 0.85rem; color: #666;">
                     数据更新时间: ${new Date().toLocaleTimeString()}
@@ -1343,9 +1283,9 @@
         }
         
         // 更新天气显示
-        function updateWeatherDisplay(weather) {
+        function updateWeatherDisplay(location, weather) {
             document.getElementById('weather-icon').textContent = weatherIcons[weather.text] || '🌤️';
-            document.getElementById('weather-text').innerHTML = `${weather.cityName} ${weather.text} ${weather.temp}°C`;
+            document.getElementById('weather-text').innerHTML = `${location.city} ${weather.text} ${weather.temp}°C`;
             document.getElementById('weather-link').onclick = () => showWeatherDetail(weather);
             
             let bgKey = Object.keys(weatherBackgrounds).find(key => weather.text.includes(key)) || '晴';
@@ -1355,47 +1295,33 @@
         }
         
         // 主函数
-        async function main(adcode = 'auto') {
+        async function main() {
             try {
-                document.getElementById('weather-text').innerHTML = '获取天气中...';
+                const weather = await getGaoDeWeather();
                 
-                let location, weather;
-                
-                if (adcode === 'auto') {
-                    location = await getLocationByIP();
-                    weather = await getWeatherByAdcode(location.adcode);
-                } else {
-                    // 使用用户选择的城市编码
-                    weather = await getWeatherByAdcode(adcode);
-                }
-                
-                updateWeatherDisplay(weather);
-            } catch (error) {
+                // 适配高德数据到我们现有的结构
+                const location = { city: weather.city };
+                const weatherDetails = {
+                    text: weather.weather,
+                    temp: weather.temperature,
+                    humidity: weather.humidity,
+                    windDir: weather.winddirection,
+                    windScale: weather.windpower,
+                };
+
+                updateWeatherDisplay(location, weatherDetails);
+            } catch (error)
+                {
                 console.error('初始化失败:', error);
-                showError('天气初始化失败');
                 document.getElementById('weather-text').innerHTML = '天气获取失败';
-                
-                // 使用备用数据
+                // 失败时回退到随机天气动画进行演示
                 const testWeathers = ["晴", "多云", "阴", "小雨", "中雨", "大雨", "暴雨", "雷阵雨", "雪", "雾", "霾", "风"];
                 const randomWeather = testWeathers[Math.floor(Math.random() * testWeathers.length)];
-                updateWeatherDisplay({ 
-                    text: randomWeather, 
-                    temp: Math.floor(15 + Math.random() * 20), 
-                    feelsLike: Math.floor(15 + Math.random() * 20), 
-                    humidity: Math.floor(30 + Math.random() * 50), 
-                    windDir: "南风", 
-                    windScale: (1 + Math.random() * 5).toFixed(1), 
-                    precip: (Math.random() * 10).toFixed(1), 
-                    pressure: Math.floor(1000 + Math.random() * 30), 
-                    vis: (5 + Math.random() * 15).toFixed(1),
-                    cityName: "模拟数据"
-                });
+                updateWeatherDisplay(
+                    {city: "演示"}, 
+                    { text: randomWeather, temp: "25", humidity: "60", windDir: "南风", windScale: "3" }
+                );
             }
-        }
-        
-        // 城市选择
-        function changeCity(adcode) {
-            main(adcode);
         }
         
         // 微博热榜API
@@ -1407,12 +1333,26 @@
 
         function handleWeiboHotData(response) {
             try {
-                let rawData = (response.code === 200 && Array.isArray(response.data)) ? response.data : [];
-                const validData = rawData.filter(item => item.keyword && item.keyword.trim()).slice(0, 10).map((item, index) => ({
-                    rank: item.rank || index + 1,
-                    title: item.keyword,
-                    url: item.url || `https://s.weibo.com/weibo?q=${encodeURIComponent(item.keyword)}&Refer=hot`
-                }));
+                let rawData = [];
+                if (Array.isArray(response)) {
+                    rawData = response;
+                } else if (response.code === 200 && Array.isArray(response.data)) {
+                    rawData = response.data;
+                } else if (Array.isArray(response.list)) {
+                    rawData = response.list;
+                } else {
+                    throw new Error("无法识别的数据格式");
+                }
+
+                const validData = rawData
+                    .filter(item => item.keyword && item.keyword.trim())
+                    .slice(0, 10)
+                    .map((item, index) => ({
+                        rank: item.rank || index + 1,
+                        title: item.keyword,
+                        url: item.url || `https://s.weibo.com/weibo?q=${encodeURIComponent(item.keyword)}&Refer=hot`
+                    }));
+
                 if (validData.length === 0) throw new Error("有效数据为空");
                 renderNews(validData);
             } catch (error) {
@@ -1423,16 +1363,30 @@
 
         function fetchHotNews() {
             const script = document.createElement('script');
-            script.src = `${WEIBO_API.url}?access-key=${WEIBO_API.accessKey}&secret-key=${WEIBO_API.secretKey}&callback=handleWeiboHotData&_=${Date.now()}`;
-            script.onerror = () => { console.error("网络请求失败"); renderNews(getBackupData()); };
+            const callbackName = `weiboCallback_${Date.now()}`;
+            window[callbackName] = handleWeiboHotData;
+
+            script.src = `${WEIBO_API.url}?access-key=${WEIBO_API.accessKey}&secret-key=${WEIBO_API.secretKey}&callback=${callbackName}&_=${Date.now()}`;
+            script.onerror = () => { 
+                console.error("网络请求失败，启用备用数据"); 
+                renderNews(getBackupData());
+                delete window[callbackName];
+            };
+            script.onload = () => {
+                setTimeout(() => {
+                    delete window[callbackName];
+                }, 1000);
+            };
             document.body.appendChild(script);
         }
 
         function getBackupData() {
             return [
-                { title: "雪碧悄悄换了配方", url: "#", rank: 1 }, { title: "神舟十八号发射成功", url: "#", rank: 2 },
-                { title: "五一假期出行预警", url: "#", rank: 3 }, { title: "AI医疗新突破", url: "#", rank: 4 },
-                { title: "国际油价剧烈波动", url: "#", rank: 5 }
+                { title: "神舟十八号发射成功", url: "https://s.weibo.com/weibo?q=%23%E7%A5%9E%E8%88%9F%E5%8D%81%E5%85%AB%E5%8F%B7%23", rank: 1 },
+                { title: "五一假期出行预警", url: "https://s.weibo.com/weibo?q=%23%E4%BA%94%E4%B8%80%E5%81%87%E6%9C%9F%E5%87%BA%E8%A1%8C%E9%A2%84%E8%AD%A6%23", rank: 2 },
+                { title: "AI医疗新突破", url: "https://s.weibo.com/weibo?q=%23AI%E5%8C%BB%E7%96%97%E6%96%B0%E7%AA%81%E7%A0%B4%23", rank: 3 },
+                { title: "国际油价剧烈波动", url: "https://s.weibo.com/weibo?q=%23%E5%9B%BD%E9%99%85%E6%B2%B9%E4%BB%B7%E5%89%A7%E7%83%88%E6%B3%A2%E5%8A%A8%23", rank: 4 },
+                { title: "雪碧悄悄换了配方", url: "https://s.weibo.com/weibo?q=%23%E9%9B%AA%E7%A2%A7%E6%82%84%E6%82%84%E6%8D%A2%E4%BA%86%E9%85%8D%E6%96%B9%23", rank: 5 }
             ];
         }
 
@@ -1466,7 +1420,7 @@
         // 初始化页面
         document.addEventListener('DOMContentLoaded', () => {
             main(); // 初始化天气
-            setInterval(() => main(), 60 * 60 * 1000); // 每小时更新天气
+            setInterval(main, 60 * 60 * 1000); // 每小时更新天气
             fetchHotNews(); // 初始化微博热榜
             setInterval(fetchHotNews, 10 * 60 * 1000);
 
